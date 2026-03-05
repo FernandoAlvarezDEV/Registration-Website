@@ -1,1 +1,272 @@
-asasdasdasads
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ENO Portal Registration Form V1</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2547f4",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101322",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3 sticky top-0 z-50">
+                <div class="flex items-center gap-4 text-primary">
+                    <div class="size-6">
+                        <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-slate-900 dark:text-white text-xl font-black leading-tight tracking-tight">ENO
+                        Portal</h2>
+                </div>
+                <div class="flex flex-1 justify-end gap-8">
+                    <nav class="flex items-center gap-8">
+                        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
+                            href="Index.html">Inicio</a>
+                        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
+                            href="event-details.html">Detalles del Evento</a>
+                        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
+                            href="event-details.html#agenda">Agenda</a>
+                        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors"
+                            href="event-details.html#contacto">Contacto</a>
+                    </nav>
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold transition-all hover:bg-primary/90">
+                            <span>Iniciar Sesión</span>
+                        </button>
+                        <div class="bg-slate-200 dark:bg-slate-700 bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/10"
+                            data-alt="User avatar placeholder"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAttGdjalFq8aciWqxbhZZ4Nz3XZBuEJcrHGEzejv_8WH6cy4N_2gC2bo_chIlQMfdss4gDOae4V0C-zle3zwBnUTDbwK5Js-iAxJ9L9e5YG-h7xhfwvEJczDOyNBkH0nqbkosEA-z09e2eglWOoG_fdG8KjD3Udalviy63O1cFRztmDPjHx4QkAf7HZlq1yeXNJlF02kASYL9nwg0J_S5tr_y3UZ_59R8w-1a_1-sU0skwlwi0tTVJr78Fx1gPJ4lTTdp72Wz2l5E");'>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 flex justify-center py-12 px-6 lg:px-40">
+                <div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+                    <div class="mb-10">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <a class="text-slate-500 text-sm font-medium hover:text-primary" href="#">Home</a>
+                            <span class="text-slate-400 text-sm font-medium">/</span>
+                            <span class="text-primary text-sm font-medium">Inscripción Evento ENO</span>
+                        </div>
+                        <h1 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight mb-2">Formulario de
+                            Registro</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-lg">Completa los datos para asegurar tu
+                            participación en el evento corporativo ENO.</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <div
+                            class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+                            <form id="registration-form" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Nombre
+                                            Completo</label>
+                                        <input id="input-nombre"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="Ej: Juan Pérez" type="text" required />
+                                        <span id="error-nombre" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <label
+                                            class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Edad</label>
+                                        <input id="input-edad"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="25" type="number" min="1" max="120" required />
+                                        <span id="error-edad" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Número
+                                            de Teléfono</label>
+                                        <input id="input-telefono"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="+1 234 567 890" type="tel" required />
+                                        <span id="error-telefono"
+                                            class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Correo
+                                            Electrónico</label>
+                                        <input id="input-email"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="ejemplo@correo.com" type="email" required />
+                                        <span id="error-email" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <label
+                                            class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Municipio</label>
+                                        <input id="input-municipio"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="Tu ciudad o municipio" type="text" required />
+                                        <span id="error-municipio"
+                                            class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Talla de
+                                        Camiseta</label>
+                                    <select id="input-talla"
+                                        class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                        required>
+                                        <option disabled="" selected="" value="">Selecciona una talla</option>
+                                        <option value="xs">Extra Small (XS)</option>
+                                        <option value="s">Small (S)</option>
+                                        <option value="m">Medium (M)</option>
+                                        <option value="l">Large (L)</option>
+                                        <option value="xl">Extra Large (XL)</option>
+                                    </select>
+                                    <span id="error-talla" class="text-red-500 text-xs font-medium hidden"></span>
+                                </div>
+                                <div class="pt-4">
+                                    <button id="btn-submit"
+                                        class="w-full md:w-auto min-w-[200px] bg-primary text-white font-bold py-4 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                                        type="submit">
+                                        <span class="material-symbols-outlined">send</span>
+                                        Enviar Inscripción
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <aside class="space-y-6">
+                            <div class="bg-primary/5 dark:bg-primary/10 border border-primary/10 rounded-xl p-6">
+                                <h3 class="text-primary text-lg font-bold mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined">info</span>
+                                    Detalles del Evento
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-start gap-3">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800 dark:text-slate-100 text-sm">Fecha</p>
+                                            <p class="text-slate-600 dark:text-slate-400 text-sm">7 de Diciembre, 2026
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-primary text-xl">location_on</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800 dark:text-slate-100 text-sm">Ubicación
+                                            </p>
+                                            <p class="text-slate-600 dark:text-slate-400 text-sm">Colegio Loyola, Av.
+                                                Abraham Lincoln #1, Centro de los Héroes, Santo Domingo</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-primary text-xl">schedule</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800 dark:text-slate-100 text-sm">Hora</p>
+                                            <p class="text-slate-600 dark:text-slate-400 text-sm">08:00 AM - 05:00 PM
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="material-symbols-outlined text-primary text-xl">payments</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800 dark:text-slate-100 text-sm">Precio</p>
+                                            <p class="text-slate-600 dark:text-slate-400 text-sm">RD$700 Pesos
+                                                Dominicanos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                                <h3
+                                    class="text-slate-900 dark:text-white text-lg font-bold mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-slate-400">help_outline</span>
+                                    Cómo Registrarse
+                                </h3>
+                                <ol class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                    <li class="flex gap-3">
+                                        <span
+                                            class="flex-shrink-0 size-6 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center font-bold text-primary">1</span>
+                                        <p>Completa todos los campos obligatorios del formulario a la izquierda.</p>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span
+                                            class="flex-shrink-0 size-6 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center font-bold text-primary">2</span>
+                                        <p>Verifica que tu número de teléfono y municipio sean correctos para la
+                                            logística.</p>
+                                    </li>
+                                    <li class="flex gap-3">
+                                        <span
+                                            class="flex-shrink-0 size-6 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center font-bold text-primary">3</span>
+                                        <p>Haz clic en "Enviar Inscripción" y recibirás un correo de confirmación en
+                                            breve.</p>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="rounded-xl overflow-hidden h-56 relative group">
+                                <iframe
+                                    src="https://maps.google.com/maps?q=Colegio+Loyola,+Av.+Abraham+Lincoln,+Santo+Domingo&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+                                    class="w-full h-full border-0" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                                <a href="https://www.google.com/maps/place/Colegio+Loyola/@18.45105,-69.92322,17z/data=!4m6!3m5!1s0x8eaf89d0093af269:0xa5c4f0fc8ef03d00!8m2!3d18.45105!4d-69.92322!16s"
+                                    target="_blank" rel="noopener noreferrer" class="absolute bottom-3 left-3 z-20">
+                                    <span
+                                        class="bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1 shadow-md hover:bg-white transition-colors">
+                                        <span class="material-symbols-outlined text-sm">map</span> Ver en Google Maps
+                                    </span>
+                                </a>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </main>
+            <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 px-10">
+                <div
+                    class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 dark:text-slate-400 text-sm">
+                    <p>© 2026 ENO Portal. Todos los derechos reservados.</p>
+                    <div class="flex gap-6">
+                        <a class="hover:text-primary" href="#">Política de Privacidad</a>
+                        <a class="hover:text-primary" href="#">Términos de Servicio</a>
+                        <a class="hover:text-primary" href="#">Soporte</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!-- Toast notification container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+    <script src="index.js"></script>
+</body>
+
+</html>
