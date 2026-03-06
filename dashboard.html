@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mi Cuenta - ENO Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2547f4",
+                        "background-light": "#f5f6f8",
+                    },
+                    fontFamily: { "display": ["Inter"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: #2547f4;
+            background: rgba(37, 71, 244, 0.03);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 min-h-screen">
+    <div id="toast" class="toast" role="alert"></div>
+    <div class="relative flex h-auto min-h-screen w-full flex-col">
+        <div class="layout-container flex h-full grow flex-col">
+
+            <!-- Header -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 bg-white px-10 py-3 sticky top-0 z-50">
+                <a href="Index.html" class="flex items-center gap-4 text-primary">
+                    <div class="size-6">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-slate-900 text-xl font-black leading-tight tracking-tight">ENO Portal</h2>
+                </a>
+                <div class="flex items-center gap-4">
+                    <span id="header-name" class="text-slate-600 text-sm font-medium"></span>
+                    <button onclick="logout()"
+                        class="flex items-center gap-2 cursor-pointer rounded-lg h-10 px-5 bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-all">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main -->
+            <main class="flex-1 py-12 px-6">
+                <div class="max-w-[900px] mx-auto">
+
+                    <!-- Welcome -->
+                    <div class="mb-10 animate-in">
+                        <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-2">
+                            <span class="text-primary">👋</span> Bienvenido, <span id="user-name"
+                                class="text-primary"></span>
+                        </h1>
+                        <p class="text-slate-500">Aquí puedes ver los detalles de tu inscripción al evento ENO 2026.</p>
+                    </div>
+
+                    <!-- Status Card -->
+                    <div
+                        class="bg-gradient-to-r from-primary to-blue-800 rounded-2xl p-8 text-white mb-8 animate-in delay-1">
+                        <div class="flex flex-wrap items-center justify-between gap-6">
+                            <div>
+                                <p class="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Código de
+                                    Registro</p>
+                                <p id="reg-code" class="text-3xl font-black">—</p>
+                            </div>
+                            <div>
+                                <p class="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Estado de
+                                    Pago</p>
+                                <span id="pago-badge"
+                                    class="inline-flex items-center gap-1 text-white text-sm font-bold px-4 py-2 rounded-full">
+                                    <!-- Se llena con JS -->
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Fecha del
+                                    Evento</p>
+                                <p class="text-xl font-bold">7 de Diciembre, 2026</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Details -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Personal Info -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-7 animate-in delay-2">
+                            <h3 class="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">badge</span>
+                                Datos Personales
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">person</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Nombre Completo</p>
+                                        <p id="detail-nombre" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">cake</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Edad</p>
+                                        <p id="detail-edad" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">phone</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Teléfono</p>
+                                        <p id="detail-telefono" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">email</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Correo Electrónico</p>
+                                        <p id="detail-email" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Event Info -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-7 animate-in delay-3">
+                            <h3 class="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">confirmation_number</span>
+                                Detalles de Inscripción
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">location_city</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Municipio</p>
+                                        <p id="detail-municipio" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">checkroom</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Talla de Camiseta</p>
+                                        <p id="detail-talla" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">calendar_today</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Fecha de Registro</p>
+                                        <p id="detail-fecha" class="text-slate-800 font-semibold">—</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-lg">payments</span>
+                                    <div>
+                                        <p class="text-slate-400 text-xs font-medium">Precio</p>
+                                        <p class="text-slate-800 font-semibold">RD$700 Pesos Dominicanos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Reminder Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-7 mt-6 animate-in delay-3">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary">info</span>
+                            Recordatorio del Evento
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">calendar_today</span>
+                                <div>
+                                    <p class="text-slate-400 text-xs">Fecha</p>
+                                    <p class="text-slate-800 font-bold">7 de Diciembre, 2026</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">schedule</span>
+                                <div>
+                                    <p class="text-slate-400 text-xs">Hora</p>
+                                    <p class="text-slate-800 font-bold">8:00 AM - 5:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">location_on</span>
+                                <div>
+                                    <p class="text-slate-400 text-xs">Lugar</p>
+                                    <p class="text-slate-800 font-bold">Colegio Loyola</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comprobante de Pago Upload -->
+                    <div id="upload-section"
+                        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-7 mt-6 animate-in delay-4">
+                        <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-emerald-600">receipt_long</span>
+                            Comprobante de Pago
+                        </h3>
+                        <p class="text-slate-500 text-sm mb-5">Sube la imagen de tu comprobante de transferencia para
+                            validar tu pago.</p>
+
+                        <!-- Already uploaded state -->
+                        <div id="comprobante-uploaded" class="hidden">
+                            <div
+                                class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex flex-col items-center gap-3">
+                                <span class="material-symbols-outlined text-emerald-600"
+                                    style="font-size: 40px;">task_alt</span>
+                                <p class="font-bold text-emerald-800">Comprobante enviado</p>
+                                <p class="text-emerald-700 text-sm text-center">Tu comprobante fue subido correctamente
+                                    y está en revisión.</p>
+                                <img id="comprobante-preview-existing"
+                                    class="max-w-[300px] rounded-lg border border-emerald-200 mt-2" alt="Comprobante" />
+                            </div>
+                        </div>
+
+                        <!-- Upload zone -->
+                        <div id="upload-zone-container">
+                            <div id="upload-zone" class="upload-zone rounded-xl p-8 text-center cursor-pointer"
+                                onclick="document.getElementById('file-input').click()">
+                                <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp"
+                                    class="hidden" />
+                                <span class="material-symbols-outlined text-slate-300 mb-3"
+                                    style="font-size: 48px;">cloud_upload</span>
+                                <p class="font-bold text-slate-700 mb-1">Arrastra tu imagen aquí o haz clic para
+                                    seleccionar</p>
+                                <p class="text-slate-400 text-xs">Formatos aceptados: JPG, PNG, WebP</p>
+                            </div>
+
+                            <!-- Preview -->
+                            <div id="file-preview" class="hidden mt-4">
+                                <div class="flex items-center gap-4 bg-slate-50 rounded-xl p-4">
+                                    <img id="preview-img"
+                                        class="w-20 h-20 object-cover rounded-lg border border-slate-200"
+                                        alt="Preview" />
+                                    <div class="flex-1">
+                                        <p id="file-name" class="font-semibold text-slate-800 text-sm"></p>
+                                        <p id="file-size" class="text-slate-400 text-xs"></p>
+                                    </div>
+                                    <button onclick="clearFile()"
+                                        class="text-red-400 hover:text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+                                <button id="btn-upload" onclick="uploadComprobante()"
+                                    class="mt-4 w-full flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="material-symbols-outlined">upload</span>
+                                    <span id="btn-upload-text">Subir Comprobante</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="border-t border-slate-200 bg-white py-8 px-10">
+                <div
+                    class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+                    <p>© 2026 ENO Portal. Todos los derechos reservados.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+
+        // Toast
+        function showToast(type, msg) {
+            const t = document.getElementById("toast");
+            t.className = `toast toast-${type} show`;
+            t.textContent = msg;
+            setTimeout(() => t.classList.remove("show"), 4000);
+        }
+
+        // Check session
+        const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
+        let registroId = null;
+
+        if (!session || !session.data || session.role === "admin") {
+            window.location.href = "login.html";
+        } else {
+            const d = session.data;
+            registroId = d.id ? parseInt(d.id.replace("ENO-", "")) : null;
+            document.getElementById("header-name").textContent = d.nombreCompleto;
+            document.getElementById("user-name").textContent = d.nombreCompleto;
+            document.getElementById("reg-code").textContent = d.id || "—";
+            document.getElementById("detail-nombre").textContent = d.nombreCompleto;
+            document.getElementById("detail-edad").textContent = d.edad ? `${d.edad} años` : "—";
+            document.getElementById("detail-telefono").textContent = d.telefono || "—";
+            document.getElementById("detail-email").textContent = d.email || "—";
+            document.getElementById("detail-municipio").textContent = d.municipio || "—";
+            document.getElementById("detail-talla").textContent = (d.tallaCamiseta || "—").toUpperCase();
+            document.getElementById("detail-fecha").textContent = d.fechaRegistro
+                ? new Date(d.fechaRegistro).toLocaleDateString("es-DO", { year: "numeric", month: "long", day: "numeric" })
+                : "—";
+
+            // Payment status badge
+            const estadoPago = d.estadoPago || "pendiente";
+            const badge = document.getElementById("pago-badge");
+            const statusMap = {
+                "pendiente": { bg: "bg-amber-500/90", icon: "schedule", text: "Pago Pendiente" },
+                "en revisión": { bg: "bg-blue-500/90", icon: "hourglass_top", text: "En Revisión" },
+                "verificado": { bg: "bg-emerald-500/90", icon: "verified", text: "Pago Verificado" },
+                "rechazado": { bg: "bg-red-500/90", icon: "cancel", text: "Pago Rechazado" },
+            };
+            const status = statusMap[estadoPago] || statusMap["pendiente"];
+            badge.className = `inline-flex items-center gap-1 ${status.bg} text-white text-sm font-bold px-4 py-2 rounded-full`;
+            badge.innerHTML = `<span class="material-symbols-outlined text-sm">${status.icon}</span> ${status.text}`;
+
+            // Comprobante already uploaded
+            if (d.comprobantePago) {
+                document.getElementById("comprobante-uploaded").classList.remove("hidden");
+                document.getElementById("upload-zone-container").classList.add("hidden");
+                document.getElementById("comprobante-preview-existing").src = `${API_BASE}${d.comprobantePago}`;
+            }
+        }
+
+        // File upload logic
+        let selectedFile = null;
+        const fileInput = document.getElementById("file-input");
+        const uploadZone = document.getElementById("upload-zone");
+
+        // Drag & Drop
+        if (uploadZone) {
+            uploadZone.addEventListener("dragover", (e) => { e.preventDefault(); uploadZone.classList.add("drag-over"); });
+            uploadZone.addEventListener("dragleave", () => uploadZone.classList.remove("drag-over"));
+            uploadZone.addEventListener("drop", (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove("drag-over");
+                if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+            });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener("change", (e) => {
+                if (e.target.files.length) handleFile(e.target.files[0]);
+            });
+        }
+
+        function handleFile(file) {
+            if (!file.type.startsWith("image/")) {
+                showToast("error", "Solo se aceptan imágenes.");
+                return;
+            }
+            selectedFile = file;
+            document.getElementById("file-preview").classList.remove("hidden");
+            document.getElementById("file-name").textContent = file.name;
+            document.getElementById("file-size").textContent = (file.size / 1024).toFixed(1) + " KB";
+            const reader = new FileReader();
+            reader.onload = (e) => document.getElementById("preview-img").src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+
+        function clearFile() {
+            selectedFile = null;
+            fileInput.value = "";
+            document.getElementById("file-preview").classList.add("hidden");
+        }
+
+        async function uploadComprobante() {
+            if (!selectedFile || !registroId) return;
+
+            const btn = document.getElementById("btn-upload");
+            const btnText = document.getElementById("btn-upload-text");
+            btn.disabled = true;
+            btnText.textContent = "Subiendo...";
+
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            try {
+                const res = await fetch(`${API_BASE}/api/registros/${registroId}/comprobante`, {
+                    method: "POST",
+                    body: formData,
+                });
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.detail || "Error al subir comprobante.");
+
+                showToast("success", data.message);
+
+                // Update session
+                const s = JSON.parse(sessionStorage.getItem("eno_session"));
+                s.data.comprobantePago = data.data.comprobantePago;
+                s.data.estadoPago = data.data.estadoPago;
+                sessionStorage.setItem("eno_session", JSON.stringify(s));
+
+                // Update UI
+                setTimeout(() => location.reload(), 1500);
+
+            } catch (err) {
+                showToast("error", err.message);
+                btn.disabled = false;
+                btnText.textContent = "Subir Comprobante";
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem("eno_session");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

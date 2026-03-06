@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Iniciar Sesión - ENO Portal</title>
+    <meta name="description" content="Inicia sesión con tu nombre y teléfono para ver tu registro del evento ENO." />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2547f4",
+                        "background-light": "#f5f6f8",
+                    },
+                    fontFamily: { "display": ["Inter"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 min-h-screen">
+    <!-- Toast container -->
+    <div id="toast" class="toast" role="alert"></div>
+
+    <div class="relative flex h-auto min-h-screen w-full flex-col">
+        <div class="layout-container flex h-full grow flex-col">
+
+            <!-- Header -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 bg-white px-10 py-3 sticky top-0 z-50">
+                <a href="Index.html" class="flex items-center gap-4 text-primary">
+                    <div class="size-6">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-slate-900 text-xl font-black leading-tight tracking-tight">ENO Portal</h2>
+                </a>
+                <div class="flex flex-1 justify-end gap-8">
+                    <nav class="flex items-center gap-8">
+                        <a class="text-slate-600 text-sm font-medium hover:text-primary transition-colors"
+                            href="Index.html">Inicio</a>
+                        <a class="text-slate-600 text-sm font-medium hover:text-primary transition-colors"
+                            href="event-details.html">Detalles del Evento</a>
+                        <a class="text-slate-600 text-sm font-medium hover:text-primary transition-colors"
+                            href="event-details.html#contacto">Contacto</a>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Main -->
+            <main class="flex-1 flex items-center justify-center py-16 px-6">
+                <div class="w-full max-w-md animate-in">
+
+                    <!-- Login Card -->
+                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+                        <!-- Icon -->
+                        <div class="flex justify-center mb-6">
+                            <div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary"
+                                    style="font-size: 36px;">lock_open</span>
+                            </div>
+                        </div>
+
+                        <h1 class="text-2xl font-black tracking-tight text-center text-slate-900 mb-2">Iniciar Sesión
+                        </h1>
+                        <p class="text-slate-500 text-sm text-center mb-8">
+                            Ingresa tu nombre completo y número de teléfono con el que te registraste.
+                        </p>
+
+                        <form id="login-form" class="space-y-5">
+                            <!-- Nombre -->
+                            <div class="flex flex-col gap-2">
+                                <label class="text-slate-700 text-sm font-semibold" for="login-nombre">Nombre
+                                    Completo</label>
+                                <div class="relative">
+                                    <span
+                                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">person</span>
+                                    <input id="login-nombre" type="text"
+                                        class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-12 pl-10 pr-4"
+                                        placeholder="Tu nombre completo" required />
+                                </div>
+                                <span id="error-nombre" class="text-red-500 text-xs font-medium hidden"></span>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="flex flex-col gap-2">
+                                <label class="text-slate-700 text-sm font-semibold" for="login-telefono">Número de
+                                    Teléfono</label>
+                                <div class="relative">
+                                    <span
+                                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">phone</span>
+                                    <input id="login-telefono" type="tel"
+                                        class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-12 pl-10 pr-4"
+                                        placeholder="Tu número de teléfono" required />
+                                </div>
+                                <span id="error-telefono" class="text-red-500 text-xs font-medium hidden"></span>
+                            </div>
+
+                            <!-- Submit -->
+                            <button id="btn-login" type="submit"
+                                class="w-full flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="material-symbols-outlined">login</span>
+                                <span id="btn-login-text">Iniciar Sesión</span>
+                            </button>
+                        </form>
+
+                        <div class="mt-6 text-center">
+                            <p class="text-slate-400 text-xs">¿No tienes cuenta?</p>
+                            <a href="Index.html" class="text-primary font-semibold text-sm hover:underline">Inscríbete
+                                al evento →</a>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="border-t border-slate-200 bg-white py-8 px-10">
+                <div
+                    class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+                    <p>© 2026 ENO Portal. Todos los derechos reservados.</p>
+                    <div class="flex gap-6">
+                        <a class="hover:text-primary" href="#">Política de Privacidad</a>
+                        <a class="hover:text-primary" href="#">Soporte</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+        const form = document.getElementById("login-form");
+        const btnLogin = document.getElementById("btn-login");
+        const btnText = document.getElementById("btn-login-text");
+
+        // Toast
+        function showToast(type, message) {
+            const toast = document.getElementById("toast");
+            toast.className = `toast toast-${type} show`;
+            toast.textContent = message;
+            setTimeout(() => toast.classList.remove("show"), 4000);
+        }
+
+        // Clean phone
+        function cleanPhone(phone) {
+            let c = phone.replace(/[\s\-().]/g, "");
+            if (c.startsWith("+1")) c = c.substring(2);
+            return c;
+        }
+
+        // Handle login
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById("login-nombre").value.trim();
+            const telefono = document.getElementById("login-telefono").value.trim();
+
+            // Validation
+            if (!nombre) { showToast("error", "Ingresa tu nombre completo."); return; }
+            if (!telefono) { showToast("error", "Ingresa tu número de teléfono."); return; }
+
+            // Loading state
+            btnLogin.disabled = true;
+            btnText.textContent = "Verificando...";
+
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        nombreCompleto: nombre,
+                        telefono: cleanPhone(telefono),
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Error al iniciar sesión.");
+                }
+
+                // Save session
+                sessionStorage.setItem("eno_session", JSON.stringify(data));
+
+                // Redirect based on role
+                if (data.role === "admin") {
+                    window.location.href = "admin.html";
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+
+            } catch (error) {
+                showToast("error", error.message);
+            } finally {
+                btnLogin.disabled = false;
+                btnText.textContent = "Iniciar Sesión";
+            }
+        });
+    </script>
+</body>
+
+</html>

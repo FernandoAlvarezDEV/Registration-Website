@@ -37,6 +37,8 @@ class Registro(Base):
     municipio = Column(String(255), nullable=False)
     talla_camiseta = Column(Enum(TallaCamiseta), nullable=False)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
+    comprobante_pago = Column(String(512), nullable=True, default=None)
+    estado_pago = Column(String(20), nullable=False, default="pendiente")
 
     def __repr__(self):
         return f"<Registro(id={self.id}, nombre='{self.nombre_completo}', telefono='{self.telefono}')>"
@@ -111,6 +113,8 @@ class RegistroOut(BaseModel):
     municipio: str
     talla_camiseta: str
     fecha_registro: datetime
+    comprobante_pago: str | None = None
+    estado_pago: str = "pendiente"
 
     class Config:
         from_attributes = True

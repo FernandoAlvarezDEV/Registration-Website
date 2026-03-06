@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Panel de Administración - ENO Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "primary": "#2547f4", "background-light": "#f5f6f8" },
+                    fontFamily: { "display": ["Inter"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.15s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.45s;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 min-h-screen">
+    <div id="toast" class="toast" role="alert"></div>
+
+    <!-- Modal para ver comprobante -->
+    <div id="modal-comprobante" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden">
+            <div class="flex items-center justify-between p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">receipt_long</span>
+                    Comprobante de Pago
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-5">
+                <p id="modal-user-name" class="font-bold text-slate-800 mb-1"></p>
+                <p id="modal-user-phone" class="text-slate-400 text-xs font-mono mb-4"></p>
+                <img id="modal-img" class="w-full rounded-xl border border-slate-200" alt="Comprobante de pago" />
+            </div>
+            <div class="flex gap-3 p-5 border-t border-slate-100 bg-slate-50">
+                <button onclick="setEstado('verificado')"
+                    class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-700 transition-all">
+                    <span class="material-symbols-outlined text-sm">check_circle</span> Aprobar Pago
+                </button>
+                <button onclick="setEstado('rechazado')"
+                    class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-all">
+                    <span class="material-symbols-outlined text-sm">cancel</span> Rechazar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="relative flex h-auto min-h-screen w-full flex-col">
+        <div class="layout-container flex h-full grow flex-col">
+
+            <!-- Header -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 bg-white px-10 py-3 sticky top-0 z-50">
+                <a href="Index.html" class="flex items-center gap-4 text-primary">
+                    <div class="size-6">
+                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-slate-900 text-xl font-black leading-tight tracking-tight">ENO Portal</h2>
+                </a>
+                <div class="flex items-center gap-4">
+                    <span
+                        class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">shield</span> Admin
+                    </span>
+                    <button onclick="logout()"
+                        class="flex items-center gap-2 cursor-pointer rounded-lg h-10 px-5 bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-all">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main -->
+            <main class="flex-1 py-12 px-6">
+                <div class="max-w-[1200px] mx-auto">
+
+                    <!-- Title -->
+                    <div class="mb-8 animate-in">
+                        <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-2">
+                            <span class="material-symbols-outlined text-primary align-middle"
+                                style="font-size: 32px;">admin_panel_settings</span>
+                            Panel de Administración
+                        </h1>
+                        <p class="text-slate-500">Gestiona los registros y pagos del evento ENO 2026.</p>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div id="stats-row" class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-8 animate-in delay-1">
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Inscritos
+                            </p>
+                            <p id="stat-total" class="text-3xl font-black text-slate-900">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Pagos Verificados
+                            </p>
+                            <p id="stat-verificados" class="text-3xl font-black text-emerald-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">En Revisión</p>
+                            <p id="stat-revision" class="text-3xl font-black text-blue-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Pendientes</p>
+                            <p id="stat-pendientes" class="text-3xl font-black text-amber-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Ingresos Verif.
+                            </p>
+                            <p id="stat-ingresos" class="text-3xl font-black text-emerald-600">RD$0</p>
+                        </div>
+                    </div>
+
+                    <!-- Comprobantes pendientes de revisión -->
+                    <div id="comprobantes-section"
+                        class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 animate-in delay-2 hidden">
+                        <div class="p-6 border-b border-slate-100">
+                            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-amber-500">pending_actions</span>
+                                Comprobantes Pendientes de Revisión
+                                <span id="comprobantes-count"
+                                    class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-0.5 rounded-full ml-2">0</span>
+                            </h3>
+                        </div>
+                        <div id="comprobantes-list" class="divide-y divide-slate-100">
+                            <!-- Se llena con JS -->
+                        </div>
+                    </div>
+
+                    <!-- Filters + Table -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 animate-in delay-3">
+                        <div class="p-6 border-b border-slate-100">
+                            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary">group</span>
+                                    Registros
+                                </h3>
+                                <button onclick="loadData()"
+                                    class="flex items-center gap-1 text-primary text-sm font-bold hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-sm">refresh</span>
+                                    Actualizar
+                                </button>
+                            </div>
+
+                            <!-- Filtros -->
+                            <div class="flex flex-wrap gap-3">
+                                <div class="flex-1 min-w-[200px]">
+                                    <div class="relative">
+                                        <span
+                                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                                        <input id="filter-search" type="text"
+                                            placeholder="Buscar por nombre, teléfono o email..."
+                                            class="w-full rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-10 pl-10 pr-4 text-sm"
+                                            oninput="applyFilters()" />
+                                    </div>
+                                </div>
+                                <select id="filter-pago"
+                                    class="rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-10 px-3 text-sm"
+                                    onchange="applyFilters()">
+                                    <option value="">Todos los estados</option>
+                                    <option value="pendiente">⏳ Pendiente</option>
+                                    <option value="en revisión">🔍 En Revisión</option>
+                                    <option value="verificado">✅ Verificado</option>
+                                    <option value="rechazado">❌ Rechazado</option>
+                                </select>
+                                <select id="filter-talla"
+                                    class="rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-10 px-3 text-sm"
+                                    onchange="applyFilters()">
+                                    <option value="">Todas las tallas</option>
+                                    <option value="xs">XS</option>
+                                    <option value="s">S</option>
+                                    <option value="m">M</option>
+                                    <option value="l">L</option>
+                                    <option value="xl">XL</option>
+                                </select>
+                                <select id="filter-municipio"
+                                    class="rounded-lg border-slate-300 focus:border-primary focus:ring-primary h-10 px-3 text-sm max-w-[200px]"
+                                    onchange="applyFilters()">
+                                    <option value="">Todos los municipios</option>
+                                    <!-- Se llena con JS -->
+                                </select>
+                            </div>
+                            <p id="filter-count" class="text-slate-400 text-xs mt-3"></p>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-5 py-3 text-left font-semibold">ID</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Nombre</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Teléfono</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Email</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Municipio</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Talla</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Estado Pago</th>
+                                        <th class="px-5 py-3 text-left font-semibold">Comprobante</th>
+                                        <th class="px-5 py-3 text-center font-semibold">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body" class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td colspan="9" class="px-6 py-12 text-center text-slate-400">
+                                            <span class="material-symbols-outlined mb-2"
+                                                style="font-size: 40px;">hourglass_empty</span>
+                                            <p>Cargando registros...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="border-t border-slate-200 bg-white py-8 px-10">
+                <div
+                    class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+                    <p>© 2026 ENO Portal. Panel de Administración.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+        let allRegistros = [];
+        let currentModalId = null;
+
+        // Check admin session
+        const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
+        if (!session || session.role !== "admin") {
+            window.location.href = "login.html";
+        }
+
+        // Toast
+        function showToast(type, msg) {
+            const t = document.getElementById("toast");
+            t.className = `toast toast-${type} show`;
+            t.textContent = msg;
+            setTimeout(() => t.classList.remove("show"), 3000);
+        }
+
+        // Estado badge helper
+        function estadoBadge(estado) {
+            const map = {
+                "pendiente": { bg: "bg-amber-100 text-amber-800", icon: "schedule", label: "Pendiente" },
+                "en revisión": { bg: "bg-blue-100 text-blue-800", icon: "hourglass_top", label: "En Revisión" },
+                "verificado": { bg: "bg-emerald-100 text-emerald-800", icon: "verified", label: "Verificado" },
+                "rechazado": { bg: "bg-red-100 text-red-800", icon: "cancel", label: "Rechazado" },
+            };
+            const s = map[estado] || map["pendiente"];
+            return `<span class="inline-flex items-center gap-1 ${s.bg} text-xs font-bold px-2 py-1 rounded-full">
+                <span class="material-symbols-outlined text-xs">${s.icon}</span>${s.label}
+            </span>`;
+        }
+
+        // Load registrations
+        async function loadRegistrations() {
+            try {
+                const res = await fetch(`${API_BASE}/api/registros?limit=200`);
+                allRegistros = await res.json();
+                populateMunicipioFilter();
+                renderComprobantes();
+                applyFilters();
+                updateStats();
+            } catch (e) {
+                console.error("Error loading registrations:", e);
+                document.getElementById("table-body").innerHTML = `
+                    <tr><td colspan="9" class="px-6 py-12 text-center text-red-400">
+                        <span class="material-symbols-outlined mb-2" style="font-size: 40px;">error</span>
+                        <p>Error al cargar los registros.</p>
+                    </td></tr>`;
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = allRegistros.length;
+            const verificados = allRegistros.filter(r => r.estado_pago === "verificado").length;
+            const enRevision = allRegistros.filter(r => r.estado_pago === "en revisión").length;
+            const pendientes = allRegistros.filter(r => r.estado_pago === "pendiente").length;
+
+            document.getElementById("stat-total").textContent = total;
+            document.getElementById("stat-verificados").textContent = verificados;
+            document.getElementById("stat-revision").textContent = enRevision;
+            document.getElementById("stat-pendientes").textContent = pendientes;
+            document.getElementById("stat-ingresos").textContent = `RD$${(verificados * 700).toLocaleString()}`;
+        }
+
+        // Populate municipio filter
+        function populateMunicipioFilter() {
+            const municipios = [...new Set(allRegistros.map(r => r.municipio))].sort();
+            const select = document.getElementById("filter-municipio");
+            select.innerHTML = '<option value="">Todos los municipios</option>' +
+                municipios.map(m => `<option value="${m}">${m}</option>`).join("");
+        }
+
+        // Render comprobantes pending review
+        function renderComprobantes() {
+            const pendientes = allRegistros.filter(r => r.comprobante_pago && r.estado_pago === "en revisión");
+            const section = document.getElementById("comprobantes-section");
+            const list = document.getElementById("comprobantes-list");
+            const count = document.getElementById("comprobantes-count");
+
+            if (pendientes.length === 0) {
+                section.classList.add("hidden");
+                return;
+            }
+
+            section.classList.remove("hidden");
+            count.textContent = pendientes.length;
+
+            list.innerHTML = pendientes.map(r => `
+                <div class="flex items-center justify-between p-5 hover:bg-slate-50 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-blue-600">receipt_long</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800">${r.nombre_completo}</p>
+                            <p class="text-slate-400 text-xs font-mono">${r.telefono} · ENO-${r.id}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        ${estadoBadge(r.estado_pago)}
+                        <button onclick="openModal(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}', '${r.telefono}', '${r.comprobante_pago}')"
+                            class="flex items-center gap-1 bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary/90 transition-all">
+                            <span class="material-symbols-outlined text-sm">visibility</span>
+                            Revisar
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Apply filters to table
+        function applyFilters() {
+            const search = document.getElementById("filter-search").value.toLowerCase();
+            const pagoFilter = document.getElementById("filter-pago").value;
+            const tallaFilter = document.getElementById("filter-talla").value;
+            const municipioFilter = document.getElementById("filter-municipio").value;
+
+            const filtered = allRegistros.filter(r => {
+                const matchSearch = !search ||
+                    r.nombre_completo.toLowerCase().includes(search) ||
+                    r.telefono.includes(search) ||
+                    r.email.toLowerCase().includes(search);
+                const matchPago = !pagoFilter || r.estado_pago === pagoFilter;
+                const matchTalla = !tallaFilter || r.talla_camiseta === tallaFilter;
+                const matchMunicipio = !municipioFilter || r.municipio === municipioFilter;
+                return matchSearch && matchPago && matchTalla && matchMunicipio;
+            });
+
+            document.getElementById("filter-count").textContent =
+                `Mostrando ${filtered.length} de ${allRegistros.length} registros`;
+
+            const tbody = document.getElementById("table-body");
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="px-6 py-12 text-center text-slate-400">
+                    <span class="material-symbols-outlined mb-2" style="font-size: 40px;">search_off</span>
+                    <p>No se encontraron registros con estos filtros.</p>
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(r => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-5 py-3.5 font-bold text-primary text-xs">ENO-${r.id}</td>
+                    <td class="px-5 py-3.5 font-semibold text-slate-800">${r.nombre_completo}</td>
+                    <td class="px-5 py-3.5 text-slate-600 font-mono text-xs">${r.telefono}</td>
+                    <td class="px-5 py-3.5 text-slate-600 text-xs">${r.email}</td>
+                    <td class="px-5 py-3.5 text-slate-600 text-xs">${r.municipio}</td>
+                    <td class="px-5 py-3.5">
+                        <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">${r.talla_camiseta.toUpperCase()}</span>
+                    </td>
+                    <td class="px-5 py-3.5">${estadoBadge(r.estado_pago)}</td>
+                    <td class="px-5 py-3.5">
+                        ${r.comprobante_pago
+                    ? `<button onclick="openModal(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}', '${r.telefono}', '${r.comprobante_pago}')"
+                                class="text-primary hover:bg-primary/5 p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold">
+                                <span class="material-symbols-outlined text-sm">image</span>Ver
+                            </button>`
+                    : `<span class="text-slate-300 text-xs">Sin enviar</span>`
+                }
+                    </td>
+                    <td class="px-5 py-3.5 text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            ${r.comprobante_pago ? `
+                                <button onclick="quickSetEstado(${r.id}, 'verificado')" title="Aprobar pago"
+                                    class="text-emerald-500 hover:bg-emerald-50 p-1.5 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                                </button>
+                                <button onclick="quickSetEstado(${r.id}, 'rechazado')" title="Rechazar pago"
+                                    class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                </button>
+                            ` : ''}
+                            <button onclick="deleteRegistro(${r.id})" title="Eliminar registro"
+                                class="text-slate-400 hover:bg-red-50 hover:text-red-500 p-1.5 rounded-lg transition-colors">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        // Modal functions
+        function openModal(id, name, phone, imgPath) {
+            currentModalId = id;
+            document.getElementById("modal-user-name").textContent = name;
+            document.getElementById("modal-user-phone").textContent = `${phone} · ENO-${id}`;
+            document.getElementById("modal-img").src = `${API_BASE}${imgPath}`;
+            document.getElementById("modal-comprobante").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("modal-comprobante").classList.remove("active");
+            currentModalId = null;
+        }
+
+        // Set payment status
+        async function setEstado(estado) {
+            if (!currentModalId) return;
+            await quickSetEstado(currentModalId, estado);
+            closeModal();
+        }
+
+        async function quickSetEstado(id, estado) {
+            try {
+                const res = await fetch(`${API_BASE}/api/registros/${id}/estado-pago`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ estado_pago: estado }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail);
+                showToast("success", data.message);
+                loadData();
+            } catch (e) {
+                showToast("error", e.message);
+            }
+        }
+
+        // Delete registration
+        async function deleteRegistro(id) {
+            if (!confirm(`¿Estás seguro de eliminar el registro ENO-${id}?`)) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/registros/${id}`, { method: "DELETE" });
+                if (res.ok) {
+                    showToast("success", `Registro ENO-${id} eliminado.`);
+                    loadData();
+                } else {
+                    showToast("error", "Error al eliminar el registro.");
+                }
+            } catch (e) {
+                showToast("error", "Error de conexión.");
+            }
+        }
+
+        // Load all data
+        function loadData() {
+            loadRegistrations();
+        }
+
+        function logout() {
+            sessionStorage.removeItem("eno_session");
+            window.location.href = "login.html";
+        }
+
+        // Init
+        loadData();
+    </script>
+</body>
+
+</html>

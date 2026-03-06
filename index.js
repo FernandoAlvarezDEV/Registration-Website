@@ -74,8 +74,7 @@ const validators = {
     },
 
     municipio(value) {
-        if (!value.trim()) return "El municipio es obligatorio.";
-        if (value.trim().length < 2) return "El municipio debe tener al menos 2 caracteres.";
+        if (!value) return "Debes seleccionar un municipio.";
         return null;
     },
 
@@ -294,15 +293,27 @@ async function checkExistingRegistration(telefono) {
 // ─────────────────────────────────────────────────────────────
 
 /**
+ * Limpia el número de teléfono: elimina espacios, guiones, paréntesis, puntos y el prefijo +1.
+ */
+function cleanPhoneNumber(phone) {
+    let cleaned = phone.replace(/[\s\-().]/g, "");
+    // Eliminar prefijo +1 si existe
+    if (cleaned.startsWith("+1")) {
+        cleaned = cleaned.substring(2);
+    }
+    return cleaned;
+}
+
+/**
  * Recolecta los datos del formulario en un objeto limpio.
  */
 function getFormData() {
     return {
         nombreCompleto: fields.nombre.input.value.trim(),
         edad: parseInt(fields.edad.input.value, 10),
-        telefono: fields.telefono.input.value.trim(),
+        telefono: cleanPhoneNumber(fields.telefono.input.value.trim()),
         email: fields.email.input.value.trim(),
-        municipio: fields.municipio.input.value.trim(),
+        municipio: fields.municipio.input.value,
         tallaCamiseta: fields.talla.input.value,
     };
 }

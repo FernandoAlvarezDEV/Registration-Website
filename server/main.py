@@ -7,14 +7,35 @@ Ejecutar con:
     uvicorn main:app --reload --host 0.0.0.0 --port 8000
 """
 
-from fastapi import FastAPI, Depends, HTTPException, Query
+from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from pydantic import BaseModel
+import re
+import os
+import uuid
+from pathlib import Path
 
 from config import settings
 from database import get_db, init_db
 from models import Registro, RegistroCreate, RegistroResponse, RegistroOut
+
+
+# ── Utilidad: Limpiar teléfono ──
+def clean_phone(phone: str) -> str:
+    """Elimina espacios, guiones, paréntesis, puntos y el prefijo +1."""
+    cleaned = re.sub(r'[\s\-().]+', '', phone)
+    if cleaned.startswith('+1'):
+        cleaned = cleaned[2:]
+    return cleaned
+
+
+# ── Modelo de Login ──
+class LoginRequest(BaseModel):
+    nombreCompleto: str
+    telefono: str
 
 
 # ─────────────────────────────────────────────
@@ -23,7 +44,7 @@ from models import Registro, RegistroCreate, RegistroResponse, RegistroOut
 
 app = FastAPI(
     title="ENO Portal API",
-    description="API para la inscripción al evento corporativo ENO - 7 de Diciembre, 2026",
+    description="API para la inscripción al evento ENO del grupo religioso Onda - 7 de Diciembre, 2026",
     version="1.0.0",
     docs_url="/docs",       # Swagger UI en /docs
     redoc_url="/redoc",     # ReDoc en /redoc
@@ -69,11 +90,14 @@ def crear_registro(registro: RegistroCreate, db: Session = Depends(get_db)):
     Recibe los datos del formulario del frontend y los guarda en MySQL.
     Si el teléfono ya existe, devuelve un error 409 (Conflict).
     """
+    # Limpiar teléfono antes de guardar
+    telefono_limpio = clean_phone(registro.telefono)
+
     # Crear el modelo de base de datos a partir de los datos del frontend
     nuevo_registro = Registro(
         nombre_completo=registro.nombreCompleto,
         edad=registro.edad,
-        telefono=registro.telefono,
+        telefono=telefono_limpio,
         email=registro.email,
         municipio=registro.municipio,
         talla_camiseta=registro.tallaCamiseta,
@@ -200,6 +224,159 @@ def eliminar_registro(registro_id: int, db: Session = Depends(get_db)):
     db.delete(registro)
     db.commit()
     return {"success": True, "message": f"Registro ENO-{registro_id} eliminado."}
+
+
+@app.post("/api/login", tags=["Auth"])
+def login(credentials: LoginRequest, db: Session = Depends(get_db)):
+    """
+    Login con nombre completo y teléfono.
+    Credenciales de admin: ADMIN@ENO.COM / 8498888888
+    """
+    telefono_limpio = clean_phone(credentials.telefono)
+
+    # Check admin credentials
+    if credentials.nombreCompleto.strip().upper() == "ADMIN@ENO.COM" and telefono_limpio == "8498888888":
+        return {
+            "success": True,
+            "role": "admin",
+            "message": "Bienvenido, Administrador.",
+            "data": {
+                "nombreCompleto": "Administrador ENO",
+                "telefono": "8498888888",
+                "isAdmin": True,
+            },
+        }
+
+    # Buscar el registro por teléfono
+    registro = db.query(Registro).filter(Registro.telefono == telefono_limpio).first()
+
+    if not registro:
+        raise HTTPException(
+            status_code=404,
+            detail="No se encontró un registro con ese número de teléfono.",
+        )
+
+    # Verificar que el nombre coincida (case-insensitive)
+    if registro.nombre_completo.strip().lower() != credentials.nombreCompleto.strip().lower():
+        raise HTTPException(
+            status_code=401,
+            detail="El nombre no coincide con el registro asociado a ese teléfono.",
+        )
+
+    return {
+        "success": True,
+        "role": "user",
+        "message": f"Bienvenido, {registro.nombre_completo}.",
+        "data": {
+            "id": f"ENO-{registro.id}",
+            "nombreCompleto": registro.nombre_completo,
+            "edad": registro.edad,
+            "telefono": registro.telefono,
+            "email": registro.email,
+            "municipio": registro.municipio,
+            "tallaCamiseta": registro.talla_camiseta.value,
+            "fechaRegistro": str(registro.fecha_registro),
+            "comprobantePago": registro.comprobante_pago,
+            "estadoPago": registro.estado_pago,
+            "isAdmin": False,
+        },
+    }
+
+
+@app.post("/api/registros/{registro_id}/comprobante", tags=["Pagos"])
+async def subir_comprobante(
+    registro_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Sube la imagen del comprobante de pago para un registro.
+    Acepta imágenes JPG, PNG y WebP.
+    """
+    registro = db.query(Registro).filter(Registro.id == registro_id).first()
+    if not registro:
+        raise HTTPException(status_code=404, detail="Registro no encontrado.")
+
+    # Validar tipo de archivo
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/jpg"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail="Formato no permitido. Solo se aceptan imágenes JPG, PNG o WebP.",
+        )
+
+    # Crear directorio de uploads si no existe
+    uploads_dir = Path(__file__).parent / "uploads"
+    uploads_dir.mkdir(exist_ok=True)
+
+    # Generar nombre único para el archivo
+    file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    filename = f"comprobante_{registro_id}_{uuid.uuid4().hex[:8]}.{file_ext}"
+    file_path = uploads_dir / filename
+
+    # Guardar archivo
+    content = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(content)
+
+    # Actualizar registro en la base de datos
+    registro.comprobante_pago = f"/uploads/{filename}"
+    registro.estado_pago = "en revisión"
+    db.commit()
+    db.refresh(registro)
+
+    return {
+        "success": True,
+        "message": "Comprobante subido exitosamente. Tu pago será verificado pronto.",
+        "data": {
+            "comprobantePago": registro.comprobante_pago,
+            "estadoPago": registro.estado_pago,
+        },
+    }
+
+
+class UpdateEstadoPago(BaseModel):
+    estado_pago: str
+
+
+@app.patch("/api/registros/{registro_id}/estado-pago", tags=["Pagos"])
+def actualizar_estado_pago(
+    registro_id: int,
+    body: UpdateEstadoPago,
+    db: Session = Depends(get_db),
+):
+    """Actualiza el estado de pago de un registro (Admin)."""
+    estados_validos = ["pendiente", "en revisión", "verificado", "rechazado"]
+    if body.estado_pago not in estados_validos:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Estado no válido. Opciones: {', '.join(estados_validos)}",
+        )
+
+    registro = db.query(Registro).filter(Registro.id == registro_id).first()
+    if not registro:
+        raise HTTPException(status_code=404, detail="Registro no encontrado.")
+
+    registro.estado_pago = body.estado_pago
+    db.commit()
+    db.refresh(registro)
+
+    return {
+        "success": True,
+        "message": f"Estado de pago actualizado a '{body.estado_pago}'.",
+        "data": {
+            "id": registro.id,
+            "estadoPago": registro.estado_pago,
+        },
+    }
+
+
+# ─────────────────────────────────────────────
+# 📁 ARCHIVOS ESTÁTICOS (uploads)
+# ─────────────────────────────────────────────
+uploads_path = Path(__file__).parent / "uploads"
+uploads_path.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_path)), name="uploads")
 
 
 # ─────────────────────────────────────────────

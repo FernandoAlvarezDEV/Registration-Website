@@ -226,12 +226,152 @@
                         </div>
                     </div>
 
+                    <!-- Formas de Pago -->
+                    <div
+                        class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-left mt-8 animate-fade-in-up delay-3">
+                        <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-emerald-600">account_balance</span>
+                            Formas de Pago
+                        </h3>
+                        <p class="text-slate-500 text-sm mb-6">Realiza tu pago mediante transferencia bancaria siguiendo
+                            estas instrucciones:</p>
+
+                        <!-- Bank Details Card -->
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-6">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="material-symbols-outlined text-emerald-700">assured_workload</span>
+                                <p class="font-bold text-emerald-900 text-base">Banco Popular Dominicano</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p
+                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
+                                        Titular de la cuenta</p>
+                                    <p class="text-emerald-900 font-bold text-base">Hamlet</p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
+                                        Número de Cuenta</p>
+                                    <p class="text-emerald-900 font-bold text-base font-mono">123-456789-0</p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
+                                        Cédula</p>
+                                    <p class="text-emerald-900 font-bold text-base font-mono">001-1234567-8</p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
+                                        Monto</p>
+                                    <p class="text-emerald-900 font-bold text-base">RD$700.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transfer Instructions -->
+                        <div class="space-y-4 mb-6">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-lg">checklist_rtl</span>
+                                Instrucciones para la transferencia:
+                            </h4>
+                            <div class="flex gap-3 items-start">
+                                <div
+                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="text-primary font-black text-xs">1</span>
+                                </div>
+                                <p class="text-slate-600 text-sm">Ingresa a tu banca en línea o aplicación del banco y
+                                    selecciona <strong>Transferencia</strong>.</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div
+                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="text-primary font-black text-xs">2</span>
+                                </div>
+                                <p class="text-slate-600 text-sm">Ingresa los datos de la cuenta indicados arriba (Banco
+                                    Popular, cuenta de <strong>Hamlet</strong>).</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div
+                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="text-primary font-black text-xs">3</span>
+                                </div>
+                                <p class="text-slate-600 text-sm">En el campo de <strong>nombre del remitente</strong>,
+                                    coloca tu <strong>Nombre Completo</strong> tal como te registraste.</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div
+                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-50 flex items-center justify-center">
+                                    <span class="text-amber-600 font-black text-xs">4</span>
+                                </div>
+                                <div>
+                                    <p class="text-slate-600 text-sm">En la <strong>descripción o concepto</strong> de
+                                        la
+                                        transferencia escribe:</p>
+                                    <div
+                                        class="bg-slate-100 rounded-lg px-4 py-2 mt-2 font-mono text-sm text-slate-800">
+                                        <strong>Tu Nombre Completo - Tu Municipio</strong>
+                                    </div>
+                                    <p class="text-slate-400 text-xs mt-1">Ejemplo: Juan Pérez - Santo Domingo Este</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div
+                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span class="text-primary font-black text-xs">5</span>
+                                </div>
+                                <p class="text-slate-600 text-sm">Confirma la transferencia por el monto de
+                                    <strong>RD$700.00</strong>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Important notice -->
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3 items-start">
+                            <span class="material-symbols-outlined text-amber-600 mt-0.5">warning</span>
+                            <div>
+                                <p class="font-bold text-amber-900 text-sm mb-1">¡Importante!</p>
+                                <p class="text-amber-800 text-sm">Una vez realizada la transferencia, <strong>inicia
+                                        sesión</strong> en tu cuenta y <strong>sube la imagen del comprobante</strong>
+                                    de la
+                                    transferencia en tu Dashboard para validar tu pago. Sin el comprobante, tu
+                                    inscripción
+                                    no será confirmada.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login CTA -->
+                    <div
+                        class="bg-primary/5 border border-primary/10 rounded-2xl p-8 text-center mt-8 animate-fade-in-up delay-4">
+                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size: 28px;">account_circle</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">¿Quieres ver el estado de tu inscripción?</h3>
+                        <p class="text-slate-500 text-sm mb-5 max-w-md mx-auto">
+                            Inicia sesión con tu nombre y número de teléfono para consultar el estatus de tu registro,
+                            ver tus datos de inscripción y obtener más información sobre el evento.
+                        </p>
+                        <a href="login.html"
+                            class="inline-flex items-center gap-2 bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                            <span class="material-symbols-outlined">login</span>
+                            Iniciar Sesión
+                        </a>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up delay-4">
                         <a href="Index.html"
                             class="inline-flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
                             <span class="material-symbols-outlined">home</span>
                             Volver al Inicio
+                        </a>
+                        <a href="login.html"
+                            class="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-4 px-8 rounded-lg shadow-sm border border-primary/20 hover:bg-primary/5 transition-all">
+                            <span class="material-symbols-outlined">login</span>
+                            Mi Cuenta
                         </a>
                         <a href="https://www.google.com/maps/place/Colegio+Loyola/@18.45105,-69.92322,17z/data=!4m6!3m5!1s0x8eaf89d0093af269:0xa5c4f0fc8ef03d00!8m2!3d18.45105!4d-69.92322!16s"
                             target="_blank" rel="noopener noreferrer"
