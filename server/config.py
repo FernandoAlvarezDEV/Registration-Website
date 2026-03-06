@@ -22,6 +22,10 @@ class Settings:
     SERVER_HOST: str = os.getenv("SERVER_HOST", "0.0.0.0")
     SERVER_PORT: int = int(os.getenv("SERVER_PORT", "8000"))
 
+    # ── Admin ──
+    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "ADMIN@ENO.COM")
+    ADMIN_PHONE: str = os.getenv("ADMIN_PHONE", "8498888888")
+
     # ── CORS ──
     ALLOWED_ORIGINS: list[str] = os.getenv(
         "ALLOWED_ORIGINS", "http://localhost:5500,http://127.0.0.1:5500"

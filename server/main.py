@@ -93,12 +93,28 @@ def crear_registro(registro: RegistroCreate, db: Session = Depends(get_db)):
     # Limpiar teléfono antes de guardar
     telefono_limpio = clean_phone(registro.telefono)
 
+    # Verificar si ya existe un registro con ese teléfono
+    existente_tel = db.query(Registro).filter(Registro.telefono == telefono_limpio).first()
+    if existente_tel:
+        raise HTTPException(
+            status_code=409,
+            detail="Ya existe una inscripción con este número de teléfono. Si ya te inscribiste, inicia sesión para ver tu perfil.",
+        )
+
+    # Verificar si ya existe un registro con ese correo
+    existente_email = db.query(Registro).filter(Registro.email == registro.email.strip().lower()).first()
+    if existente_email:
+        raise HTTPException(
+            status_code=409,
+            detail="Ya existe una inscripción con este correo electrónico. Si ya te inscribiste, inicia sesión para ver tu perfil.",
+        )
+
     # Crear el modelo de base de datos a partir de los datos del frontend
     nuevo_registro = Registro(
         nombre_completo=registro.nombreCompleto,
         edad=registro.edad,
         telefono=telefono_limpio,
-        email=registro.email,
+        email=registro.email.strip().lower(),
         municipio=registro.municipio,
         talla_camiseta=registro.tallaCamiseta,
     )
@@ -111,7 +127,7 @@ def crear_registro(registro: RegistroCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(
             status_code=409,
-            detail="Este número de teléfono ya está registrado para el evento.",
+            detail="Ya existe una inscripción con estos datos. Si ya te inscribiste, inicia sesión para ver tu perfil.",
         )
     except Exception as e:
         db.rollback()
@@ -230,12 +246,11 @@ def eliminar_registro(registro_id: int, db: Session = Depends(get_db)):
 def login(credentials: LoginRequest, db: Session = Depends(get_db)):
     """
     Login con nombre completo y teléfono.
-    Credenciales de admin: ADMIN@ENO.COM / 8498888888
     """
     telefono_limpio = clean_phone(credentials.telefono)
 
     # Check admin credentials
-    if credentials.nombreCompleto.strip().upper() == "ADMIN@ENO.COM" and telefono_limpio == "8498888888":
+    if credentials.nombreCompleto.strip().upper() == settings.ADMIN_EMAIL.strip().upper() and telefono_limpio == settings.ADMIN_PHONE:
         return {
             "success": True,
             "role": "admin",
@@ -305,6 +320,14 @@ async def subir_comprobante(
             detail="Formato no permitido. Solo se aceptan imágenes JPG, PNG o WebP.",
         )
 
+    # Leer archivo y validar tamaño máximo (5 MB = 5 * 1024 * 1024 bytes)
+    content = await file.read()
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status_code=400,
+            detail="El archivo es demasiado grande. El máximo permitido es 5 MB.",
+        )
+
     # Crear directorio de uploads si no existe
     uploads_dir = Path(__file__).parent / "uploads"
     uploads_dir.mkdir(exist_ok=True)
@@ -315,7 +338,6 @@ async def subir_comprobante(
     file_path = uploads_dir / filename
 
     # Guardar archivo
-    content = await file.read()
     with open(file_path, "wb") as f:
         f.write(content)
 
