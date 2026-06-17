@@ -13,6 +13,9 @@ services:
     region: oregon
     plan: free
 
+    # Fijar Python 3.11 — Python 3.14 no tiene wheels para pydantic-core
+    pythonVersion: "3.11.9"
+
     # Comandos de build e inicio (rutas relativas a la raíz del repo)
     buildCommand: pip install -r server/requirements.txt
     startCommand: cd server && uvicorn main:app --host 0.0.0.0 --port $PORT
@@ -44,10 +47,8 @@ services:
     region: oregon
     plan: free
 
-    # Directorio del frontend
     staticPublishPath: frontend
 
-    # Reglas de enrutamiento: redirige 404 a Index.html
     routes:
       - type: rewrite
         source: /*
