@@ -1,0 +1,3 @@
+# Este archivo existe como referencia para herramientas que buscan requirements.txt en la raíz.
+# Las dependencias reales están en server/requirements.txt
+-r server/requirements.txt
