@@ -1,0 +1,60 @@
+# ============================================================
+# Render Infrastructure-as-Code
+# Despliega: Backend (Web Service) + Frontend (Static Site)
+# Documentación: https://render.com/docs/render-yaml
+# ============================================================
+
+services:
+
+  # ── Backend: FastAPI API ─────────────────────────────────
+  - type: web
+    name: eno-portal-backend
+    runtime: python
+    region: oregon
+    plan: free
+
+    # Directorio raíz del código fuente del backend
+    rootDir: server
+
+    # Comandos de build e inicio
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    # Variables de entorno requeridas en producción
+    # Agrégalas manualmente en el dashboard de Render o usa el bloque envVars
+    envVars:
+      - key: DB_HOST
+        sync: false          # Deberás completar este valor en el dashboard de Render
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: "eno_portal"
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PHONE
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false          # Ej: https://eno-portal-frontend.onrender.com
+
+  # ── Frontend: HTML Estático ──────────────────────────────
+  - type: web
+    name: eno-portal-frontend
+    runtime: static
+    region: oregon
+    plan: free
+
+    # Directorio raíz del código fuente del frontend
+    rootDir: frontend
+
+    # Archivo raíz del sitio
+    staticPublishPath: .
+
+    # Reglas de enrutamiento: redirige 404 a Index.html (SPA-like)
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /Index.html

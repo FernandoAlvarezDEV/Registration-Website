@@ -77,257 +77,99 @@
                         <div
                             class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
                             <form id="registration-form" class="space-y-6">
+                                <!-- Fila 1: Nombre Completo + Teléfono -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="flex flex-col gap-2">
-                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Nombre
-                                            Completo</label>
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-nombre">Nombre Completo</label>
                                         <input id="input-nombre"
                                             class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
                                             placeholder="Ej: Juan Pérez" type="text" required />
                                         <span id="error-nombre" class="text-red-500 text-xs font-medium hidden"></span>
                                     </div>
                                     <div class="flex flex-col gap-2">
-                                        <label
-                                            class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Edad</label>
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-telefono">Teléfono</label>
+                                        <input id="input-telefono"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="809-555-1234" type="tel" required />
+                                        <span id="error-telefono" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                </div>
+                                <!-- Fila 2: Edad + No. Onda -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-edad">Edad</label>
                                         <input id="input-edad"
                                             class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
                                             placeholder="25" type="number" min="1" max="120" required />
                                         <span id="error-edad" class="text-red-500 text-xs font-medium hidden"></span>
                                     </div>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="flex flex-col gap-2">
-                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Número
-                                            de Teléfono</label>
-                                        <input id="input-telefono"
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-noonda">No. Onda</label>
+                                        <input id="input-noonda"
                                             class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
-                                            placeholder="+1 234 567 890" type="tel" required />
-                                        <span id="error-telefono"
-                                            class="text-red-500 text-xs font-medium hidden"></span>
+                                            placeholder="Ej: 42" type="text" required />
+                                        <span id="error-noonda" class="text-red-500 text-xs font-medium hidden"></span>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Fila 3: Correo Electrónico -->
+                                <div class="grid grid-cols-1 gap-6">
                                     <div class="flex flex-col gap-2">
-                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Correo
-                                            Electrónico</label>
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-email">Correo Electrónico</label>
                                         <input id="input-email"
                                             class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
                                             placeholder="ejemplo@correo.com" type="email" required />
                                         <span id="error-email" class="text-red-500 text-xs font-medium hidden"></span>
                                     </div>
+                                </div>
+                                <!-- Fila 4: Municipio + Size de T-Shirt -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-municipio">Municipio</label>
                                         <select id="input-municipio"
                                             class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
                                             required>
                                             <option disabled selected value="">Selecciona tu municipio</option>
-                                            <!-- Distrito Nacional -->
-                                            <option value="Santo Domingo de Guzmán">Santo Domingo de Guzmán (DN)
-                                            </option>
-                                            <!-- Provincia Santo Domingo -->
+                                            <option value="Distrito Nacional">Distrito Nacional</option>
                                             <option value="Santo Domingo Este">Santo Domingo Este</option>
-                                            <option value="Santo Domingo Norte">Santo Domingo Norte</option>
-                                            <option value="Santo Domingo Oeste">Santo Domingo Oeste</option>
-                                            <option value="Boca Chica">Boca Chica</option>
-                                            <option value="San Antonio de Guerra">San Antonio de Guerra</option>
-                                            <option value="Los Alcarrizos">Los Alcarrizos</option>
-                                            <option value="Pedro Brand">Pedro Brand</option>
-                                            <!-- Azua -->
-                                            <option value="Azua de Compostela">Azua de Compostela</option>
-                                            <option value="Estebanía">Estebanía</option>
-                                            <option value="Guayabal">Guayabal</option>
-                                            <option value="Las Charcas">Las Charcas</option>
-                                            <option value="Las Yayas de Viajama">Las Yayas de Viajama</option>
-                                            <option value="Padre Las Casas">Padre Las Casas</option>
-                                            <option value="Peralta">Peralta</option>
-                                            <option value="Pueblo Viejo">Pueblo Viejo</option>
-                                            <option value="Sabana Yegua">Sabana Yegua</option>
-                                            <option value="Tábara Arriba">Tábara Arriba</option>
-                                            <!-- Bahoruco -->
-                                            <option value="Neiba">Neiba</option>
-                                            <option value="Galván">Galván</option>
-                                            <option value="Los Ríos">Los Ríos</option>
-                                            <option value="Tamayo">Tamayo</option>
-                                            <option value="Villa Jaragua">Villa Jaragua</option>
-                                            <!-- Barahona -->
-                                            <option value="Santa Cruz de Barahona">Santa Cruz de Barahona</option>
-                                            <option value="Cabral">Cabral</option>
-                                            <option value="El Peñón">El Peñón</option>
-                                            <option value="Enriquillo">Enriquillo</option>
-                                            <option value="Fundación">Fundación</option>
-                                            <option value="Jaquimeyes">Jaquimeyes</option>
-                                            <option value="La Ciénaga">La Ciénaga</option>
-                                            <option value="Las Salinas">Las Salinas</option>
-                                            <option value="Paraíso">Paraíso</option>
-                                            <option value="Polo">Polo</option>
-                                            <option value="Vicente Noble">Vicente Noble</option>
-                                            <!-- Dajabón -->
-                                            <option value="Dajabón">Dajabón</option>
-                                            <option value="El Pino">El Pino</option>
-                                            <option value="Loma de Cabrera">Loma de Cabrera</option>
-                                            <option value="Partido">Partido</option>
-                                            <option value="Restauración">Restauración</option>
-                                            <!-- Duarte -->
-                                            <option value="San Francisco de Macorís">San Francisco de Macorís</option>
-                                            <option value="Arenoso">Arenoso</option>
-                                            <option value="Castillo">Castillo</option>
-                                            <option value="Hostos">Hostos</option>
-                                            <option value="Las Guáranas">Las Guáranas</option>
-                                            <option value="Pimentel">Pimentel</option>
-                                            <option value="Villa Riva">Villa Riva</option>
-                                            <!-- El Seibo -->
-                                            <option value="El Seibo">El Seibo</option>
-                                            <option value="Miches">Miches</option>
-                                            <!-- Elías Piña -->
-                                            <option value="Comendador">Comendador</option>
-                                            <option value="Bánica">Bánica</option>
-                                            <option value="El Llano">El Llano</option>
-                                            <option value="Hondo Valle">Hondo Valle</option>
-                                            <option value="Juan Santiago">Juan Santiago</option>
-                                            <option value="Pedro Santana">Pedro Santana</option>
-                                            <!-- Espaillat -->
-                                            <option value="Moca">Moca</option>
-                                            <option value="Cayetano Germosén">Cayetano Germosén</option>
-                                            <option value="Gaspar Hernández">Gaspar Hernández</option>
-                                            <option value="Jamao al Norte">Jamao al Norte</option>
-                                            <!-- Hato Mayor -->
-                                            <option value="Hato Mayor del Rey">Hato Mayor del Rey</option>
-                                            <option value="El Valle">El Valle</option>
-                                            <option value="Sabana de la Mar">Sabana de la Mar</option>
-                                            <!-- Hermanas Mirabal -->
-                                            <option value="Salcedo">Salcedo</option>
-                                            <option value="Tenares">Tenares</option>
-                                            <option value="Villa Tapia">Villa Tapia</option>
-                                            <!-- Independencia -->
-                                            <option value="Jimaní">Jimaní</option>
-                                            <option value="Cristóbal">Cristóbal</option>
-                                            <option value="Duvergé">Duvergé</option>
-                                            <option value="La Descubierta">La Descubierta</option>
-                                            <option value="Mella">Mella</option>
-                                            <option value="Postrer Río">Postrer Río</option>
-                                            <!-- La Altagracia -->
-                                            <option value="Higüey">Higüey</option>
-                                            <option value="San Rafael del Yuma">San Rafael del Yuma</option>
-                                            <!-- La Romana -->
-                                            <option value="La Romana">La Romana</option>
-                                            <option value="Guaymate">Guaymate</option>
-                                            <option value="Villa Hermosa">Villa Hermosa</option>
-                                            <!-- La Vega -->
                                             <option value="La Vega">La Vega</option>
-                                            <option value="Constanza">Constanza</option>
-                                            <option value="Jarabacoa">Jarabacoa</option>
-                                            <option value="Jima Abajo">Jima Abajo</option>
-                                            <!-- María Trinidad Sánchez -->
-                                            <option value="Nagua">Nagua</option>
-                                            <option value="Cabrera">Cabrera</option>
-                                            <option value="El Factor">El Factor</option>
-                                            <option value="Río San Juan">Río San Juan</option>
-                                            <!-- Monseñor Nouel -->
-                                            <option value="Bonao">Bonao</option>
-                                            <option value="Maimón">Maimón</option>
-                                            <option value="Piedra Blanca">Piedra Blanca</option>
-                                            <!-- Monte Cristi -->
-                                            <option value="Monte Cristi">Monte Cristi</option>
-                                            <option value="Castañuelas">Castañuelas</option>
-                                            <option value="Guayubín">Guayubín</option>
-                                            <option value="Las Matas de Santa Cruz">Las Matas de Santa Cruz</option>
-                                            <option value="Pepillo Salcedo">Pepillo Salcedo</option>
-                                            <option value="Villa Vásquez">Villa Vásquez</option>
-                                            <!-- Monte Plata -->
-                                            <option value="Monte Plata">Monte Plata</option>
-                                            <option value="Bayaguana">Bayaguana</option>
-                                            <option value="Peralvillo">Peralvillo</option>
-                                            <option value="Sabana Grande de Boyá">Sabana Grande de Boyá</option>
-                                            <option value="Yamasá">Yamasá</option>
-                                            <!-- Pedernales -->
-                                            <option value="Pedernales">Pedernales</option>
-                                            <option value="Oviedo">Oviedo</option>
-                                            <!-- Peravia -->
-                                            <option value="Baní">Baní</option>
-                                            <option value="Nizao">Nizao</option>
-                                            <!-- Puerto Plata -->
-                                            <option value="Puerto Plata">Puerto Plata</option>
-                                            <option value="Altamira">Altamira</option>
-                                            <option value="Guananico">Guananico</option>
-                                            <option value="Imbert">Imbert</option>
-                                            <option value="Los Hidalgos">Los Hidalgos</option>
-                                            <option value="Luperón">Luperón</option>
-                                            <option value="Sosúa">Sosúa</option>
-                                            <option value="Villa Isabela">Villa Isabela</option>
-                                            <option value="Villa Montellano">Villa Montellano</option>
-                                            <!-- Samaná -->
-                                            <option value="Samaná">Samaná</option>
-                                            <option value="Las Terrenas">Las Terrenas</option>
-                                            <option value="Sánchez">Sánchez</option>
-                                            <!-- San Cristóbal -->
-                                            <option value="San Cristóbal">San Cristóbal</option>
-                                            <option value="Bajos de Haina">Bajos de Haina</option>
-                                            <option value="Cambita Garabitos">Cambita Garabitos</option>
-                                            <option value="Los Cacaos">Los Cacaos</option>
-                                            <option value="Sabana Grande de Palenque">Sabana Grande de Palenque</option>
-                                            <option value="San Gregorio de Nigua">San Gregorio de Nigua</option>
-                                            <option value="Villa Altagracia">Villa Altagracia</option>
-                                            <option value="Yaguate">Yaguate</option>
-                                            <!-- San José de Ocoa -->
-                                            <option value="San José de Ocoa">San José de Ocoa</option>
-                                            <option value="Rancho Arriba">Rancho Arriba</option>
-                                            <option value="Sabana Larga">Sabana Larga</option>
-                                            <!-- San Juan -->
-                                            <option value="San Juan de la Maguana">San Juan de la Maguana</option>
-                                            <option value="Bohechío">Bohechío</option>
-                                            <option value="El Cercado">El Cercado</option>
-                                            <option value="Juan de Herrera">Juan de Herrera</option>
-                                            <option value="Las Matas de Farfán">Las Matas de Farfán</option>
-                                            <option value="Vallejuelo">Vallejuelo</option>
-                                            <!-- San Pedro de Macorís -->
-                                            <option value="San Pedro de Macorís">San Pedro de Macorís</option>
-                                            <option value="Consuelo">Consuelo</option>
-                                            <option value="Guayacanes">Guayacanes</option>
-                                            <option value="Quisqueya">Quisqueya</option>
-                                            <option value="Ramón Santana">Ramón Santana</option>
-                                            <option value="San José de Los Llanos">San José de Los Llanos</option>
-                                            <!-- Sánchez Ramírez -->
-                                            <option value="Cotuí">Cotuí</option>
-                                            <option value="Cevicos">Cevicos</option>
-                                            <option value="Fantino">Fantino</option>
-                                            <option value="La Mata">La Mata</option>
-                                            <!-- Santiago -->
-                                            <option value="Santiago de los Caballeros">Santiago de los Caballeros
-                                            </option>
-                                            <option value="Bisonó">Bisonó</option>
-                                            <option value="Jánico">Jánico</option>
-                                            <option value="Licey al Medio">Licey al Medio</option>
-                                            <option value="Puñal">Puñal</option>
-                                            <option value="Sabana Iglesia">Sabana Iglesia</option>
-                                            <option value="San José de las Matas">San José de las Matas</option>
-                                            <option value="Tamboril">Tamboril</option>
-                                            <option value="Villa González">Villa González</option>
-                                            <!-- Santiago Rodríguez -->
-                                            <option value="San Ignacio de Sabaneta">San Ignacio de Sabaneta</option>
-                                            <option value="Monción">Monción</option>
-                                            <option value="Villa Los Almácigos">Villa Los Almácigos</option>
-                                            <!-- Valverde -->
-                                            <option value="Mao">Mao</option>
-                                            <option value="Esperanza">Esperanza</option>
-                                            <option value="Laguna Salada">Laguna Salada</option>
+                                            <option value="Santiago">Santiago</option>
+                                            <option value="San Francisco">San Francisco</option>
+                                            <option value="Higuey">Higuey</option>
                                         </select>
-                                        <span id="error-municipio"
-                                            class="text-red-500 text-xs font-medium hidden"></span>
+                                        <span id="error-municipio" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-talla">Size de T-Shirt</label>
+                                        <select id="input-talla"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            required>
+                                            <option disabled selected value="">Selecciona una talla</option>
+                                            <option value="xs">XS</option>
+                                            <option value="s">S</option>
+                                            <option value="m">M</option>
+                                            <option value="l">L</option>
+                                            <option value="xl">XL</option>
+                                            <option value="xxl">XXL</option>
+                                        </select>
+                                        <span id="error-talla" class="text-red-500 text-xs font-medium hidden"></span>
                                     </div>
                                 </div>
-                                <div class="flex flex-col gap-2">
-                                    <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold">Talla de
-                                        Camiseta</label>
-                                    <select id="input-talla"
-                                        class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
-                                        required>
-                                        <option disabled="" selected="" value="">Selecciona una talla</option>
-                                        <option value="xs">Extra Small (XS)</option>
-                                        <option value="s">Small (S)</option>
-                                        <option value="m">Medium (M)</option>
-                                        <option value="l">Large (L)</option>
-                                        <option value="xl">Extra Large (XL)</option>
-                                    </select>
-                                    <span id="error-talla" class="text-red-500 text-xs font-medium hidden"></span>
+                                <!-- Fila 4: Contacto de Emergencia y Parentesco -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-contacto-emergencia">Contacto de Emergencia</label>
+                                        <input id="input-contacto-emergencia"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="Nombre y teléfono" type="text" required />
+                                        <span id="error-contacto-emergencia" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-slate-700 dark:text-slate-200 text-sm font-semibold" for="input-parentesco">Parentesco</label>
+                                        <input id="input-parentesco"
+                                            class="rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary h-12 px-4"
+                                            placeholder="Ej: Madre, Padre, Hermano" type="text" required />
+                                        <span id="error-parentesco" class="text-red-500 text-xs font-medium hidden"></span>
+                                    </div>
                                 </div>
                                 <div class="pt-4">
                                     <button id="btn-submit"

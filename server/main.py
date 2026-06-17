@@ -63,8 +63,8 @@ app.add_middleware(
 # ── Crear tablas al iniciar el servidor ──
 @app.on_event("startup")
 def on_startup():
-    print("🟢 Iniciando ENO Portal API...")
-    print(f"📡 Base de datos: {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
+    print("[OK] Iniciando ENO Portal API...")
+    print(f"[DB] Base de datos: {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
     init_db()
 
 
@@ -117,6 +117,9 @@ def crear_registro(registro: RegistroCreate, db: Session = Depends(get_db)):
         email=registro.email.strip().lower(),
         municipio=registro.municipio,
         talla_camiseta=registro.tallaCamiseta,
+        no_onda=registro.noOnda,
+        contacto_emergencia=registro.contactoEmergencia,
+        parentesco=registro.parentesco,
     )
 
     try:
@@ -147,6 +150,9 @@ def crear_registro(registro: RegistroCreate, db: Session = Depends(get_db)):
             "email": nuevo_registro.email,
             "municipio": nuevo_registro.municipio,
             "tallaCamiseta": nuevo_registro.talla_camiseta.value,
+            "noOnda": nuevo_registro.no_onda,
+            "contactoEmergencia": nuevo_registro.contacto_emergencia,
+            "parentesco": nuevo_registro.parentesco,
             "fechaRegistro": str(nuevo_registro.fecha_registro),
         },
     )
@@ -287,9 +293,11 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db)):
             "nombreCompleto": registro.nombre_completo,
             "edad": registro.edad,
             "telefono": registro.telefono,
-            "email": registro.email,
             "municipio": registro.municipio,
             "tallaCamiseta": registro.talla_camiseta.value,
+            "noOnda": registro.no_onda,
+            "contactoEmergencia": registro.contacto_emergencia,
+            "parentesco": registro.parentesco,
             "fechaRegistro": str(registro.fecha_registro),
             "comprobantePago": registro.comprobante_pago,
             "estadoPago": registro.estado_pago,

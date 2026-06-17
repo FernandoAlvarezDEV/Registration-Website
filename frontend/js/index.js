@@ -6,8 +6,10 @@
 // 🔧 CONFIGURACIÓN DEL BACKEND (Edita esta sección para conectar)
 // ─────────────────────────────────────────────────────────────
 const API_CONFIG = {
-    // URL del backend FastAPI
-    BASE_URL: "http://localhost:8000",
+    // URL del backend FastAPI (detecta automáticamente dev vs producción)
+    BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+        ? "http://localhost:8000"
+        : "https://eno-portal-backend.onrender.com",
 
     // Endpoints
     ENDPOINTS: {
@@ -35,11 +37,14 @@ const btnSubmit = document.getElementById("btn-submit");
 
 const fields = {
     nombre: { input: document.getElementById("input-nombre"), error: document.getElementById("error-nombre") },
-    edad: { input: document.getElementById("input-edad"), error: document.getElementById("error-edad") },
     telefono: { input: document.getElementById("input-telefono"), error: document.getElementById("error-telefono") },
+    edad: { input: document.getElementById("input-edad"), error: document.getElementById("error-edad") },
+    noonda: { input: document.getElementById("input-noonda"), error: document.getElementById("error-noonda") },
     email: { input: document.getElementById("input-email"), error: document.getElementById("error-email") },
     municipio: { input: document.getElementById("input-municipio"), error: document.getElementById("error-municipio") },
     talla: { input: document.getElementById("input-talla"), error: document.getElementById("error-talla") },
+    contactoEmergencia: { input: document.getElementById("input-contacto-emergencia"), error: document.getElementById("error-contacto-emergencia") },
+    parentesco: { input: document.getElementById("input-parentesco"), error: document.getElementById("error-parentesco") },
 };
 
 const toastContainer = document.getElementById("toast-container");
@@ -56,6 +61,13 @@ const validators = {
         return null;
     },
 
+    telefono(value) {
+        if (!value.trim()) return "El número de teléfono es obligatorio.";
+        const cleaned = value.replace(/[\s\-().+]/g, "");
+        if (!/^\d{7,15}$/.test(cleaned)) return "Ingresa un número de teléfono válido (7 a 15 dígitos).";
+        return null;
+    },
+
     edad(value) {
         if (!value) return "La edad es obligatoria.";
         const num = parseInt(value, 10);
@@ -65,16 +77,8 @@ const validators = {
         return null;
     },
 
-    telefono(value) {
-        if (!value.trim()) return "El número de teléfono es obligatorio.";
-        // Acepta formatos como: +1 234 567 890, (809)555-1234, 8095551234
-        const cleaned = value.replace(/[\s\-().+]/g, "");
-        if (!/^\d{7,15}$/.test(cleaned)) return "Ingresa un número de teléfono válido (7 a 15 dígitos).";
-        return null;
-    },
-
-    municipio(value) {
-        if (!value) return "Debes seleccionar un municipio.";
+    noonda(value) {
+        if (!value.trim()) return "El No. Onda es obligatorio.";
         return null;
     },
 
@@ -85,8 +89,23 @@ const validators = {
         return null;
     },
 
+    municipio(value) {
+        if (!value) return "Debes seleccionar un municipio.";
+        return null;
+    },
+
     talla(value) {
         if (!value) return "Debes seleccionar una talla de camiseta.";
+        return null;
+    },
+
+    contactoEmergencia(value) {
+        if (!value.trim()) return "El contacto de emergencia es obligatorio.";
+        return null;
+    },
+
+    parentesco(value) {
+        if (!value.trim()) return "El parentesco es obligatorio.";
         return null;
     },
 };
@@ -310,11 +329,14 @@ function cleanPhoneNumber(phone) {
 function getFormData() {
     return {
         nombreCompleto: fields.nombre.input.value.trim(),
-        edad: parseInt(fields.edad.input.value, 10),
         telefono: cleanPhoneNumber(fields.telefono.input.value.trim()),
+        edad: parseInt(fields.edad.input.value, 10),
+        noOnda: fields.noonda.input.value.trim(),
         email: fields.email.input.value.trim(),
         municipio: fields.municipio.input.value,
         tallaCamiseta: fields.talla.input.value,
+        contactoEmergencia: fields.contactoEmergencia.input.value.trim(),
+        parentesco: fields.parentesco.input.value.trim(),
     };
 }
 

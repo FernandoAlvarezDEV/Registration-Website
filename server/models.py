@@ -1,5 +1,5 @@
 """
-Modelos de SQLAlchemy (tablas de MySQL) y esquemas de Pydantic (validación).
+Modelos de SQLAlchemy (tablas de PostgreSQL) y esquemas de Pydantic (validación).
 """
 
 from datetime import datetime
@@ -23,10 +23,11 @@ class TallaCamiseta(str, PyEnum):
     M = "m"
     L = "l"
     XL = "xl"
+    XXL = "xxl"
 
 
 class Registro(Base):
-    """Tabla 'registros' en MySQL."""
+    """Tabla 'registros' en PostgreSQL."""
     __tablename__ = "registros"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -36,6 +37,9 @@ class Registro(Base):
     email = Column(String(255), nullable=False, index=True)
     municipio = Column(String(255), nullable=False)
     talla_camiseta = Column(Enum(TallaCamiseta), nullable=False)
+    no_onda = Column(String(100), nullable=True)
+    contacto_emergencia = Column(String(255), nullable=True)
+    parentesco = Column(String(100), nullable=True)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     comprobante_pago = Column(String(512), nullable=True, default=None)
     estado_pago = Column(String(20), nullable=False, default="pendiente")
@@ -55,7 +59,10 @@ class RegistroCreate(BaseModel):
     telefono: str = Field(..., min_length=7, max_length=20, description="Número de teléfono")
     email: str = Field(..., max_length=255, description="Correo electrónico")
     municipio: str = Field(..., min_length=2, max_length=255, description="Municipio de residencia")
-    tallaCamiseta: TallaCamiseta = Field(..., description="Talla de camiseta (xs, s, m, l, xl)")
+    tallaCamiseta: TallaCamiseta = Field(..., description="Talla de camiseta (xs, s, m, l, xl, xxl)")
+    noOnda: str = Field(None, max_length=100, description="Número de Onda")
+    contactoEmergencia: str = Field(None, max_length=255, description="Contacto de emergencia")
+    parentesco: str = Field(None, max_length=100, description="Parentesco del contacto de emergencia")
 
     @field_validator("nombreCompleto")
     @classmethod
@@ -79,6 +86,8 @@ class RegistroCreate(BaseModel):
     @classmethod
     def validar_email(cls, v: str) -> str:
         v = v.strip()
+        if not v:
+            raise ValueError("El correo electrónico es obligatorio.")
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', v):
             raise ValueError("Ingresa un correo electrónico válido.")
         return v
@@ -89,9 +98,11 @@ class RegistroCreate(BaseModel):
                 "nombreCompleto": "Juan Pérez",
                 "edad": 25,
                 "telefono": "+1 809 555 1234",
-                "email": "juan@ejemplo.com",
-                "municipio": "Santo Domingo",
+                "municipio": "Distrito Nacional",
                 "tallaCamiseta": "m",
+                "noOnda": "42",
+                "contactoEmergencia": "María Pérez - 809-555-9876",
+                "parentesco": "Madre",
             }
         }
 
@@ -112,6 +123,9 @@ class RegistroOut(BaseModel):
     email: str
     municipio: str
     talla_camiseta: str
+    no_onda: str | None = None
+    contacto_emergencia: str | None = None
+    parentesco: str | None = None
     fecha_registro: datetime
     comprobante_pago: str | None = None
     estado_pago: str = "pendiente"

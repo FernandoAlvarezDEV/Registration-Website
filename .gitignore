@@ -1,0 +1,44 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+venv/
+.venv/
+env/
+.env/
+
+# ── Variables de Entorno (NUNCA subir a Git) ──────────────────
+server/.env
+.env
+
+# ── Base de Datos ─────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Uploads del servidor ──────────────────────────────────────
+server/uploads/*
+!server/uploads/.gitkeep
+
+# ── Editores e IDEs ───────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Sistema Operativo ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ─────────────────────────────────────────────────────
+*.log
+logs/

@@ -1,12 +1,12 @@
 """
-Configuración de la base de datos MySQL con SQLAlchemy.
+Configuración de la base de datos PostgreSQL con SQLAlchemy.
 """
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from config import settings
 
-# Crear el motor de conexión a MySQL
+# Crear el motor de conexión a PostgreSQL
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,       # Verifica conexión antes de usarla
@@ -40,4 +40,4 @@ def init_db():
     Se ejecuta al iniciar el servidor.
     """
     Base.metadata.create_all(bind=engine)
-    print("✅ Tablas de la base de datos creadas/verificadas.")
+    print("[OK] Tablas de la base de datos creadas/verificadas.")
