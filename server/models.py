@@ -60,9 +60,9 @@ class RegistroCreate(BaseModel):
     email: str = Field(..., max_length=255, description="Correo electrónico")
     municipio: str = Field(..., min_length=2, max_length=255, description="Municipio de residencia")
     tallaCamiseta: TallaCamiseta = Field(..., description="Talla de camiseta (xs, s, m, l, xl, xxl)")
-    noOnda: str = Field(None, max_length=100, description="Número de Onda")
-    contactoEmergencia: str = Field(None, max_length=255, description="Contacto de emergencia")
-    parentesco: str = Field(None, max_length=100, description="Parentesco del contacto de emergencia")
+    noOnda: str = Field(..., min_length=1, max_length=100, description="Número de Onda")
+    contactoEmergencia: str = Field(..., min_length=1, max_length=255, description="Contacto de emergencia")
+    parentesco: str = Field(..., min_length=1, max_length=100, description="Parentesco del contacto de emergencia")
 
     @field_validator("nombreCompleto")
     @classmethod
