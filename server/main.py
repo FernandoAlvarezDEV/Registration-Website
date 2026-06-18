@@ -379,6 +379,49 @@ def actualizar_estado_pago(
 
 
 # ─────────────────────────────────────────────────────────────────
+# 🧪 DIAGNÓSTICO TEMPORAL — Eliminar después de verificar correo
+# ─────────────────────────────────────────────────────────────────
+
+@app.get("/api/test-email", tags=["Debug"])
+def test_email(to: str = Query(..., description="Correo destino de prueba")):
+    """
+    Envía un correo de prueba de forma síncrona y retorna el resultado detallado.
+    ELIMINAR después de confirmar que el correo funciona.
+    """
+    import smtplib
+    from email.mime.text import MIMEText
+
+    result = {
+        "gmail_user_configured": bool(settings.GMAIL_USER),
+        "gmail_password_configured": bool(settings.GMAIL_APP_PASSWORD),
+        "frontend_url": settings.FRONTEND_URL,
+        "gmail_user": settings.GMAIL_USER,
+    }
+
+    if not settings.GMAIL_USER or not settings.GMAIL_APP_PASSWORD:
+        return {"success": False, "error": "Variables GMAIL_USER o GMAIL_APP_PASSWORD no configuradas.", **result}
+
+    try:
+        msg = MIMEText("<h2>Prueba de correo ENO 2026</h2><p>Si ves esto, el correo funciona ✅</p>", "html")
+        msg["Subject"] = "🧪 Test Email — ENO Portal"
+        msg["From"] = settings.GMAIL_USER
+        msg["To"] = to
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(settings.GMAIL_USER, settings.GMAIL_APP_PASSWORD)
+            server.sendmail(settings.GMAIL_USER, to, msg.as_string())
+
+        return {"success": True, "message": f"Correo enviado a {to} ✅", **result}
+
+    except smtplib.SMTPAuthenticationError as e:
+        return {"success": False, "error": f"Error de autenticación Gmail: {str(e)}", "hint": "Verifica GMAIL_USER y GMAIL_APP_PASSWORD. El App Password debe tener verificación en 2 pasos activa.", **result}
+    except smtplib.SMTPException as e:
+        return {"success": False, "error": f"Error SMTP: {str(e)}", **result}
+    except Exception as e:
+        return {"success": False, "error": f"Error inesperado: {str(e)}", **result}
+
+
+# ─────────────────────────────────────────────────────────────────
 # ▶️ EJECUCIÓN DIRECTA
 # ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
