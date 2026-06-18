@@ -52,4 +52,4 @@ services:
     routes:
       - type: rewrite
         source: /*
-        destination: /Index.html
+        destination: /index.html

@@ -37,7 +37,7 @@
                 <div class="text-center py-4">
                     <span class="material-symbols-outlined text-slate-300 mb-2" style="font-size: 48px;">info</span>
                     <p class="text-slate-400">No se encontraron datos de registro recientes.</p>
-                    <a href="Index.html" class="text-primary font-semibold text-sm hover:underline mt-2 inline-block">Ir al formulario de registro →</a>
+                    <a href="index.html" class="text-primary font-semibold text-sm hover:underline mt-2 inline-block">Ir al formulario de registro →</a>
                 </div>
             `;
         }
