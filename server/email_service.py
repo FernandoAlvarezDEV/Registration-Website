@@ -1,12 +1,10 @@
 """
 Email Service — ENO Portal
-Envía correos usando Gmail SMTP con credenciales de App Password.
+Envía correos usando la API HTTP de Resend (funciona en Render, Vercel, etc.)
 """
 
-import smtplib
 import logging
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import resend
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -40,10 +38,10 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
           <!-- Body -->
           <tr>
             <td style="background:#1a2035;padding:40px;border-left:1px solid rgba(37,71,244,0.2);border-right:1px solid rgba(37,71,244,0.2);">
-              <h2 style="margin:0 0 8px;color:#ffffff;font-size:22px;font-weight:700;">¡Tu registro fue exitoso, {nombre}! 🎉</h2>
+              <h2 style="margin:0 0 8px;color:#ffffff;font-size:22px;font-weight:700;">Tu registro fue exitoso, {nombre}!</h2>
               <p style="margin:0 0 24px;color:#94a3b8;font-size:15px;line-height:1.6;">
-                Gracias por inscribirte al <strong style="color:#ffffff;">Evento Nacional Onda 2026</strong>. Tu lugar está reservado.<br/>
-                Para ver tu estado de registro y subir tu comprobante de pago, haz clic en el botón a continuación.
+                Gracias por inscribirte al <strong style="color:#ffffff;">Evento Nacional Onda 2026</strong>. Tu lugar esta reservado.<br/>
+                Para ver tu estado de registro y subir tu comprobante de pago, haz clic en el boton a continuacion.
               </p>
 
               <!-- CTA Button -->
@@ -52,22 +50,22 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
                   <td style="background:linear-gradient(135deg,#2547f4,#4f6ef7);border-radius:12px;box-shadow:0 8px 30px rgba(37,71,244,0.4);">
                     <a href="{dashboard_url}"
                        style="display:inline-block;padding:16px 40px;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;letter-spacing:0.3px;">
-                      Acceder a Mi Portal →
+                      Acceder a Mi Portal
                     </a>
                   </td>
                 </tr>
               </table>
 
               <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-align:center;">
-                ⚠️ Este enlace es único y personal. No lo compartas con nadie.<br/>
-                Es válido por <strong>72 horas</strong>.
+                Este enlace es unico y personal. No lo compartas con nadie.<br/>
+                Es valido por <strong>72 horas</strong>.
               </p>
 
               <!-- Divider -->
               <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:32px 0;" />
 
               <!-- Event Details -->
-              <h3 style="margin:0 0 16px;color:#ffffff;font-size:15px;font-weight:600;">📅 Detalles del Evento</h3>
+              <h3 style="margin:0 0 16px;color:#ffffff;font-size:15px;font-weight:600;">Detalles del Evento</h3>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
@@ -84,7 +82,7 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
                 <tr>
                   <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
                     <span style="color:#64748b;font-size:13px;">Hora</span><br/>
-                    <span style="color:#e2e8f0;font-size:14px;font-weight:600;">08:00 AM — 05:00 PM</span>
+                    <span style="color:#e2e8f0;font-size:14px;font-weight:600;">08:00 AM - 05:00 PM</span>
                   </td>
                 </tr>
                 <tr>
@@ -101,7 +99,7 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
           <tr>
             <td style="background:#131929;border-radius:0 0 16px 16px;padding:24px 40px;text-align:center;border:1px solid rgba(37,71,244,0.1);border-top:none;">
               <p style="margin:0;color:#475569;font-size:12px;line-height:1.6;">
-                ENO 2026 · Grupo Religioso Onda<br/>
+                ENO 2026 - Grupo Religioso Onda<br/>
                 Si no realizaste este registro, ignora este correo.
               </p>
             </td>
@@ -119,28 +117,29 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
 def send_confirmation_email(to_email: str, nombre: str, token: str) -> bool:
     """
     Envía el correo de confirmación con el enlace mágico al usuario.
+    Usa la API HTTP de Resend (no SMTP, funciona en cualquier hosting).
     Retorna True si se envió correctamente, False si hubo error.
     """
-    if not settings.GMAIL_USER or not settings.GMAIL_APP_PASSWORD:
-        logger.warning("📧 Correo NO enviado: GMAIL_USER o GMAIL_APP_PASSWORD no configurados.")
+    if not settings.RESEND_API_KEY:
+        logger.warning("[EMAIL] Correo NO enviado: RESEND_API_KEY no configurada.")
         return False
 
     try:
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = "✅ Tu registro en ENO 2026 fue exitoso"
-        msg["From"] = f"ENO 2026 <{settings.GMAIL_USER}>"
-        msg["To"] = to_email
+        resend.api_key = settings.RESEND_API_KEY
 
         html_body = _build_confirmation_email(nombre, token, settings.FRONTEND_URL)
-        msg.attach(MIMEText(html_body, "html"))
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(settings.GMAIL_USER, settings.GMAIL_APP_PASSWORD)
-            server.sendmail(settings.GMAIL_USER, to_email, msg.as_string())
+        params: resend.Emails.SendParams = {
+            "from": f"ENO 2026 <{settings.RESEND_FROM_EMAIL}>",
+            "to": [to_email],
+            "subject": "Tu registro en ENO 2026 fue exitoso",
+            "html": html_body,
+        }
 
-        logger.info(f"📧 Correo enviado exitosamente a {to_email}")
+        email_response = resend.Emails.send(params)
+        logger.info(f"[EMAIL] Correo enviado exitosamente a {to_email} | ID: {email_response.get('id', 'N/A')}")
         return True
 
     except Exception as e:
-        logger.error(f"📧 Error enviando correo a {to_email}: {e}")
+        logger.error(f"[EMAIL] Error enviando correo a {to_email}: {e}")
         return False

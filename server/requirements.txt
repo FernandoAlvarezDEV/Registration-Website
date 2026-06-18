@@ -7,3 +7,4 @@ python-dotenv==1.0.1
 python-multipart==0.0.9
 Pillow==10.4.0
 supabase==2.9.1
+resend==2.32.2
