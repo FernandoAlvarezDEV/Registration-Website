@@ -100,7 +100,28 @@
 
 <body class="bg-background-light font-display text-slate-900 min-h-screen">
     <div id="toast" class="toast" role="alert"></div>
-    <div class="relative flex h-auto min-h-screen w-full flex-col">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-background-light flex flex-col items-center justify-center z-50">
+        <div class="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin mb-5"></div>
+        <p class="text-slate-600 font-semibold">Verificando tu enlace de acceso...</p>
+    </div>
+
+    <!-- Error Screen -->
+    <div id="error-screen" class="hidden fixed inset-0 bg-background-light flex flex-col items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-10 max-w-md w-full text-center">
+            <span class="material-symbols-outlined text-red-400 mb-4" style="font-size: 56px;">link_off</span>
+            <h2 class="text-xl font-black text-slate-900 mb-3">Enlace inválido</h2>
+            <p id="error-message" class="text-slate-500 text-sm mb-6">Este enlace es inválido o ha expirado.</p>
+            <a href="index.html" class="inline-flex items-center gap-2 bg-primary text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                <span class="material-symbols-outlined text-sm">home</span>
+                Volver al Inicio
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard (shown after auth) -->
+    <div id="dashboard-main" class="hidden relative flex h-auto min-h-screen w-full flex-col">
         <div class="layout-container flex h-full grow flex-col">
 
             <!-- Header -->
@@ -340,6 +361,7 @@
             </footer>
         </div>
     </div>
+    </div><!-- end #dashboard-main -->
 
     <script src="js/dashboard.js"></script>
 </body>

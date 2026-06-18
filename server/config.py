@@ -16,7 +16,7 @@ class Settings:
     DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
     DB_USER: str = os.getenv("DB_USER", "root")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
-    DB_NAME: str = os.getenv("DB_NAME", "eno_portal")
+    DB_NAME: str = os.getenv("DB_NAME", "postgres")
 
     # ── Servidor ──
     SERVER_HOST: str = os.getenv("SERVER_HOST", "0.0.0.0")
@@ -30,6 +30,18 @@ class Settings:
     ALLOWED_ORIGINS: list[str] = os.getenv(
         "ALLOWED_ORIGINS", "http://localhost:5500,http://127.0.0.1:5500"
     ).split(",")
+
+    # ── Gmail (Envío de Correos) ──
+    GMAIL_USER: str = os.getenv("GMAIL_USER", "")
+    GMAIL_APP_PASSWORD: str = os.getenv("GMAIL_APP_PASSWORD", "")
+
+    # ── URLs ──
+    # URL pública del frontend (usada en los enlaces de los correos)
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5500")
+
+    # ── Supabase Storage ──
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_SERVICE_KEY: str = os.getenv("SUPABASE_SERVICE_KEY", "")
 
     @property
     def DATABASE_URL(self) -> str:

@@ -169,8 +169,8 @@
                                 </div>
                                 <div>
                                     <p class="font-bold text-slate-800 mb-1">Revisa tu correo electrónico</p>
-                                    <p class="text-slate-500 text-sm">Te enviamos un correo de confirmación con los
-                                        detalles de tu inscripción y tu código de registro. Si no lo ves, revisa la
+                                    <p class="text-slate-500 text-sm">Te enviamos un correo a <strong id="magic-link-email" class="text-primary"></strong> con los
+                                        detalles de tu inscripción y un <strong>enlace mágico</strong> para acceder a tu cuenta. Si no lo ves, revisa la
                                         carpeta de spam.</p>
                                 </div>
                             </div>
@@ -335,23 +335,19 @@
                         </div>
                     </div>
 
-                    <!-- Login CTA -->
+                    <!-- Magic Link CTA -->
                     <div
-                        class="bg-primary/5 border border-primary/10 rounded-2xl p-8 text-center mt-8 animate-fade-in-up delay-4">
+                        class="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center mt-8 animate-fade-in-up delay-4">
                         <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
                             <span class="material-symbols-outlined text-primary"
-                                style="font-size: 28px;">account_circle</span>
+                                style="font-size: 28px;">mark_email_unread</span>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-2">¿Quieres ver el estado de tu inscripción?</h3>
-                        <p class="text-slate-500 text-sm mb-5 max-w-md mx-auto">
-                            Inicia sesión con tu nombre y número de teléfono para consultar el estatus de tu registro,
-                            ver tus datos de inscripción y obtener más información sobre el evento.
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">¿Cómo accedo a mi cuenta?</h3>
+                        <p class="text-slate-500 text-sm max-w-md mx-auto">
+                            No necesitas contraseña. Te enviamos un <strong class="text-primary">enlace mágico</strong>
+                            directamente a tu correo electrónico. Al hacer clic en ese enlace, accederás
+                            automáticamente a tu portal para ver el estado de tu inscripción y subir tu comprobante de pago.
                         </p>
-                        <a href="login.html"
-                            class="inline-flex items-center gap-2 bg-primary text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
-                            <span class="material-symbols-outlined">login</span>
-                            Iniciar Sesión
-                        </a>
                     </div>
 
                     <!-- Action Buttons -->
@@ -360,11 +356,6 @@
                             class="inline-flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
                             <span class="material-symbols-outlined">home</span>
                             Volver al Inicio
-                        </a>
-                        <a href="login.html"
-                            class="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-4 px-8 rounded-lg shadow-sm border border-primary/20 hover:bg-primary/5 transition-all">
-                            <span class="material-symbols-outlined">login</span>
-                            Mi Cuenta
                         </a>
                         <a href="https://www.google.com/maps/place/Colegio+Loyola/@18.45105,-69.92322,17z/data=!4m6!3m5!1s0x8eaf89d0093af269:0xa5c4f0fc8ef03d00!8m2!3d18.45105!4d-69.92322!16s"
                             target="_blank" rel="noopener noreferrer"

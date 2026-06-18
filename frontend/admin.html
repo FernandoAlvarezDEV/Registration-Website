@@ -112,6 +112,44 @@
 <body class="bg-background-light font-display text-slate-900 min-h-screen">
     <div id="toast" class="toast" role="alert"></div>
 
+    <!-- Admin Login Screen (shown when no session) -->
+    <div id="admin-login-screen" class="hidden fixed inset-0 bg-background-light flex items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-10 max-w-sm w-full">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-100 mb-4">
+                    <span class="material-symbols-outlined text-amber-700" style="font-size:28px">shield</span>
+                </div>
+                <h1 class="text-2xl font-black text-slate-900 mb-1">Acceso Administrativo</h1>
+                <p class="text-slate-400 text-sm">Exclusivo para administradores del evento</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" for="admin-email">Correo electrónico</label>
+                    <input id="admin-email" type="email" placeholder="admin@eno.com"
+                        class="w-full rounded-lg border-slate-300 focus:border-amber-500 focus:ring-amber-500 h-11 px-4 text-sm" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1" for="admin-phone">Teléfono / PIN</label>
+                    <input id="admin-phone" type="text" placeholder="•••••"
+                        class="w-full rounded-lg border-slate-300 focus:border-amber-500 focus:ring-amber-500 h-11 px-4 text-sm"
+                        onkeydown="if(event.key==='Enter') adminLogin()" />
+                </div>
+                <p id="admin-login-error" class="hidden text-red-500 text-xs font-semibold"></p>
+                <button id="admin-login-btn" onclick="adminLogin()"
+                    class="w-full flex items-center justify-center gap-2 bg-amber-500 text-white font-bold py-3 rounded-lg hover:bg-amber-600 transition-all disabled:opacity-50">
+                    <span class="material-symbols-outlined text-sm">lock_open</span>
+                    Entrar
+                </button>
+            </div>
+            <p class="text-center text-slate-400 text-xs mt-6">
+                <a href="index.html" class="hover:text-primary">Volver al inicio</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Content -->
+    <div id="admin-dashboard-content">
+
     <!-- Modal para ver comprobante -->
     <div id="modal-comprobante" class="modal-overlay" onclick="if(event.target===this)closeModal()">
         <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden">
@@ -317,6 +355,7 @@
         </div>
     </div>
 
+    </div><!-- end #admin-dashboard-content -->
     <script src="js/admin.js"></script>
 </body>
 

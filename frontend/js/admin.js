@@ -4,10 +4,16 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
         let allRegistros = [];
         let currentModalId = null;
 
-        // Check admin session
+        // Check admin session — si no hay sesión admin, mostrar formulario de login
         const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
         if (!session || session.role !== "admin") {
-            window.location.href = "login.html";
+            // Mostrar login form, ocultar dashboard
+            document.getElementById("admin-login-screen").classList.remove("hidden");
+            document.getElementById("admin-dashboard-content").classList.add("hidden");
+        } else {
+            document.getElementById("admin-login-screen").classList.add("hidden");
+            document.getElementById("admin-dashboard-content").classList.remove("hidden");
+            loadData();
         }
 
         // Toast
@@ -244,8 +250,56 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
 
         function logout() {
             sessionStorage.removeItem("eno_session");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
 
-        // Init
-        loadData();
+        // Init — solo si hay sesión (si no, el login form ya se muestra arriba)
+        // loadData() se llama dentro del bloque session check
+        
+        // ── Admin Login form ──────────────────────────────────────────
+        const API_BASE_ADMIN = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+            ? "http://localhost:8000"
+            : "https://eno-portal-backend.onrender.com";
+
+        async function adminLogin() {
+            const email = document.getElementById("admin-email").value.trim();
+            const phone = document.getElementById("admin-phone").value.trim();
+            const errorEl = document.getElementById("admin-login-error");
+            const btn = document.getElementById("admin-login-btn");
+
+            if (!email || !phone) {
+                errorEl.textContent = "Por favor completa todos los campos.";
+                errorEl.classList.remove("hidden");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Verificando...";
+            errorEl.classList.add("hidden");
+
+            try {
+                const res = await fetch(`${API_BASE_ADMIN}/api/auth/admin`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, phone }),
+                });
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.detail || "Credenciales incorrectas.");
+
+                sessionStorage.setItem("eno_session", JSON.stringify({
+                    role: "admin",
+                    data: data.data,
+                }));
+
+                // Mostrar dashboard, ocultar login
+                document.getElementById("admin-login-screen").classList.add("hidden");
+                document.getElementById("admin-dashboard-content").classList.remove("hidden");
+                loadData();
+            } catch (err) {
+                errorEl.textContent = err.message;
+                errorEl.classList.remove("hidden");
+                btn.disabled = false;
+                btn.textContent = "Entrar";
+            }
+        }

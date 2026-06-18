@@ -37,12 +37,14 @@ class Registro(Base):
     email = Column(String(255), nullable=False, index=True)
     municipio = Column(String(255), nullable=False)
     talla_camiseta = Column(Enum(TallaCamiseta), nullable=False)
-    no_onda = Column(String(100), nullable=True)
-    contacto_emergencia = Column(String(255), nullable=True)
-    parentesco = Column(String(100), nullable=True)
+    no_onda = Column(String(100), nullable=False)
+    contacto_emergencia = Column(String(255), nullable=False)
+    parentesco = Column(String(100), nullable=False)
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     comprobante_pago = Column(String(512), nullable=True, default=None)
     estado_pago = Column(String(20), nullable=False, default="pendiente")
+    magic_token = Column(String(128), nullable=True, unique=True, index=True)
+    token_expires = Column(DateTime, nullable=True)
 
     def __repr__(self):
         return f"<Registro(id={self.id}, nombre='{self.nombre_completo}', telefono='{self.telefono}')>"
