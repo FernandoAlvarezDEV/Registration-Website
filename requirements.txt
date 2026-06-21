@@ -1,3 +1,10 @@
-# Este archivo existe como referencia para herramientas que buscan requirements.txt en la raíz.
-# Las dependencias reales están en server/requirements.txt
--r server/requirements.txt
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+sqlalchemy==2.0.35
+psycopg2-binary==2.9.9
+pydantic[email]==2.9.0
+python-dotenv==1.0.1
+python-multipart==0.0.9
+Pillow==10.4.0
+supabase==2.9.1
+resend==2.32.2
