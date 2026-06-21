@@ -1,6 +1,6 @@
 const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
     ? "http://localhost:8000"
-    : "https://eno-portal-backend.onrender.com";
+    : "https://eno-portal-backend-production.up.railway.app";
 
 // ── Toast ──────────────────────────────────────────────────────────
 function showToast(type, msg) {

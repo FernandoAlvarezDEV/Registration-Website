@@ -1,6 +1,6 @@
 const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
     ? "http://localhost:8000"
-    : "https://eno-portal-backend.onrender.com";
+    : "https://eno-portal-backend-production.up.railway.app";
         let allRegistros = [];
         let currentModalId = null;
 
@@ -259,7 +259,7 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
         // ── Admin Login form ──────────────────────────────────────────
         const API_BASE_ADMIN = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
             ? "http://localhost:8000"
-            : "https://eno-portal-backend.onrender.com";
+            : "https://eno-portal-backend-production.up.railway.app";
 
         async function adminLogin() {
             const email = document.getElementById("admin-email").value.trim();

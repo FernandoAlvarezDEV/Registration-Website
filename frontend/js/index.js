@@ -9,7 +9,7 @@ const API_CONFIG = {
     // URL del backend FastAPI (detecta automáticamente dev vs producción)
     BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
         ? "http://localhost:8000"
-        : "https://eno-portal-backend.onrender.com",
+        : "https://eno-portal-backend-production.up.railway.app",
 
     // Endpoints
     ENDPOINTS: {
