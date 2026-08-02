@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>¡Registro Exitoso! - ENO 2026</title>
+    <title>¡Registro Exitoso! - Onda Fest</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+    <link rel="icon" type="image/png" href="img/logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300;1,9..40,400;1,9..40,500&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
@@ -16,12 +17,13 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#2547f4",
-                        "background-light": "#f5f6f8",
-                        "background-dark": "#101322",
+                        "primary": "#ED008C",
+                        "background-light": "#F9F4E0",
+                        "background-dark": "#0E0E0E",
                     },
                     fontFamily: {
-                        "display": ["Inter"]
+                        "display": ["DM Sans", "sans-serif"],
+                        "brand": ["DM Serif Display", "serif"]
                     },
                 },
             },
@@ -113,7 +115,7 @@
             <header
                 class="flex flex-wrap items-center justify-between gap-3 border-b border-solid border-slate-200 bg-white px-4 sm:px-10 py-3 sticky top-0 z-50">
                 <div class="flex items-center gap-4 text-primary">
-                    <h2 class="text-slate-900 text-xl font-black leading-tight tracking-tight">ENO 2026</h2>
+                    <img src="img/logo.png" alt="OndaFest Logo" class="h-10 w-auto object-contain rounded-full shadow-sm" />
                 </div>
             </header>
 
@@ -135,7 +137,7 @@
                         ¡Inscripción Exitosa!
                     </h1>
                     <p class="text-lg text-slate-500 mb-2 animate-fade-in-up delay-1">
-                        Tu registro para el evento <strong class="text-primary">ENO</strong> ha sido confirmado.
+                        Tu registro para el evento <strong class="text-primary">Onda Fest</strong> ha sido confirmado.
                     </p>
                     <p id="registration-code" class="text-sm text-slate-400 mb-10 animate-fade-in-up delay-1 font-mono">
                         <!-- Se llena con JS -->
@@ -372,7 +374,7 @@
             <footer class="border-t border-slate-200 bg-white py-8 px-4 sm:px-10">
                 <div
                     class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
-                    <p>© 2026 ENO 2026. Todos los derechos reservados.</p>
+                    <p>© 2026 Onda Fest. Todos los derechos reservados.</p>
                     <div class="flex gap-6">
                         <a class="hover:text-primary" href="#">Política de Privacidad</a>
                         <a class="hover:text-primary" href="#">Términos de Servicio</a>

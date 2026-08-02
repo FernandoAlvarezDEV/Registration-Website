@@ -102,7 +102,7 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
                         </div>
                         <div>
                             <p class="font-bold text-slate-800">${r.nombre_completo}</p>
-                            <p class="text-slate-400 text-xs font-mono">${r.telefono} · ENO-${r.id}</p>
+                            <p class="text-slate-400 text-xs font-mono">${r.telefono} · ONDA-${r.id}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
@@ -150,7 +150,7 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
 
             tbody.innerHTML = filtered.map(r => `
                 <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-5 py-3.5 font-bold text-primary text-xs">ENO-${r.id}</td>
+                    <td class="px-5 py-3.5 font-bold text-primary text-xs">ONDA-${r.id}</td>
                     <td class="px-5 py-3.5 font-semibold text-slate-800">${r.nombre_completo}</td>
                     <td class="px-5 py-3.5 text-slate-600 font-mono text-xs">${r.telefono}</td>
                     <td class="px-5 py-3.5 text-slate-600 text-xs">${r.email}</td>
@@ -194,7 +194,7 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
         function openModal(id, name, phone, imgPath) {
             currentModalId = id;
             document.getElementById("modal-user-name").textContent = name;
-            document.getElementById("modal-user-phone").textContent = `${phone} · ENO-${id}`;
+            document.getElementById("modal-user-phone").textContent = `${phone} · ONDA-${id}`;
             document.getElementById("modal-img").src = `${API_BASE}${imgPath}`;
             document.getElementById("modal-comprobante").classList.add("active");
         }
@@ -229,11 +229,11 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
 
         // Delete registration
         async function deleteRegistro(id) {
-            if (!confirm(`¿Estás seguro de eliminar el registro ENO-${id}?`)) return;
+            if (!confirm(`¿Estás seguro de eliminar el registro ONDA-${id}?`)) return;
             try {
                 const res = await fetch(`${API_BASE}/api/registros/${id}`, { method: "DELETE" });
                 if (res.ok) {
-                    showToast("success", `Registro ENO-${id} eliminado.`);
+                    showToast("success", `Registro ONDA-${id} eliminado.`);
                     loadData();
                 } else {
                     showToast("error", "Error al eliminar el registro.");

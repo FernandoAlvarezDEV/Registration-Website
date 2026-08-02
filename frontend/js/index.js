@@ -1,5 +1,5 @@
 // ============================================================
-// ENO Portal - Registration Form JavaScript
+// Onda Fest - Registration Form JavaScript
 // ============================================================
 
 // ─────────────────────────────────────────────────────────────
@@ -279,7 +279,7 @@ async function simulateBackendResponse(formData) {
         success: true,
         message: "Registro exitoso",
         data: {
-            id: `ENO-${Date.now()}`,
+            id: `ONDA-${Date.now()}`,
             ...formData,
             registeredAt: new Date().toISOString(),
         },
@@ -394,12 +394,12 @@ async function handleSubmit(event) {
         const result = await submitRegistration(formData);
 
         // 6. Éxito — Guardar datos y redirigir a página de confirmación
-        console.log("✅ Registro exitoso:", result);
+        console.log("Registro exitoso:", result);
 
         // Guardar en sessionStorage para la página de éxito
         const registrationInfo = {
             ...formData,
-            id: result.data?.id || `ENO-${Date.now()}`,
+            id: result.data?.id || `ONDA-${Date.now()}`,
             fechaRegistro: result.data?.fechaRegistro || new Date().toISOString(),
         };
         sessionStorage.setItem("eno_registration", JSON.stringify(registrationInfo));
@@ -408,7 +408,7 @@ async function handleSubmit(event) {
         window.location.href = "success.html";
     } catch (error) {
         // 7. Error
-        console.error("❌ Error al registrar:", error);
+        console.error("Error al registrar:", error);
         showToast("error", error.message || "Hubo un error al enviar tu registro. Intenta de nuevo.");
     } finally {
         setLoadingState(false);
@@ -445,5 +445,5 @@ Object.keys(fields).forEach((key) => {
 });
 
 // Log de inicialización
-console.log("🟢 ENO Portal - Formulario de registro inicializado.");
+console.log("Onda Fest - Formulario de registro inicializado.");
 console.log(`🔧 Backend real: ${API_CONFIG.USE_REAL_BACKEND ? "ACTIVADO" : "DESACTIVADO (modo simulación)"}`);

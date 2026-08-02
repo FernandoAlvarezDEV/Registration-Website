@@ -27,12 +27,12 @@ function renderPaymentStatus(estadoPago) {
 
 // ── Rellenar UI con los datos del usuario ──────────────────────────
 function populateUI(d) {
-    const registroId = d.id ? parseInt(d.id.toString().replace("ENO-", "")) : d.id;
+    const registroId = d.id ? parseInt(d.id.toString().replace("ONDA-", "")) : d.id;
 
     // Guardar en sessionStorage para uso posterior (subir comprobante, etc.)
     sessionStorage.setItem("eno_session", JSON.stringify({
         role: "user",
-        data: { ...d, idLabel: `ENO-${registroId}` }
+        data: { ...d, idLabel: `ONDA-${registroId}` }
     }));
     sessionStorage.setItem("eno_registro_id", registroId);
 
@@ -40,7 +40,7 @@ function populateUI(d) {
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
     set("header-name", d.nombreCompleto);
     set("user-name", d.nombreCompleto);
-    set("reg-code", d.idLabel || `ENO-${registroId}`);
+    set("reg-code", d.idLabel || `ONDA-${registroId}`);
     set("detail-nombre", d.nombreCompleto);
     set("detail-edad", d.edad ? `${d.edad} años` : "—");
     set("detail-telefono", d.telefono || "—");
