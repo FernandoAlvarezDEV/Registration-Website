@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>¡Ya tienes tu pase! — Onda Fest 2026</title>
+    <meta name="description" content="Tu inscripción a Onda Fest 2026 fue exitosa. ¡Ya tienes tu pase!" />
+    <link rel="icon" type="image/png" href="img/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --crema:    #F9F4E0;
+            --rojo:     #FF0000;
+            --amarillo: #FEB004;
+            --naranja:  #FF7D04;
+            --fucsia:   #ED008C;
+            --verde:    #3CE705;
+            --oscuro:   #1A1A1A;
+            --radius:   14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--crema);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--oscuro);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        h1, h2, h3 { font-family: 'Syne', sans-serif; }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0%   { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+            60%  { transform: scale(1.15) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes floatConfetti {
+            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-250px) rotate(540deg); opacity: 0; }
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50%       { transform: translateY(-10px) rotate(4deg); }
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        .fade-up { animation: fadeUp 0.65s ease-out both; }
+        .d1 { animation-delay: 0.4s; }
+        .d2 { animation-delay: 0.6s; }
+        .d3 { animation-delay: 0.8s; }
+        .d4 { animation-delay: 1.0s; }
+        .pop-in { animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+        .float-icon { animation: floatIcon 4s ease-in-out infinite; }
+
+        .confetti-piece {
+            position: fixed;
+            border-radius: 3px;
+            animation: floatConfetti linear forwards;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            background: var(--oscuro);
+            padding: 14px 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 3px solid var(--oscuro);
+        }
+        .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .header-logo img { height: 40px; width: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
+        .header-logo span { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--crema); letter-spacing: 1px; }
+
+        /* Hero success strip */
+        .success-hero {
+            background: var(--verde);
+            border-bottom: 4px solid var(--oscuro);
+            padding: 60px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .success-hero::before {
+            content: '';
+            position: absolute; top: -80px; left: -80px;
+            width: 300px; height: 300px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+        .success-hero::after {
+            content: '';
+            position: absolute; bottom: -60px; right: -60px;
+            width: 220px; height: 220px; border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+        }
+        .success-icon-wrap {
+            width: 100px; height: 100px;
+            background: white;
+            border: 4px solid var(--oscuro);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 28px;
+            box-shadow: 5px 5px 0 var(--oscuro);
+            position: relative; z-index: 1;
+        }
+        .success-icon-wrap span { font-size: 52px; color: var(--verde); }
+        .success-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            color: var(--oscuro);
+            line-height: 1;
+            position: relative; z-index: 1;
+            margin-bottom: 12px;
+        }
+        .success-hero p {
+            font-size: 1.05rem; font-weight: 600; color: rgba(0,0,0,0.65);
+            position: relative; z-index: 1;
+        }
+        .success-hero strong { color: var(--oscuro); }
+
+        /* Code badge */
+        #registration-code {
+            display: inline-block;
+            background: var(--oscuro); color: var(--crema);
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.9rem;
+            letter-spacing: 2px; padding: 8px 20px; border-radius: 100px;
+            margin-top: 16px; position: relative; z-index: 1;
+        }
+
+        /* Marquee strip */
+        .marquee-strip {
+            background: var(--amarillo);
+            border-top: 3px solid var(--oscuro);
+            border-bottom: 3px solid var(--oscuro);
+            padding: 12px 0; overflow: hidden;
+        }
+        .marquee-track { display: flex; animation: marquee 14s linear infinite; width: max-content; }
+        .marquee-item {
+            display: inline-flex; align-items: center; gap: 16px;
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.9rem;
+            text-transform: uppercase; color: var(--oscuro); padding: 0 28px;
+            white-space: nowrap;
+        }
+        .marquee-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rojo); flex-shrink: 0; }
+
+        /* Content */
+        .content-wrap {
+            max-width: 760px; margin: 0 auto;
+            padding: 60px 24px 80px;
+            display: flex; flex-direction: column; gap: 28px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border: 3px solid var(--oscuro);
+            border-radius: var(--radius);
+            box-shadow: 5px 5px 0 var(--oscuro);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 20px 28px;
+            border-bottom: 2px solid #eee;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .card-header h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; }
+        .card-header span.material-symbols-outlined { color: var(--fucsia); }
+        .card-body { padding: 24px 28px; }
+
+        /* Summary grid */
+        #summary-details { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 560px) { #summary-details { grid-template-columns: 1fr; } }
+
+        /* Bank info card */
+        .bank-card {
+            background: #F0FFF0;
+            border: 2px solid var(--verde);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .bank-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .bank-card-header span { color: #2d8c00; }
+        .bank-card-header strong { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: #1a5200; }
+        .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 480px) { .bank-grid { grid-template-columns: 1fr; } }
+        .bank-field label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5a9a40; }
+        .bank-field p { font-weight: 800; font-size: 1rem; color: #1a5200; font-family: 'Syne', sans-serif; }
+
+        /* Steps */
+        .steps-list { display: flex; flex-direction: column; gap: 16px; }
+        .step-row { display: flex; gap: 14px; align-items: flex-start; }
+        .step-num {
+            width: 36px; height: 36px; flex-shrink: 0;
+            background: var(--oscuro); color: var(--crema);
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        .step-content p { font-size: 0.875rem; line-height: 1.6; color: #555; }
+        .step-content strong { color: var(--oscuro); font-weight: 700; }
+
+        /* Warning box */
+        .warning-box {
+            background: #FFFBEB;
+            border: 2px solid var(--amarillo);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex; gap: 12px; align-items: flex-start;
+            margin-top: 16px;
+        }
+        .warning-box span { color: #B45309; flex-shrink: 0; }
+        .warning-box p { font-size: 0.85rem; color: #92400E; line-height: 1.55; }
+        .warning-box strong { font-weight: 700; }
+
+        /* Magic link card */
+        .magic-card {
+            background: var(--fucsia);
+            border: 3px solid var(--oscuro);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            text-align: center;
+            box-shadow: 5px 5px 0 var(--oscuro);
+        }
+        .magic-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+        .magic-card h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: white; margin-bottom: 10px; }
+        .magic-card p { font-size: 0.875rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
+        .magic-card strong { color: white; font-weight: 700; }
+
+        /* Action buttons */
+        .action-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--amarillo); color: var(--oscuro);
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+            padding: 16px 36px; border-radius: var(--radius);
+            text-decoration: none; border: 3px solid var(--oscuro);
+            box-shadow: 4px 4px 0 var(--oscuro); transition: all 0.15s;
+        }
+        .btn-primary:hover { box-shadow: 2px 2px 0 var(--oscuro); transform: translate(2px, 2px); }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: white; color: var(--oscuro);
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+            padding: 16px 32px; border-radius: var(--radius);
+            text-decoration: none; border: 3px solid var(--oscuro);
+            box-shadow: 4px 4px 0 var(--oscuro); transition: all 0.15s;
+        }
+        .btn-secondary:hover { box-shadow: 2px 2px 0 var(--oscuro); transform: translate(2px, 2px); }
+
+        /* Confetti container */
+        #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+
+        /* Footer */
+        footer { background: var(--oscuro); padding: 24px 40px; text-align: center; border-top: 3px solid var(--oscuro); }
+        footer p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+    </style>
+</head>
+
+<body>
+
+    <!-- Confetti -->
+    <div id="confetti-container"></div>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="header-logo">
+            <img src="img/logo.png" alt="Onda Fest" />
+            <span>ONDA FEST 2026</span>
+        </a>
+    </header>
+
+    <!-- Success Hero -->
+    <section class="success-hero">
+        <div class="success-icon-wrap pop-in">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">check_circle</span>
+        </div>
+        <h1 class="fade-up d1">¡YA TIENES<br />TU PASE!</h1>
+        <p class="fade-up d2">Tu registro para <strong>Onda Fest 2026</strong> fue confirmado exitosamente.</p>
+        <div id="registration-code" class="fade-up d2"><!-- Filled by JS --></div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-strip">
+        <div class="marquee-track">
+            <div class="marquee-item"><span class="marquee-dot"></span>¡INSCRIPCIÓN EXITOSA!</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST 2026</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>13 DE DICIEMBRE</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>AHORA PAGA TU ENTRADA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>¡INSCRIPCIÓN EXITOSA!</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST 2026</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>13 DE DICIEMBRE</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>AHORA PAGA TU ENTRADA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <main>
+        <div class="content-wrap">
+
+            <!-- Summary card -->
+            <div class="card fade-up d1" id="summary-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">badge</span>
+                    <h3>Resumen de tu Inscripción</h3>
+                </div>
+                <div class="card-body">
+                    <div id="summary-details"><!-- Filled by JS --></div>
+                    <p id="magic-link-email" style="display:none;"></p>
+                </div>
+            </div>
+
+            <!-- Próximos pasos -->
+            <div class="card fade-up d2">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">checklist</span>
+                    <h3>Próximos Pasos</h3>
+                </div>
+                <div class="card-body">
+                    <div class="steps-list">
+                        <div class="step-row">
+                            <div class="step-num">1</div>
+                            <div class="step-content"><p>Revisa tu <strong>correo electrónico</strong> — te enviamos los detalles de tu inscripción y un enlace mágico de acceso.</p></div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">2</div>
+                            <div class="step-content"><p>Realiza el <strong>pago de RD$700</strong> por transferencia bancaria usando los datos de abajo. Plazo: <strong>30 de Noviembre 2026</strong>.</p></div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">3</div>
+                            <div class="step-content"><p>Sube tu <strong>comprobante de pago</strong> en tu portal personal (entra desde el enlace mágico en tu correo).</p></div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">4</div>
+                            <div class="step-content"><p>El <strong>13 de Diciembre</strong>, llega al Colegio Loyola con 30 min de anticipación y presenta tu código de registro.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pago -->
+            <div class="card fade-up d3">
+                <div class="card-header">
+                    <span class="material-symbols-outlined" style="color:var(--verde);">account_balance</span>
+                    <h3>Datos de Pago</h3>
+                </div>
+                <div class="card-body">
+                    <div class="bank-card">
+                        <div class="bank-card-header">
+                            <span class="material-symbols-outlined">assured_workload</span>
+                            <strong>Banco Popular Dominicano</strong>
+                        </div>
+                        <div class="bank-grid">
+                            <div class="bank-field">
+                                <label>Titular</label>
+                                <p>Hamlet</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>No. de Cuenta</label>
+                                <p>123-456789-0</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>Cédula</label>
+                                <p>001-1234567-8</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>Monto</label>
+                                <p style="color:var(--verde);">RD$700.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;font-weight:700;color:#444;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.8px;">En la descripción de la transferencia escribe:</p>
+                    <div style="background:#F5F5F5; border:2px solid #D1D5DB; border-radius:8px; padding:12px 16px; font-family:monospace; font-size:0.9rem; margin-bottom:16px;">
+                        Tu Nombre Completo - Tu Municipio
+                    </div>
+                    <div class="warning-box">
+                        <span class="material-symbols-outlined">warning</span>
+                        <p>Una vez realizada la transferencia, <strong>inicia sesión</strong> en tu cuenta usando el enlace mágico que recibiste en el correo y <strong>sube la imagen del comprobante</strong> para validar tu inscripción.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Magic link card -->
+            <div class="magic-card fade-up d3">
+                <span class="magic-icon material-symbols-outlined" style="font-variation-settings:'FILL' 1;">mark_email_unread</span>
+                <h3>¿Cómo accedo a mi cuenta?</h3>
+                <p>No necesitas contraseña. Te enviamos un <strong>enlace mágico</strong> directamente a tu correo. Al hacer clic en ese enlace, accederás automáticamente a tu portal personal para ver tu estado y subir tu comprobante.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-btns fade-up d4">
+                <a href="index.html" class="btn-primary">
+                    <span class="material-symbols-outlined">home</span>
+                    Volver al Inicio
+                </a>
+                <a href="https://www.google.com/maps/place/Colegio+Loyola/@18.45105,-69.92322,17z" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                    <span class="material-symbols-outlined">map</span>
+                    Ver Ubicación
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Onda Fest. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="js/success.js"></script>
+</body>
+</html>

@@ -405,7 +405,7 @@ async function handleSubmit(event) {
         sessionStorage.setItem("eno_registration", JSON.stringify(registrationInfo));
 
         // Redirigir a la página de confirmación
-        window.location.href = "success.html";
+        window.location.href = "succes.html";
     } catch (error) {
         // 7. Error
         console.error("Error al registrar:", error);
