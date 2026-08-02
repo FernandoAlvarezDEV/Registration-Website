@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Admin — Onda Fest 2026</title>
-    <meta name="description" content="Panel de administración Onda Fest. Gestiona inscripciones y pagos." />
+    <title>Admin â€” Onda Fest 2026</title>
+    <meta name="description" content="Panel de administraciÃ³n Onda Fest. Gestiona inscripciones y pagos." />
     <link rel="icon" type="image/png" href="img/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,7 +42,7 @@
         .d1{animation-delay:.1s} .d2{animation-delay:.2s} .d3{animation-delay:.3s}
         .float-icon { animation: floatIcon 4s ease-in-out infinite; }
 
-        /* ── Login Screen ── */
+        /* â”€â”€ Login Screen â”€â”€ */
         #admin-login-screen {
             min-height: 100vh;
             background: var(--crema);
@@ -100,7 +100,7 @@
         .login-back a { color: var(--fucsia); font-weight: 600; text-decoration: none; }
         .login-back a:hover { text-decoration: underline; }
 
-        /* ── Admin Dashboard ── */
+        /* â”€â”€ Admin Dashboard â”€â”€ */
         #admin-dashboard-content { /* manejado por la clase .hidden */ }
 
         /* Modal overlay */
@@ -288,14 +288,14 @@
     <!-- Toast -->
     <div id="toast" role="alert"></div>
 
-    <!-- ════════════════════════════════
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
          LOGIN SCREEN
-    ════════════════════════════════ -->
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div id="admin-login-screen">
         <div class="login-wrap">
             <div class="login-header fade-up">
                 <div class="login-icon float-icon">
-                    <img src="../Diseno/Iconos/Custodia.svg" alt="Admin" />
+                    <img src="./img/iconos/custodia.svg" alt="Admin" />
                 </div>
                 <h1 class="login-title">Panel Admin</h1>
                 <p class="login-sub">Acceso exclusivo para organizadores de Onda Fest</p>
@@ -305,11 +305,11 @@
                 <div id="admin-login-error" class="login-error hidden"></div>
 
                 <div class="login-field">
-                    <label class="login-label" for="admin-email">Correo Electrónico</label>
+                    <label class="login-label" for="admin-email">Correo ElectrÃ³nico</label>
                     <input id="admin-email" class="login-input" type="email" placeholder="admin@eno.com" />
                 </div>
                 <div class="login-field">
-                    <label class="login-label" for="admin-phone">Teléfono de Administrador</label>
+                    <label class="login-label" for="admin-phone">TelÃ©fono de Administrador</label>
                     <input id="admin-phone" class="login-input" type="tel" placeholder="8498888888" />
                 </div>
 
@@ -320,14 +320,14 @@
             </div>
 
             <p class="login-back fade-up d2">
-                <a href="index.html">← Volver al inicio</a>
+                <a href="index.html">â† Volver al inicio</a>
             </p>
         </div>
     </div>
 
-    <!-- ════════════════════════════════
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
          DASHBOARD CONTENT
-    ════════════════════════════════ -->
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div id="admin-dashboard-content" class="hidden">
 
         <!-- Modal ver comprobante -->
@@ -371,7 +371,7 @@
                 </div>
                 <button class="btn-logout" onclick="logout()">
                     <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
-                    <span>Cerrar Sesión</span>
+                    <span>Cerrar SesiÃ³n</span>
                 </button>
             </div>
         </header>
@@ -384,7 +384,7 @@
                 <div>
                     <h1 class="page-title">
                         <span class="material-symbols-outlined" style="font-size:1.5rem; vertical-align:middle;">admin_panel_settings</span>
-                        Panel de <span>Administración</span>
+                        Panel de <span>AdministraciÃ³n</span>
                     </h1>
                     <p class="page-sub">Gestiona los registros y pagos del evento Onda Fest 2026</p>
                 </div>
@@ -401,7 +401,7 @@
                     <div class="stat-value" id="stat-verificados">0</div>
                 </div>
                 <div class="stat-card c-blue">
-                    <div class="stat-label">En revisión</div>
+                    <div class="stat-label">En revisiÃ³n</div>
                     <div class="stat-value" id="stat-revision">0</div>
                 </div>
                 <div class="stat-card c-amarillo">
@@ -441,11 +441,11 @@
 
                 <!-- Filters -->
                 <div class="filters-row">
-                    <input id="filter-search" class="filter-search" type="text" placeholder="Buscar por nombre, teléfono o email..." oninput="applyFilters()" />
+                    <input id="filter-search" class="filter-search" type="text" placeholder="Buscar por nombre, telÃ©fono o email..." oninput="applyFilters()" />
                     <select id="filter-pago" class="filter-select" onchange="applyFilters()">
                         <option value="">Todos los estados</option>
                         <option value="pendiente">Pendiente</option>
-                        <option value="en revisión">En Revisión</option>
+                        <option value="en revisiÃ³n">En RevisiÃ³n</option>
                         <option value="verificado">Verificado</option>
                         <option value="rechazado">Rechazado</option>
                     </select>
@@ -472,7 +472,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Teléfono</th>
+                                <th>TelÃ©fono</th>
                                 <th>Email</th>
                                 <th>Municipio</th>
                                 <th>Talla</th>
@@ -497,7 +497,7 @@
 
         <!-- Footer -->
         <footer>
-            <p>© 2026 Onda Fest · Panel de Administración · Acceso Restringido</p>
+            <p>Â© 2026 Onda Fest Â· Panel de AdministraciÃ³n Â· Acceso Restringido</p>
         </footer>
 
     </div><!-- end #admin-dashboard-content -->

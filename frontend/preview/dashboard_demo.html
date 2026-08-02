@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Mi Cuenta — Onda Fest 2026</title>
+    <title>Mi Cuenta â€” Onda Fest 2026</title>
     <meta name="description"
-        content="Panel del asistente Onda Fest. Consulta el estado de tu inscripción y sube tu comprobante de pago." />
+        content="Panel del asistente Onda Fest. Consulta el estado de tu inscripciÃ³n y sube tu comprobante de pago." />
     <link rel="icon" type="image/png" href="../img/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -89,7 +89,7 @@
             animation-delay: 0.4s;
         }
 
-        /* ── Loading / Error screens ── */
+        /* â”€â”€ Loading / Error screens â”€â”€ */
         .overlay-screen {
             position: fixed;
             inset: 0;
@@ -143,7 +143,7 @@
             line-height: 1.6;
         }
 
-        /* ── Header ── */
+        /* â”€â”€ Header â”€â”€ */
         header {
             background: var(--oscuro);
             border-bottom: 3px solid var(--oscuro);
@@ -216,14 +216,14 @@
             }
         }
 
-        /* ── Main layout ── */
+        /* â”€â”€ Main layout â”€â”€ */
         main {
             max-width: 920px;
             margin: 0 auto;
             padding: 48px 24px 80px;
         }
 
-        /* ── Welcome ── */
+        /* â”€â”€ Welcome â”€â”€ */
         .welcome-block {
             margin-bottom: 32px;
         }
@@ -246,7 +246,7 @@
             margin-top: 6px;
         }
 
-        /* ── Hero ticket card ── */
+        /* â”€â”€ Hero ticket card â”€â”€ */
         .ticket-card {
             background: var(--oscuro);
             border: 3px solid var(--oscuro);
@@ -330,7 +330,7 @@
             filter: brightness(0) invert(1);
         }
 
-        /* ── Cards grid ── */
+        /* â”€â”€ Cards grid â”€â”€ */
         .cards-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -405,7 +405,7 @@
             color: var(--oscuro);
         }
 
-        /* ── Event reminder ── */
+        /* â”€â”€ Event reminder â”€â”€ */
         .event-reminder {
             background: var(--amarillo);
             border: 3px solid var(--oscuro);
@@ -445,7 +445,7 @@
             color: var(--oscuro);
         }
 
-        /* ── Upload card ── */
+        /* â”€â”€ Upload card â”€â”€ */
         .upload-card {
             background: white;
             border: 3px solid var(--oscuro);
@@ -615,7 +615,7 @@
             color: #4a7a40;
         }
 
-        /* ── Toast ── */
+        /* â”€â”€ Toast â”€â”€ */
         #toast {
             position: fixed;
             top: 20px;
@@ -646,7 +646,7 @@
             color: var(--oscuro);
         }
 
-        /* ── Footer ── */
+        /* â”€â”€ Footer â”€â”€ */
         footer {
             background: var(--oscuro);
             padding: 24px 40px;
@@ -659,7 +659,7 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* ── Primary link button ── */
+        /* â”€â”€ Primary link button â”€â”€ */
         .btn-link-primary {
             display: inline-flex;
             align-items: center;
@@ -765,7 +765,7 @@
     </style>
 </head>
 
-<!-- TODO: ELIMINAR O MODIFICAR EN PRODUCCIÓN - ARCHIVO DE DEMOSTRACIÓN -->
+<!-- TODO: ELIMINAR O MODIFICAR EN PRODUCCIÃ“N - ARCHIVO DE DEMOSTRACIÃ“N -->
 
 <body>
 
@@ -777,7 +777,7 @@
 
 
 
-    <!-- ── DASHBOARD MAIN ── -->
+    <!-- â”€â”€ DASHBOARD MAIN â”€â”€ -->
     <div id="dashboard-main" style="display:block;">
 
         <!-- Header -->
@@ -790,7 +790,7 @@
                 <span id="header-name">Fernando Alvarez</span>
                 <button class="btn-logout" onclick="logout()">
                     <span class="material-symbols-outlined" style="font-size:1rem;">logout</span>
-                    Cerrar Sesión
+                    Cerrar SesiÃ³n
                 </button>
             </div>
         </header>
@@ -801,13 +801,13 @@
             <!-- Welcome -->
             <div class="welcome-block fade-up">
                 <h1>Bienvenido, <span id="user-name">Fernando Alvarez</span></h1>
-                <p>Aquí puedes ver el estado de tu inscripción a Onda Fest 2026.</p>
+                <p>AquÃ­ puedes ver el estado de tu inscripciÃ³n a Onda Fest 2026.</p>
             </div>
 
             <!-- Ticket card -->
             <div class="ticket-card fade-up d1">
                 <div class="ticket-block">
-                    <p class="ticket-label">Código de Registro</p>
+                    <p class="ticket-label">CÃ³digo de Registro</p>
                     <p class="ticket-code" id="reg-code">ONDA-001</p>
                 </div>
                 <div class="ticket-block">
@@ -822,7 +822,7 @@
                     <p class="ticket-date">13 Dic, 2026</p>
                 </div>
                 <div class="ticket-icon">
-                    <img src="../../Diseno/Iconos/Custodia.svg" alt="" />
+                    <img src="../img/iconos/custodia.svg" alt="" />
                 </div>
             </div>
 
@@ -846,13 +846,13 @@
                             <span class="material-symbols-outlined">cake</span>
                             <div>
                                 <div class="detail-row-label">Edad</div>
-                                <div class="detail-row-value" id="detail-edad">25 años</div>
+                                <div class="detail-row-value" id="detail-edad">25 aÃ±os</div>
                             </div>
                         </div>
                         <div class="detail-row">
                             <span class="material-symbols-outlined">phone</span>
                             <div>
-                                <div class="detail-row-label">Teléfono</div>
+                                <div class="detail-row-label">TelÃ©fono</div>
                                 <div class="detail-row-value" id="detail-telefono">809-123-4567</div>
                             </div>
                         </div>
@@ -870,7 +870,7 @@
                 <div class="detail-card fade-up d2">
                     <div class="detail-card-header">
                         <span class="material-symbols-outlined">confirmation_number</span>
-                        <h3>Detalles de Inscripción</h3>
+                        <h3>Detalles de InscripciÃ³n</h3>
                     </div>
                     <div class="detail-card-body">
                         <div class="detail-row">
@@ -918,7 +918,7 @@
                     <span class="material-symbols-outlined">schedule</span>
                     <div>
                         <div class="event-reminder-label">Horario</div>
-                        <div class="event-reminder-val">8:00 AM – 5:00 PM</div>
+                        <div class="event-reminder-val">8:00 AM â€“ 5:00 PM</div>
                     </div>
                 </div>
                 <div class="event-reminder-item">
@@ -934,7 +934,7 @@
             <!-- Pago y Advertencia -->
             <div class="warning-box fade-up d3">
                 <span class="material-symbols-outlined">warning</span>
-                <p><strong>ATENCIÓN:</strong> El pago por esta vía es <strong>ÚNICAMENTE para personas del Distrito
+                <p><strong>ATENCIÃ“N:</strong> El pago por esta vÃ­a es <strong>ÃšNICAMENTE para personas del Distrito
                         Nacional</strong>. Cada municipio tiene su propia persona de contacto para gestionar los pagos.
                 </p>
             </div>
@@ -960,7 +960,7 @@
                                 <p>123-456789-0</p>
                             </div>
                             <div class="bank-field">
-                                <label>Cédula</label>
+                                <label>CÃ©dula</label>
                                 <p>001-1234567-8</p>
                             </div>
                             <div class="bank-field">
@@ -988,7 +988,7 @@
                             <span class="material-symbols-outlined"
                                 style="font-variation-settings:'FILL' 1;">task_alt</span>
                             <p>Comprobante enviado correctamente</p>
-                            <small>Tu comprobante está en proceso de revisión.</small>
+                            <small>Tu comprobante estÃ¡ en proceso de revisiÃ³n.</small>
                             <br /><br />
                             <img id="comprobante-preview-existing"
                                 style="max-width:280px; border-radius:10px; border:2px solid var(--verde);"
@@ -1003,8 +1003,8 @@
                             <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp"
                                 style="display:none;" />
                             <span class="material-symbols-outlined">cloud_upload</span>
-                            <p>Arrastra tu imagen aquí o haz clic para seleccionar</p>
-                            <small>Formatos: JPG, PNG, WebP · Máx. 10MB</small>
+                            <p>Arrastra tu imagen aquÃ­ o haz clic para seleccionar</p>
+                            <small>Formatos: JPG, PNG, WebP Â· MÃ¡x. 10MB</small>
                         </div>
 
                         <!-- File preview -->
@@ -1032,7 +1032,7 @@
 
         <!-- Footer -->
         <footer>
-            <p>© 2026 Onda Fest. Todos los derechos reservados.</p>
+            <p>Â© 2026 Onda Fest. Todos los derechos reservados.</p>
         </footer>
 
     </div><!-- end #dashboard-main -->
