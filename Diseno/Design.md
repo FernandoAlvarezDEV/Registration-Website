@@ -79,8 +79,18 @@ La IA debe estructurar el diseño de la aplicación web conectando coherentement
 Todos los recursos vectoriales se encuentran en la ruta raíz del proyecto bajo la carpeta: `Diseno/iconos/`
 
 Rutas exactas de los archivos para vinculación en HTML:
-- **Custodia Festivalera**: `Diseno/iconos/custodia.png` (o .png) -> Usar como marca de agua o separador espiritual.
-- **Cámara de Cine Retro**: `Diseno/iconos/camara.png` (o .png) -> Usar en galerías y secciones multimedia.
-- **Micrófono de Mano**: `Diseno/iconos/microfono.png` (o .png) -> Usar junto a bloques de bandas y oradores.
-- **Lentes de Sol**: `Diseno/iconos/lentes.png` (o .png) -> Usar en la cabecera y el formulario de inscripción.
-- **Cruz Estilizada**: `Diseno/iconos/cruz.png` (o .png) -> Usar como viñeta en listas y en el pie de página (footer).
+- **Custodia Festivalera**: `Diseno/iconos/custodia.png` -> Usar como marca de agua o separador espiritual.
+- **Cámara de Cine Retro**: `Diseno/iconos/camara.png` -> Usar en galerías y secciones multimedia.
+- **Micrófono de Mano**: `Diseno/iconos/microfono.png` -> Usar junto a bloques de bandas y oradores.
+- **Lentes de Sol**: `Diseno/iconos/lentes.png` -> Usar en la cabecera y el formulario de inscripción.
+- **Cruz Estilizada**: `Diseno/iconos/cruz.png` -> Usar como viñeta en listas y en el pie de página (footer).
+
+### 6. Configuración de Rutas de Archivos
+Todas las páginas deben tener rutas de activos relativas y absolutas bien definidas para asegurar la portabilidad y correcto enlace entre archivos.
+
+Rutas Absolutas sugeridas desde la raíz del proyecto:
+- **Estilos CSS**: `/frontend/css/styles.css`
+- **Archivos JavaScript**: `/frontend/js/main.js` y `/frontend/js/auth.js`
+- **Assets de Imagen/Iconos**: `/frontend/img/` y `/frontend/Diseno/iconos/`
+- **Fuentes Custom**: `/frontend/fonts/`
+z

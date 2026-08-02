@@ -1,4 +1,5 @@
-const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168") || window.location.protocol === "file:";
+const API_BASE = isLocal
     ? "http://localhost:8000"
     : "https://eno-portal-backend-production.up.railway.app";
 
@@ -15,14 +16,14 @@ function renderPaymentStatus(estadoPago) {
     const badge = document.getElementById("pago-badge");
     if (!badge) return;
     const statusMap = {
-        "pendiente":    { bg: "bg-amber-500/90",   icon: "schedule",     text: "Pago Pendiente" },
-        "en revisión":  { bg: "bg-blue-500/90",    icon: "hourglass_top",text: "En Revisión" },
-        "verificado":   { bg: "bg-emerald-500/90", icon: "verified",     text: "Pago Verificado" },
-        "rechazado":    { bg: "bg-red-500/90",      icon: "cancel",       text: "Pago Rechazado" },
+        "pendiente":    { bg: "background-color: rgba(245, 158, 11, 0.9); color: white;",   icon: "schedule",     text: "Pago Pendiente" },
+        "en revisión":  { bg: "background-color: rgba(59, 130, 246, 0.9); color: white;",    icon: "hourglass_top",text: "En Revisión" },
+        "verificado":   { bg: "background-color: rgba(16, 185, 129, 0.9); color: white;", icon: "verified",     text: "Pago Verificado" },
+        "rechazado":    { bg: "background-color: rgba(239, 68, 68, 0.9); color: white;",      icon: "cancel",       text: "Pago Rechazado" },
     };
     const status = statusMap[estadoPago] || statusMap["pendiente"];
-    badge.className = `inline-flex items-center gap-1 ${status.bg} text-white text-sm font-bold px-4 py-2 rounded-full`;
-    badge.innerHTML = `<span class="material-symbols-outlined text-sm">${status.icon}</span> ${status.text}`;
+    badge.style.cssText = status.bg;
+    badge.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem;">${status.icon}</span> ${status.text}`;
 }
 
 // ── Rellenar UI con los datos del usuario ──────────────────────────

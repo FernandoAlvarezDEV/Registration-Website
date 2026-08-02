@@ -262,6 +262,35 @@
             text-decoration: none; transition: all 0.15s;
         }
         .btn-link-primary:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--oscuro); }
+
+        /* Bank info card */
+        .bank-card {
+            background: #F0FFF0;
+            border: 2px solid var(--verde);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .bank-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .bank-card-header span { color: #2d8c00; }
+        .bank-card-header strong { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: #1a5200; }
+        .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 480px) { .bank-grid { grid-template-columns: 1fr; } }
+        .bank-field label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5a9a40; }
+        .bank-field p { font-weight: 800; font-size: 1rem; color: #1a5200; font-family: 'Syne', sans-serif; }
+
+        /* Warning box */
+        .warning-box {
+            background: #FFFBEB;
+            border: 2px solid var(--amarillo);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex; gap: 12px; align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .warning-box span { color: #B45309; flex-shrink: 0; }
+        .warning-box p { font-size: 0.85rem; color: #92400E; line-height: 1.55; }
+        .warning-box strong { font-weight: 700; }
     </style>
 </head>
 
@@ -331,7 +360,7 @@
                     <p class="ticket-date">13 Dic, 2026</p>
                 </div>
                 <div class="ticket-icon">
-                    <img src="../Diseno/Iconos/Custodia.png" alt="" />
+                    <img src="../Diseno/Iconos/Custodia.svg" alt="" />
                 </div>
             </div>
 
@@ -406,6 +435,46 @@
                 </div>
             </div>
 
+
+            <!-- Pago y Advertencia -->
+            <div class="warning-box fade-up d4">
+                <span class="material-symbols-outlined">warning</span>
+                <p><strong>ATENCIÓN:</strong> El pago por esta vía es <strong>ÚNICAMENTE para personas del Distrito Nacional</strong>. Cada municipio tiene su propia persona de contacto para gestionar los pagos.</p>
+            </div>
+
+            <div class="detail-card fade-up d4" style="margin-bottom:20px;">
+                <div class="detail-card-header">
+                    <span class="material-symbols-outlined" style="color:var(--verde);">account_balance</span>
+                    <h3>Datos de Transferencia</h3>
+                </div>
+                <div class="detail-card-body" style="padding:20px 24px;">
+                    <div class="bank-card" style="margin-bottom:0;">
+                        <div class="bank-card-header">
+                            <span class="material-symbols-outlined">assured_workload</span>
+                            <strong>Banco Popular Dominicano</strong>
+                        </div>
+                        <div class="bank-grid">
+                            <div class="bank-field">
+                                <label>Titular</label>
+                                <p>Hamlet</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>No. de Cuenta</label>
+                                <p>123-456789-0</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>Cédula</label>
+                                <p>001-1234567-8</p>
+                            </div>
+                            <div class="bank-field">
+                                <label>Monto</label>
+                                <p style="color:var(--verde);">RD$700.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Upload comprobante -->
             <div class="upload-card fade-up d4" id="upload-section">
                 <div class="upload-card-header">
@@ -466,14 +535,9 @@
     </div><!-- end #dashboard-main -->
 
     <script>
-        // Override error screen show — use inline styles compatible with our CSS
-        const _origShowError = window.showError;
+        // Preparar UI inicial
         document.addEventListener('DOMContentLoaded', () => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const errorScreen = document.getElementById('error-screen');
-            const dashMain = document.getElementById('dashboard-main');
-            // patch hidden class behavior to work with display:none
-            if (loadingScreen) loadingScreen.style.display = 'flex';
+            // El MutationObserver maneja los cambios de clase 'hidden'
         });
     </script>
     <script src="js/dashboard.js"></script>

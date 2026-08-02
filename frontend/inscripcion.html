@@ -55,7 +55,20 @@
         }
         .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .header-logo img { height: 40px; width: 40px; border-radius: 50%; border: 2px solid var(--oscuro); }
-        .header-logo span { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--oscuro); }
+        .header-logo span, .header-logo .site-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--oscuro); }
+        .btn-register-nav {
+            background: var(--amarillo);
+            color: var(--oscuro);
+            font-weight: 800;
+            font-size: 0.875rem;
+            padding: 10px 24px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 2px solid var(--oscuro);
+            box-shadow: 3px 3px 0 var(--oscuro);
+            transition: all 0.15s;
+        }
+        .btn-register-nav:hover { box-shadow: 1px 1px 0 var(--oscuro); transform: translate(2px, 2px); }
         .header-nav { display: flex; align-items: center; gap: 28px; }
         .header-nav a { font-weight: 600; font-size: 0.875rem; color: var(--oscuro); text-decoration: none; }
         .header-nav a:hover { color: var(--fucsia); }
@@ -212,12 +225,12 @@
     <!-- Header -->
     <header>
         <a href="index.html" class="header-logo">
-            <img src="img/logo.png" alt="Onda Fest" />
-            <span>ONDA FEST</span>
+            <img src="img/logo.png" alt="Onda Fest Logo" />
+            <span class="site-name">ONDA FEST</span>
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
-            <a href="inscripcion.html" style="color:var(--fucsia); font-weight:800;">Inscripción</a>
+            <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
 
@@ -233,14 +246,14 @@
                     <p class="page-subtitle">Asegura tu entrada para vivir la experiencia Onda Fest. Una sola iglesia, una sola dirección.</p>
                 </div>
                 <div class="page-header-icon float-icon">
-                    <img src="../Diseno/Iconos/Lentes de sol.png" alt="Lentes de sol" />
+                    <img src="../Diseno/Iconos/Lentes de sol.svg" alt="Lentes de sol" />
                 </div>
             </div>
 
             <!-- Form Card -->
             <div class="form-card fade-up d1">
                 <div class="form-card-header">
-                    <img src="../Diseno/Iconos/Cruz.png" alt="Cruz" />
+                    <img src="../Diseno/Iconos/Cruz.svg" alt="Cruz" />
                     <div>
                         <h2>Formulario de Inscripción</h2>
                         <p>Completa todos los campos obligatorios</p>
@@ -397,24 +410,24 @@
                 <!-- Requisitos con Cruz -->
                 <div class="sidebar-card" style="background:var(--fucsia); border-color: var(--oscuro);">
                     <div class="sidebar-card-header">
-                        <img src="../Diseno/Iconos/Cruz.png" alt="Cruz" style="width:24px;height:24px;filter:brightness(0) invert(1);" />
+                        <img src="../Diseno/Iconos/Cruz.svg" alt="Cruz" style="width:24px;height:24px;filter:brightness(0) invert(1);" />
                         <h3 style="color:white;">Incluye tu entrada</h3>
                     </div>
                     <ul class="cruz-list">
                         <li style="color:white;">
-                            <img src="../Diseno/Iconos/Cruz.png" alt="" style="filter:brightness(0) invert(1);" />
+                            <img src="../Diseno/Iconos/Cruz.svg" alt="" style="filter:brightness(0) invert(1);" />
                             Camiseta oficial del evento
                         </li>
                         <li style="color:white;">
-                            <img src="../Diseno/Iconos/Cruz.png" alt="" style="filter:brightness(0) invert(1);" />
+                            <img src="../Diseno/Iconos/Cruz.svg" alt="" style="filter:brightness(0) invert(1);" />
                             Almuerzo y refrigerios
                         </li>
                         <li style="color:white;">
-                            <img src="../Diseno/Iconos/Cruz.png" alt="" style="filter:brightness(0) invert(1);" />
+                            <img src="../Diseno/Iconos/Cruz.svg" alt="" style="filter:brightness(0) invert(1);" />
                             Acceso a todas las actividades
                         </li>
                         <li style="color:white;">
-                            <img src="../Diseno/Iconos/Cruz.png" alt="" style="filter:brightness(0) invert(1);" />
+                            <img src="../Diseno/Iconos/Cruz.svg" alt="" style="filter:brightness(0) invert(1);" />
                             Música en vivo y dinámicas
                         </li>
                     </ul>

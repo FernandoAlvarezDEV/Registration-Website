@@ -1,4 +1,5 @@
-const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168") || window.location.protocol === "file:";
+const API_BASE = isLocal
     ? "http://localhost:8000"
     : "https://eno-portal-backend-production.up.railway.app";
         let allRegistros = [];
@@ -257,7 +258,7 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
         // loadData() se llama dentro del bloque session check
         
         // ── Admin Login form ──────────────────────────────────────────
-        const API_BASE_ADMIN = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+        const API_BASE_ADMIN = isLocal
             ? "http://localhost:8000"
             : "https://eno-portal-backend-production.up.railway.app";
 

@@ -23,6 +23,8 @@
             --radius:   14px;
         }
 
+        .hidden { display: none !important; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
@@ -89,19 +91,17 @@
         .btn-login:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--oscuro); }
         .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0 var(--oscuro); }
         .login-error {
-            display: none;
             background: #FEE2E2; border: 1.5px solid #FECACA;
             border-radius: 8px; padding: 10px 14px;
             font-size: 0.82rem; font-weight: 600; color: #DC2626;
             margin-bottom: 14px;
         }
-        .login-error.visible { display: block; }
         .login-back { text-align: center; margin-top: 16px; font-size: 0.8rem; color: #999; }
         .login-back a { color: var(--fucsia); font-weight: 600; text-decoration: none; }
         .login-back a:hover { text-decoration: underline; }
 
         /* ── Admin Dashboard ── */
-        #admin-dashboard-content { display: none; }
+        #admin-dashboard-content { /* manejado por la clase .hidden */ }
 
         /* Modal overlay */
         .modal-overlay {
@@ -295,14 +295,14 @@
         <div class="login-wrap">
             <div class="login-header fade-up">
                 <div class="login-icon float-icon">
-                    <img src="../Diseno/Iconos/Custodia.png" alt="Admin" />
+                    <img src="../Diseno/Iconos/Custodia.svg" alt="Admin" />
                 </div>
                 <h1 class="login-title">Panel Admin</h1>
                 <p class="login-sub">Acceso exclusivo para organizadores de Onda Fest</p>
             </div>
 
             <div class="login-card fade-up d1">
-                <div id="admin-login-error" class="login-error"></div>
+                <div id="admin-login-error" class="login-error hidden"></div>
 
                 <div class="login-field">
                     <label class="login-label" for="admin-email">Correo Electrónico</label>
@@ -328,7 +328,7 @@
     <!-- ════════════════════════════════
          DASHBOARD CONTENT
     ════════════════════════════════ -->
-    <div id="admin-dashboard-content">
+    <div id="admin-dashboard-content" class="hidden">
 
         <!-- Modal ver comprobante -->
         <div id="modal-comprobante" class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -502,43 +502,6 @@
 
     </div><!-- end #admin-dashboard-content -->
 
-    <script>
-        // Patch: override JS functions that reference Tailwind classes / old IDs for compatibility
-        // The admin.js uses .classList.add/remove('hidden') — we patch the elements to support it
-        const _styleForHidden = () => {
-            const loginScreen = document.getElementById('admin-login-screen');
-            const dashContent = document.getElementById('admin-dashboard-content');
-            // If JS adds 'hidden' class to login → hide it
-            const obs = new MutationObserver(() => {
-                if (loginScreen.classList.contains('hidden')) {
-                    loginScreen.style.display = 'none';
-                } else if (!loginScreen.classList.contains('hidden') && loginScreen.style.display === 'none') {
-                    loginScreen.style.display = 'flex';
-                }
-                if (dashContent.classList.contains('hidden')) {
-                    dashContent.style.display = 'none';
-                } else if (!dashContent.classList.contains('hidden')) {
-                    dashContent.style.display = 'block';
-                }
-            });
-            obs.observe(loginScreen, { attributes: true, attributeFilter: ['class'] });
-            obs.observe(dashContent, { attributes: true, attributeFilter: ['class'] });
-        };
-        // Patch comprobantes-section hidden class
-        const _patchCompSection = () => {
-            const el = document.getElementById('comprobantes-section');
-            if (!el) return;
-            const obs = new MutationObserver(() => {
-                if (el.classList.contains('hidden')) el.style.display = 'none';
-                else el.style.display = 'block';
-            });
-            obs.observe(el, { attributes: true, attributeFilter: ['class'] });
-        };
-        document.addEventListener('DOMContentLoaded', () => {
-            _styleForHidden();
-            _patchCompSection();
-        });
-    </script>
-    <script src="js/admin.js"></script>
+    <script src="js/admin.js?v=3"></script>
 </body>
 </html>
