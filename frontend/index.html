@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Onda Fest 2026 â€” Una Sola Onda</title>
-    <meta name="description" content="Onda Fest 2026 â€” El festival juvenil mÃ¡s energÃ©tico del aÃ±o. 13 de Diciembre, Colegio Loyola, Santo Domingo. Â¡InscrÃ­bete ahora!" />
+    <title>Onda Fest 2026 — Una Sola Onda</title>
+    <meta name="description" content="Onda Fest 2026 — El festival juvenil más energético del año. 13 de Diciembre, Colegio Loyola, Santo Domingo. ¡Inscríbete ahora!" />
     <link rel="icon" type="image/png" href="img/logo.png" />
     <!-- Google Fonts: Syne + Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <style>
-        /* â”€â”€ Design Tokens â”€â”€ */
+        /* ── Design Tokens ── */
         :root {
             --crema:    #F9F4E0;
             --rojo:     #FF0000;
@@ -40,7 +40,7 @@
             font-family: 'Syne', sans-serif;
         }
 
-        /* â”€â”€ Marquee â”€â”€ */
+        /* ── Marquee ── */
         @keyframes marquee {
             from { transform: translateX(0); }
             to   { transform: translateX(-50%); }
@@ -48,7 +48,7 @@
         .marquee-track { display: flex; animation: marquee 18s linear infinite; width: max-content; }
         .marquee-track:hover { animation-play-state: paused; }
 
-        /* â”€â”€ Animations â”€â”€ */
+        /* ── Animations ── */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(28px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -69,7 +69,7 @@
         .float-icon { animation: floatIcon 4s ease-in-out infinite; }
         .float-icon-2 { animation: floatIcon 5s ease-in-out infinite 1s; }
 
-        /* â”€â”€ Header â”€â”€ */
+        /* ── Header ── */
         header {
             background: var(--crema);
             border-bottom: 3px solid var(--oscuro);
@@ -101,7 +101,7 @@
         }
         .btn-register-nav:hover { box-shadow: 1px 1px 0 var(--oscuro); transform: translate(2px, 2px); }
 
-        /* â”€â”€ Hero â”€â”€ */
+        /* ── Hero ── */
         .hero {
             background-color: var(--crema);
             min-height: 92vh;
@@ -186,7 +186,7 @@
         .hif-2 { bottom: 20px; right: 0; background: var(--fucsia); }
         .hif-3 { top: 20px; right: 40px; background: var(--naranja); }
 
-        /* â”€â”€ Marquee Strip â”€â”€ */
+        /* ── Marquee Strip ── */
         .marquee-strip {
             background: var(--amarillo);
             border-top: 3px solid var(--oscuro);
@@ -203,7 +203,7 @@
         }
         .marquee-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rojo); flex-shrink: 0; }
 
-        /* â”€â”€ Info Cards â”€â”€ */
+        /* ── Info Cards ── */
         .info-section {
             background: var(--oscuro);
             padding: 80px;
@@ -236,7 +236,7 @@
         .info-card.accent { background: var(--amarillo); }
         .info-card.accent .info-card-label { color: rgba(0,0,0,0.5); }
 
-        /* â”€â”€ About Section â”€â”€ */
+        /* ── About Section ── */
         .about-section {
             background: var(--crema);
             padding: 100px 80px;
@@ -270,7 +270,7 @@
         }
         .about-icon-deco img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* â”€â”€ Includes Section â”€â”€ */
+        /* ── Includes Section ── */
         .includes-section {
             background: var(--rojo);
             padding: 100px 80px;
@@ -297,7 +297,7 @@
         .include-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
         .include-desc { font-size: 0.875rem; color: #666; line-height: 1.6; }
 
-        /* â”€â”€ CTA Section â”€â”€ */
+        /* ── CTA Section ── */
         .cta-section {
             background: var(--amarillo);
             padding: 100px 80px;
@@ -332,7 +332,7 @@
         .cta-deco-1 { width: 100px; top: -20px; left: -20px; }
         .cta-deco-2 { width: 80px; bottom: 0; right: 0; }
 
-        /* â”€â”€ FAQ â”€â”€ */
+        /* ── FAQ ── */
         .faq-section {
             background: var(--crema);
             padding: 100px 80px;
@@ -358,7 +358,7 @@
         details[open] .faq-arrow { transform: rotate(180deg); }
         .faq-a { padding: 0 24px 20px; font-size: 0.9rem; color: #555; line-height: 1.7; }
 
-        /* â”€â”€ Footer â”€â”€ */
+        /* ── Footer ── */
         footer {
             background: var(--oscuro);
             padding: 40px 80px;
@@ -374,7 +374,7 @@
         .footer-cruz { display: flex; align-items: center; gap: 6px; }
         .footer-cruz img { width: 24px; height: 24px; opacity: 0.5; filter: brightness(0) invert(1); }
 
-        /* â”€â”€ Responsive â”€â”€ */
+        /* ── Responsive ── */
         @media (max-width: 1024px) {
             .hero { grid-template-columns: 1fr; padding: 60px 32px; min-height: auto; }
             .hero-visual { display: none; }
@@ -396,7 +396,7 @@
 
 <body>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• HEADER â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ HEADER ═══════════ -->
     <header>
         <a href="index.html" class="header-logo">
             <img src="img/logo.png" alt="Onda Fest Logo" />
@@ -404,29 +404,29 @@
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
-            <a href="inscripcion.html" class="btn-register-nav">InscrÃ­bete â†’</a>
+            <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• HERO â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ HERO ═══════════ -->
     <section class="hero">
         <div class="hero-content">
             <div class="hero-tag fade-up">
-                <span>ðŸ”¥</span>
-                <span>13 de Diciembre Â· Colegio Loyola, SD</span>
+                <span>🔥</span>
+                <span>13 de Diciembre · Colegio Loyola, SD</span>
             </div>
             <h1 class="hero-title fade-up d1">ONDA<br /><span>FEST</span><br />2026</h1>
             <p class="hero-subtitle fade-up d2">
-                En cada rincÃ³n de nuestra naciÃ³n, jÃ³venes de fe comparten un mismo latido. Vive la experiencia donde la fe se siente desde la alegrÃ­a y la creatividad.
+                En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido. Vive la experiencia donde la fe se siente desde la alegría y la creatividad.
             </p>
             <a href="inscripcion.html" class="btn-cta-hero fade-up d3">
                 <span class="material-symbols-outlined">confirmation_number</span>
-                Â¡Consigue tu entrada!
+                ¡Consigue tu entrada!
             </a>
         </div>
         <div class="hero-visual fade-up d2">
             <div class="hero-icon-main float-icon">
-                <img src="./img/iconos/microfono.svg" alt="MicrÃ³fono Onda Fest" />
+                <img src="./img/iconos/microfono.svg" alt="Micrófono Onda Fest" />
             </div>
             <div class="hero-icon-float hif-1 float-icon-2">
                 <img src="./img/iconos/lentes-de-sol.svg" alt="Lentes" />
@@ -440,7 +440,7 @@
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• MARQUEE â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ MARQUEE ═══════════ -->
     <div class="marquee-strip">
         <div class="marquee-track">
             <!-- duplicated for infinite loop -->
@@ -448,18 +448,18 @@
             <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>13 DIC 2026</div>
             <div class="marquee-item"><span class="marquee-dot"></span>COLEGIO LOYOLA</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>INSCRÃBETE YA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>INSCRÍBETE YA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>RD$700</div>
             <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST</div>
             <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>13 DIC 2026</div>
             <div class="marquee-item"><span class="marquee-dot"></span>COLEGIO LOYOLA</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>INSCRÃBETE YA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>INSCRÍBETE YA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>RD$700</div>
         </div>
     </div>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• INFO CARDS â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ INFO CARDS ═══════════ -->
     <section class="info-section">
         <div class="info-grid">
             <div class="info-card fade-up">
@@ -470,7 +470,7 @@
             </div>
             <div class="info-card fade-up d1">
                 <div class="info-card-label">Horario</div>
-                <div class="info-card-value">8AM â€“ 5PM</div>
+                <div class="info-card-value">8AM – 5PM</div>
                 <div class="info-card-sub">Jornada completa</div>
                 <span class="material-symbols-outlined info-card-icon">schedule</span>
             </div>
@@ -489,32 +489,32 @@
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• ABOUT â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ ABOUT ═══════════ -->
     <section class="about-section">
         <div class="about-inner">
             <div>
                 <p class="section-eyebrow">Sobre el Evento</p>
                 <h2 class="section-title">Somos una sola iglesia</h2>
                 <p class="section-body">
-                    En cada rincÃ³n de nuestra naciÃ³n, jÃ³venes de fe comparten un mismo latido y una misma misiÃ³n, unidos por un movimiento que trasciende y nos recuerda que mÃ¡s allÃ¡ de individuos, somos una sola iglesia.<br /><br />
-                    Este festival juvenil transforma ese encuentro en una experiencia vibrante donde la fe se vive desde la alegrÃ­a, la creatividad y la conexiÃ³n.
+                    En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido y una misma misión, unidos por un movimiento que trasciende y nos recuerda que más allá de individuos, somos una sola iglesia.<br /><br />
+                    Este festival juvenil transforma ese encuentro en una experiencia vibrante donde la fe se vive desde la alegría, la creatividad y la conexión.
                 </p>
                 <ul class="check-list">
                     <li>
-                        <div class="check-bullet"><span>âœ“</span></div>
+                        <div class="check-bullet"><span>✓</span></div>
                         Camiseta oficial del evento incluida
                     </li>
                     <li>
-                        <div class="check-bullet"><span>âœ“</span></div>
+                        <div class="check-bullet"><span>✓</span></div>
                         Refrigerios y almuerzo durante el evento
                     </li>
                     <li>
-                        <div class="check-bullet"><span>âœ“</span></div>
-                        Acceso a todas las actividades del dÃ­a
+                        <div class="check-bullet"><span>✓</span></div>
+                        Acceso a todas las actividades del día
                     </li>
                     <li>
-                        <div class="check-bullet"><span>âœ“</span></div>
-                        MÃºsica en vivo, talleres y dinÃ¡mica espiritual
+                        <div class="check-bullet"><span>✓</span></div>
+                        Música en vivo, talleres y dinámica espiritual
                     </li>
                 </ul>
             </div>
@@ -525,18 +525,18 @@
                 <iframe
                     src="https://maps.google.com/maps?q=Colegio+Loyola,+Av.+Abraham+Lincoln,+Santo+Domingo&t=&z=16&ie=UTF8&iwloc=B&output=embed"
                     allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                    title="UbicaciÃ³n Colegio Loyola">
+                    title="Ubicación Colegio Loyola">
                 </iframe>
             </div>
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• INCLUDES â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ INCLUDES ═══════════ -->
     <section class="includes-section">
         <div class="includes-inner">
             <div class="includes-header">
                 <p class="section-eyebrow">Lo que obtienes</p>
-                <h2 class="section-title" style="color:white;">Â¿QuÃ© incluye tu inscripciÃ³n?</h2>
+                <h2 class="section-title" style="color:white;">¿Qué incluye tu inscripción?</h2>
             </div>
             <div class="includes-grid">
                 <div class="include-card">
@@ -548,39 +548,39 @@
                 </div>
                 <div class="include-card">
                     <div class="include-icon" style="display:flex;align-items:center;justify-content:center;">
-                        <img src="./img/iconos/microfono.svg" alt="MÃºsica en vivo" style="width:64px;height:64px;object-fit:contain;" />
+                        <img src="./img/iconos/microfono.svg" alt="Música en vivo" style="width:64px;height:64px;object-fit:contain;" />
                     </div>
-                    <h3 class="include-title">MÃºsica en Vivo</h3>
-                    <p class="include-desc">Artistas y bandas que llevan la alabanza a otro nivel en una atmÃ³sfera de festival.</p>
+                    <h3 class="include-title">Música en Vivo</h3>
+                    <p class="include-desc">Artistas y bandas que llevan la alabanza a otro nivel en una atmósfera de festival.</p>
                 </div>
                 <div class="include-card">
                     <div class="include-icon">
                         <span class="material-symbols-outlined mat-icon" style="color:var(--naranja);">lunch_dining</span>
                     </div>
-                    <h3 class="include-title">AlimentaciÃ³n</h3>
+                    <h3 class="include-title">Alimentación</h3>
                     <p class="include-desc">Almuerzo completo y refrigerios durante toda la jornada para que disfrutes sin preocuparte.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• CTA â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ CTA ═══════════ -->
     <section class="cta-section">
         <div class="cta-inner">
             <img src="./img/iconos/lentes-de-sol.svg" alt="" class="cta-deco cta-deco-1 float-icon" />
             <img src="./img/iconos/cruz.svg" alt="" class="cta-deco cta-deco-2 float-icon-2" />
             <p class="section-eyebrow" style="text-align:center; color:var(--fucsia);">Cupos Limitados</p>
-            <h2 class="section-title" style="text-align:center; font-size:clamp(2rem,5vw,3.5rem);">Â¡Asegura tu lugar en<br />Onda Fest 2026!</h2>
+            <h2 class="section-title" style="text-align:center; font-size:clamp(2rem,5vw,3.5rem);">¡Asegura tu lugar en<br />Onda Fest 2026!</h2>
             <div class="cta-price">RD$<span>700</span></div>
             <a href="inscripcion.html" class="btn-cta-big">
                 <span class="material-symbols-outlined">confirmation_number</span>
-                Â¡InscrÃ­bete Ahora!
+                ¡Inscríbete Ahora!
             </a>
-            <p class="cta-note">Pago disponible por transferencia bancaria Â· Plazo hasta el 30 de Noviembre 2026</p>
+            <p class="cta-note">Pago disponible por transferencia bancaria · Plazo hasta el 30 de Noviembre 2026</p>
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• FAQ â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ FAQ ═══════════ -->
     <section class="faq-section">
         <div class="faq-inner">
             <div class="faq-header">
@@ -589,36 +589,36 @@
             </div>
             <details class="faq-item">
                 <summary class="faq-q">
-                    <span>Â¿CÃ³mo puedo pagar mi inscripciÃ³n?</span>
+                    <span>¿Cómo puedo pagar mi inscripción?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">DespuÃ©s de inscribirte, recibirÃ¡s un correo con los datos bancarios para transferencia. El pago debe realizarse antes del 30 de Noviembre, 2026.</div>
+                <div class="faq-a">Después de inscribirte, recibirás un correo con los datos bancarios para transferencia. El pago debe realizarse antes del 30 de Noviembre, 2026.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
-                    <span>Â¿Puedo cancelar mi inscripciÃ³n?</span>
+                    <span>¿Puedo cancelar mi inscripción?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">No se aceptan devoluciones ni cancelaciones una vez realizado el pago. AsegÃºrate de poder asistir antes de inscribirte.</div>
+                <div class="faq-a">No se aceptan devoluciones ni cancelaciones una vez realizado el pago. Asegúrate de poder asistir antes de inscribirte.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
-                    <span>Â¿QuÃ© debo llevar el dÃ­a del evento?</span>
+                    <span>¿Qué debo llevar el día del evento?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">Ropa y tenis cÃ³modos, muchas ganas de vivir Onda Fest, y tu cÃ³digo de registro o correo de confirmaciÃ³n para recoger tu camiseta.</div>
+                <div class="faq-a">Ropa y tenis cómodos, muchas ganas de vivir Onda Fest, y tu código de registro o correo de confirmación para recoger tu camiseta.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
-                    <span>Â¿CÃ³mo accedo a mi cuenta despuÃ©s de registrarme?</span>
+                    <span>¿Cómo accedo a mi cuenta después de registrarme?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">No necesitas contraseÃ±a. Te enviamos un enlace mÃ¡gico a tu correo. Al hacer clic, accedes directamente a tu panel para subir el comprobante de pago.</div>
+                <div class="faq-a">No necesitas contraseña. Te enviamos un enlace mágico a tu correo. Al hacer clic, accedes directamente a tu panel para subir el comprobante de pago.</div>
             </details>
         </div>
     </section>
 
-    <!-- â•â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ═══════════ FOOTER ═══════════ -->
     <footer>
         <div class="footer-brand">
             <img src="img/logo.png" alt="Onda Fest" />
@@ -626,11 +626,11 @@
         </div>
         <div class="footer-cruz">
             <img src="./img/iconos/cruz.svg" alt="Cruz" />
-            <span style="color:rgba(255,255,255,0.35); font-size:0.78rem;">Â© 2026 Onda Fest. Todos los derechos reservados.</span>
+            <span style="color:rgba(255,255,255,0.35); font-size:0.78rem;">© 2026 Onda Fest. Todos los derechos reservados.</span>
         </div>
         <div class="footer-links">
             <a href="#">Privacidad</a>
-            <a href="#">TÃ©rminos</a>
+            <a href="#">Términos</a>
             <a href="#contacto">Soporte</a>
         </div>
     </footer>
