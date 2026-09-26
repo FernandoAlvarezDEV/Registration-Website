@@ -270,16 +270,16 @@ function applyFilters() {
                     <td data-label="Acciones" class="px-5 py-3.5 text-center">
                         <div class="flex items-center justify-center gap-1">
                             ${r.comprobante_pago ? `
-                                <button onclick="quickSetEstado(${r.id}, 'verificado')" title="Aprobar pago"
+                                <button onclick="promptQuickSetEstado(${r.id}, 'verificado', '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Aprobar pago"
                                     class="text-emerald-500 hover:bg-emerald-50 p-1.5 rounded-lg transition-colors">
                                     <span class="material-symbols-outlined text-sm">check_circle</span>
                                 </button>
-                                <button onclick="quickSetEstado(${r.id}, 'rechazado')" title="Rechazar pago"
+                                <button onclick="promptQuickSetEstado(${r.id}, 'rechazado', '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Rechazar pago"
                                     class="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors">
                                     <span class="material-symbols-outlined text-sm">cancel</span>
                                 </button>
                             ` : ''}
-                            <button onclick="deleteRegistro(${r.id})" title="Eliminar registro"
+                            <button onclick="promptDeleteRegistro(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Eliminar registro"
                                 class="text-slate-400 hover:bg-red-50 hover:text-red-500 p-1.5 rounded-lg transition-colors">
                                 <span class="material-symbols-outlined text-sm">delete</span>
                             </button>
@@ -306,14 +306,140 @@ function closeModal() {
     currentModalId = null;
 }
 
-// Cerrar modal con tecla Escape
+// ── Modal de Confirmación para Acciones Rápidas ──
+let confirmActionCallback = null;
+
+function requestConfirmAction({ title, message, targetName, targetCode, warning, actionType, btnText, onConfirm }) {
+    const modal = document.getElementById("modal-confirm");
+    if (!modal) {
+        if (confirm(`${title}\n${targetName} (${targetCode})\n¿Deseas continuar?`)) {
+            onConfirm();
+        }
+        return;
+    }
+
+    const iconWrap = document.getElementById("confirm-icon-wrap");
+    const icon = document.getElementById("confirm-icon");
+    const titleEl = document.getElementById("confirm-title");
+    const msgEl = document.getElementById("confirm-message");
+    const targetNameEl = document.getElementById("confirm-target-name");
+    const targetMetaEl = document.getElementById("confirm-target-meta");
+    const warningEl = document.getElementById("confirm-warning");
+    const btn = document.getElementById("confirm-action-btn");
+
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message || "Por favor confirma antes de continuar.";
+    if (targetNameEl) targetNameEl.textContent = targetName;
+    if (targetMetaEl) targetMetaEl.textContent = targetCode;
+
+    if (warningEl) {
+        if (warning) {
+            warningEl.textContent = warning;
+            warningEl.style.display = "block";
+        } else {
+            warningEl.style.display = "none";
+        }
+    }
+
+    if (btn) btn.textContent = btnText || "Confirmar";
+
+    if (iconWrap && icon && btn) {
+        if (actionType === "approve") {
+            iconWrap.style.background = "#ecfdf5";
+            iconWrap.style.borderColor = "#a7f3d0";
+            icon.style.color = "#059669";
+            icon.textContent = "check_circle";
+            btn.style.background = "#059669";
+        } else if (actionType === "reject") {
+            iconWrap.style.background = "#fef2f2";
+            iconWrap.style.borderColor = "#fecaca";
+            icon.style.color = "#dc2626";
+            icon.textContent = "cancel";
+            btn.style.background = "#dc2626";
+        } else {
+            iconWrap.style.background = "#fff1f2";
+            iconWrap.style.borderColor = "#fecdd3";
+            icon.style.color = "#e11d48";
+            icon.textContent = "delete_forever";
+            btn.style.background = "#b91c1c";
+        }
+    }
+
+    confirmActionCallback = onConfirm;
+    modal.classList.add("active");
+}
+
+function closeConfirmModal() {
+    const modal = document.getElementById("modal-confirm");
+    if (modal) modal.classList.remove("active");
+    confirmActionCallback = null;
+}
+
+// Inicializar listener de confirmación
+(function initConfirmModalListener() {
+    const btn = document.getElementById("confirm-action-btn");
+    if (btn) {
+        btn.onclick = () => {
+            if (typeof confirmActionCallback === "function") {
+                const cb = confirmActionCallback;
+                closeConfirmModal();
+                cb();
+            }
+        };
+    }
+})();
+
+// Cerrar modales con tecla Escape
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && currentModalId) {
-        closeModal();
+    if (e.key === "Escape") {
+        const confirmModal = document.getElementById("modal-confirm");
+        if (confirmModal && confirmModal.classList.contains("active")) {
+            closeConfirmModal();
+            return;
+        }
+        if (currentModalId) {
+            closeModal();
+        }
     }
 });
 
-// Set payment status
+// Prompts para acciones rápidas desde la tabla
+function promptQuickSetEstado(id, estado, nombre) {
+    const code = formatRegistroCode(id);
+    const isApprove = estado === "verificado";
+    requestConfirmAction({
+        title: isApprove
+            ? "¿Realmente quieres aprobar el pago?"
+            : "¿Realmente quieres rechazar el pago?",
+        message: isApprove
+            ? `Vas a aprobar el pago de este asistente.`
+            : `Vas a rechazar el comprobante de este asistente.`,
+        targetName: nombre,
+        targetCode: code,
+        warning: isApprove
+            ? "El asistente quedará registrado con estado verificado en el sistema."
+            : "El asistente figurará con pago rechazado y deberá subir un nuevo comprobante.",
+        actionType: isApprove ? "approve" : "reject",
+        btnText: isApprove ? "Sí, aprobar pago" : "Sí, rechazar pago",
+        onConfirm: () => quickSetEstado(id, estado)
+    });
+}
+
+function promptDeleteRegistro(id, nombre) {
+    const code = formatRegistroCode(id);
+    requestConfirmAction({
+        title: "¿Realmente quieres eliminar este registro?",
+        message: "Esta acción borrará permanentemente los datos del asistente.",
+        targetName: nombre,
+        targetCode: code,
+        warning: "⚠️ Esta acción es irreversible. Se eliminarán los datos personales y el comprobante asociado a este registro.",
+        actionType: "delete",
+        btnText: "Sí, eliminar registro",
+        onConfirm: () => executeDeleteRegistro(id, code)
+    });
+}
+
+// Set payment status (desde modal de imagen)
 async function setEstado(estado) {
     if (!currentModalId) return;
     await quickSetEstado(currentModalId, estado);
@@ -338,8 +464,12 @@ async function quickSetEstado(id, estado) {
 
 // Delete registration
 async function deleteRegistro(id) {
-    const code = formatRegistroCode(id);
-    if (!confirm(`¿Estás seguro de eliminar el registro ${code}?`)) return;
+    const reg = allRegistros.find(r => r.id === id);
+    const name = reg ? reg.nombre_completo : "Asistente";
+    promptDeleteRegistro(id, name);
+}
+
+async function executeDeleteRegistro(id, code) {
     try {
         const res = await fetch(`${API_BASE}/api/registros/${id}`, {
             method: "DELETE",
