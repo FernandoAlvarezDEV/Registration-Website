@@ -45,6 +45,7 @@ const fields = {
     talla: { input: document.getElementById("input-talla"), error: document.getElementById("error-talla") },
     contactoEmergencia: { input: document.getElementById("input-contacto-emergencia"), error: document.getElementById("error-contacto-emergencia") },
     parentesco: { input: document.getElementById("input-parentesco"), error: document.getElementById("error-parentesco") },
+    comida: { input: document.getElementById("input-comida"), error: document.getElementById("error-comida") },
 };
 
 const toastContainer = document.getElementById("toast-container");
@@ -106,6 +107,11 @@ const validators = {
 
     parentesco(value) {
         if (!value.trim()) return "El parentesco es obligatorio.";
+        return null;
+    },
+
+    comida(value) {
+        if (!value) return "Debes seleccionar una opción de comida.";
         return null;
     },
 };
@@ -338,6 +344,7 @@ function getFormData() {
         tallaCamiseta: fields.talla.input.value,
         contactoEmergencia: fields.contactoEmergencia.input.value.trim(),
         parentesco: fields.parentesco.input.value.trim(),
+        opcionComida: fields.comida.input.value,
     };
 }
 

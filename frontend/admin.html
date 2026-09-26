@@ -347,16 +347,7 @@
             background: rgba(255, 0, 0, 0.25);
         }
 
-        @media (max-width: 640px) {
-            header {
-                padding: 12px 16px;
-            }
 
-            .admin-badge span:last-child,
-            .btn-logout span:last-child {
-                display: none;
-            }
-        }
 
         /* Main */
         .admin-main {
@@ -400,17 +391,7 @@
             margin-bottom: 28px;
         }
 
-        @media (max-width: 900px) {
-            .stats-row {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
 
-        @media (max-width: 560px) {
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
 
         .stat-card {
             background: white;
@@ -467,6 +448,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         .section-card-header h3 {
@@ -541,53 +524,141 @@
 
         /* Filters */
         .filters-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: block;
             padding: 16px 24px;
-            align-items: center;
             border-bottom: 2px solid #eee;
         }
 
-        .filter-search {
-            flex: 1;
-            min-width: 200px;
-            height: 38px;
-            padding: 0 12px;
+        /* ── Odoo Style Search Bar ── */
+        .odoo-search-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: #F9FAFB;
             border: 2px solid #D1D5DB;
             border-radius: 8px;
-            font-size: 0.85rem;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #F9F9F9;
-            outline: none;
             transition: border-color 0.2s;
+            margin-bottom: 12px;
         }
 
-        .filter-search:focus {
+        .odoo-search-container:focus-within {
             border-color: var(--naranja);
+            background: #FFFFFF;
         }
 
-        .filter-select {
+        .odoo-search-icon {
+            padding-left: 12px;
+            color: #9CA3AF;
+            font-size: 20px !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .odoo-search-input {
+            flex: 1;
             height: 38px;
             padding: 0 10px;
-            border: 2px solid #D1D5DB;
-            border-radius: 8px;
-            font-size: 0.82rem;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #F9F9F9;
+            color: var(--oscuro);
             outline: none;
+        }
+
+        .odoo-search-toggle {
+            height: 38px;
+            width: 38px;
+            background: transparent;
+            border: none;
+            border-left: 1px solid #E5E7EB;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            border-radius: 0 6px 6px 0;
         }
 
-        .filter-select:focus {
-            border-color: var(--naranja);
+        .odoo-search-toggle:hover {
+            background-color: #F3F4F6;
+            color: var(--oscuro);
         }
 
-        .filter-count {
-            font-size: 0.78rem;
-            color: #999;
-            width: 100%;
-            padding: 4px 0 0;
+        /* Odoo Dropdown Menu */
+        .odoo-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            right: 0;
+            width: 260px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 8px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .odoo-dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .odoo-dropdown-section {
+            padding: 4px 0;
+        }
+
+        .odoo-dropdown-header {
+            padding: 6px 16px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .odoo-dropdown-header .material-symbols-outlined {
+            font-size: 14px;
+            color: var(--fucsia);
+        }
+
+        .odoo-dropdown-item {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: var(--oscuro);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.15s;
+        }
+
+        .odoo-dropdown-item:hover {
+            background-color: #F3F4F6;
+        }
+
+        .odoo-dropdown-item.active {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+            font-weight: 700;
+        }
+
+        .odoo-dropdown-divider {
+            height: 1px;
+            background-color: #E5E7EB;
+            margin: 4px 0;
         }
 
         .btn-refresh {
@@ -785,106 +856,253 @@
             text-align: center;
         }
 
-        /* ── Responsive ── */
-        @media (max-width: 640px) {
+        /* ── Table Sorting Odoo Style ── */
+        .sortable-table th {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            padding-right: 24px !important;
+            transition: background-color 0.2s;
+            vertical-align: top;
+        }
 
-            /* Header */
+        .sortable-table th:hover {
+            background-color: #f3f4f6;
+        }
+
+        .sortable-table th::after {
+            font-family: 'Material Symbols Outlined';
+            content: 'unfold_more';
+            position: absolute;
+            right: 4px;
+            top: 14px;
+            font-size: 14px;
+            color: #9CA3AF;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .sortable-table th:hover::after {
+            opacity: 0.5;
+        }
+
+        .sortable-table th.sort-asc::after {
+            content: 'arrow_upward';
+            opacity: 1;
+            color: var(--fucsia);
+        }
+
+        .sortable-table th.sort-desc::after {
+            content: 'arrow_downward';
+            opacity: 1;
+            color: var(--fucsia);
+        }
+
+        /* Minimalist Header Filters */
+        .th-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            align-items: flex-start;
+        }
+
+        .filter-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .header-filter-minimal {
+            width: 100%;
+            padding: 2px 14px 2px 0;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            border: none;
+            background-color: transparent;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            transition: color 0.2s;
+        }
+
+        .filter-wrapper::after {
+            content: 'expand_more';
+            font-family: 'Material Symbols Outlined';
+            font-size: 14px;
+            font-weight: 800;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .filter-wrapper:hover .header-filter-minimal,
+        .filter-wrapper:hover::after {
+            color: var(--fucsia);
+        }
+
+        .header-filter-minimal.active-filter {
+            color: var(--verde);
+        }
+        
+        .header-filter-minimal option {
+            font-size: 13px;
+            text-transform: none;
+            color: #333;
+        }
+
+        /* ── Responsive ── */
+
+        /* Tablet landscape (1024px) — gentle squeeze */
+        @media (max-width: 1024px) {
+            .admin-main {
+                padding: 32px 20px 60px;
+            }
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* Tablet portrait / large phone (768px) */
+        @media (max-width: 768px) {
             header {
                 padding: 10px 16px;
             }
-
             .header-logo img {
-                height: 38px;
+                height: 40px;
             }
-
-            .admin-badge span:last-child,
-            .btn-logout span:last-child {
-                display: none;
-            }
-
-            .admin-badge {
-                padding: 4px 10px;
-            }
-
-            .btn-logout {
-                padding: 6px 10px;
-            }
-
-            /* Main */
             .admin-main {
-                padding: 20px 12px 60px;
+                padding: 28px 16px 60px;
             }
-
-            /* Page title row: apilar en columna */
             .page-title-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
-            }
-
-            .page-title {
-                font-size: 1.3rem;
-            }
-
-            /* Stats: 2 columnas en móvil */
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-
-            .stat-value {
-                font-size: 1.6rem;
+            .page-title {
+                font-size: 1.35rem;
             }
-
-            /* Asegurar que la tabla tenga scroll horizontal y no rompa layout */
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .stat-value {
+                font-size: 1.7rem;
+            }
+            /* Scrollable table with styled scrollbar */
             .table-wrap {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                border-radius: var(--radius);
             }
-
-            /* Filtros: ocupar ancho completo */
+            .table-wrap::-webkit-scrollbar {
+                height: 6px;
+            }
+            .table-wrap::-webkit-scrollbar-track {
+                background: #f1f5f9;
+                border-radius: 3px;
+            }
+            .table-wrap::-webkit-scrollbar-thumb {
+                background: var(--fucsia);
+                border-radius: 3px;
+            }
             .filters-row {
-                padding: 12px 16px;
+                padding: 14px 16px;
                 gap: 8px;
             }
-
             .filter-search {
                 min-width: 100%;
             }
-
-            .filter-select {
-                width: 100%;
-            }
-
-            /* Comprobante items: adaptación */
             .comp-item {
                 flex-wrap: wrap;
                 padding: 14px 16px;
             }
-
             .section-card-header {
                 padding: 14px 16px;
             }
-
-            /* Footer */
             footer {
                 padding: 16px;
             }
         }
 
-        @media (max-width: 480px) {
-
-            /* Stats: 1 columna en pantallas muy estrechas */
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
+        /* Small phones (640px) — Card View for table */
+        @media (max-width: 640px) {
+            .admin-badge span:last-child,
+            .btn-logout span:last-child {
+                display: none;
+            }
+            .admin-badge {
+                padding: 4px 10px;
+            }
+            .btn-logout {
+                padding: 6px 10px;
+            }
+            .admin-main {
+                padding: 24px 14px 50px;
+            }
+            .page-title {
+                font-size: 1.2rem;
+            }
+            .page-sub {
+                font-size: 0.78rem;
             }
 
-            /* Toast */
+            /* Table → Odoo Standard Scrolling Table */
+            .table-wrap {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table-wrap table {
+                /* Forzamos un ancho mínimo para que las columnas no se aplasten y se active el scroll horizontal */
+                min-width: 900px;
+                table-layout: auto;
+            }
+            .table-wrap th, 
+            .table-wrap td {
+                padding: 10px 8px; /* Reducimos padding para que quepan más datos */
+                font-size: 0.75rem; /* Fuente ligeramente más compacta */
+            }
+            .table-wrap th {
+                font-size: 0.65rem;
+            }
+            
+            /* Asegurar que los filtros se mantengan compactos */
+            .header-filter-minimal {
+                font-size: 9px;
+                padding-right: 12px;
+            }
+            .filter-wrapper::after {
+                font-size: 12px;
+            }
+        }
+
+        /* Very small phones (480px) */
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 16px 14px;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
             #toast {
                 right: 10px;
                 left: 10px;
                 max-width: calc(100vw - 20px);
+            }
+            .modal-content {
+                max-width: 100%;
+                border-radius: 12px;
             }
         }
     </style>
@@ -1052,44 +1270,70 @@
                     </button>
                 </div>
 
+                <!-- Hidden inputs to maintain compatibility with JS applyFilters() -->
+                <input type="hidden" id="filter-pago" value="">
+                <input type="hidden" id="filter-talla" value="">
+                <input type="hidden" id="filter-comida" value="">
+                <input type="hidden" id="filter-municipio" value="">
+
                 <!-- Filters -->
                 <div class="filters-row">
-                    <input id="filter-search" class="filter-search" type="text"
-                        placeholder="Buscar por nombre, teléfono o email..." oninput="applyFilters()" />
-                    <select id="filter-pago" class="filter-select" onchange="applyFilters()">
-                        <option value="">Todos los estados</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="en revisión">En Revisión</option>
-                        <option value="verificado">Verificado</option>
-                        <option value="rechazado">Rechazado</option>
-                    </select>
-                    <select id="filter-talla" class="filter-select" onchange="applyFilters()">
-                        <option value="">Todas las tallas</option>
-                        <option value="xs">XS</option>
-                        <option value="s">S</option>
-                        <option value="m">M</option>
-                        <option value="l">L</option>
-                        <option value="xl">XL</option>
-                        <option value="xxl">XXL</option>
-                    </select>
-                    <select id="filter-municipio" class="filter-select" onchange="applyFilters()">
-                        <option value="">Todos los municipios</option>
-                        <!-- filled by JS -->
-                    </select>
-                    <p id="filter-count" class="filter-count"></p>
+                    <div class="odoo-search-container">
+                        <span class="material-symbols-outlined odoo-search-icon">search</span>
+                        <input id="filter-search" class="odoo-search-input" type="text"
+                            placeholder="Buscar..." oninput="applyFilters()" />
+                        <button class="odoo-search-toggle" onclick="toggleOdooDropdown(event)">
+                            <span class="material-symbols-outlined">arrow_drop_down</span>
+                        </button>
+                        
+                        <!-- Odoo Filter Dropdown -->
+                        <div id="odoo-filter-dropdown" class="odoo-dropdown-menu" onclick="event.stopPropagation()">
+                            <div class="odoo-dropdown-section">
+                                <div class="odoo-dropdown-header">
+                                    <span class="material-symbols-outlined">filter_alt</span> Filtros
+                                </div>
+                                <div class="odoo-dropdown-item active" onclick="syncOdooFilter('pago', ''); syncOdooFilter('talla', ''); syncOdooFilter('comida', ''); syncOdooFilter('municipio', '');">Quitar todos los filtros</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('pago', 'pendiente')">Pendientes</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('pago', 'en revisión')">En Revisión</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('pago', 'verificado')">Verificados</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('pago', 'rechazado')">Rechazados</div>
+                            </div>
+                            <div class="odoo-dropdown-divider"></div>
+                            <div class="odoo-dropdown-section">
+                                <div class="odoo-dropdown-header">Por Talla</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('talla', 'xs')">Talla XS</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('talla', 's')">Talla S</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('talla', 'm')">Talla M</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('talla', 'l')">Talla L</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('talla', 'xl')">Talla XL</div>
+                            <div class="odoo-dropdown-divider"></div>
+                            <div class="odoo-dropdown-section">
+                                <div class="odoo-dropdown-header">Por Comida</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('comida', 'Comida 1')">Comida 1</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('comida', 'Comida 2')">Comida 2</div>
+                                <div class="odoo-dropdown-item" onclick="syncOdooFilter('comida', 'Comida 3')">Comida 3</div>
+                            </div>
+                            <div class="odoo-dropdown-divider"></div>
+                            <div class="odoo-dropdown-section" id="dropdown-municipios-container">
+                                <div class="odoo-dropdown-header">Por Municipio</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Table -->
                 <div class="table-wrap">
-                    <table>
+                    <table class="sortable-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Edad</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
                                 <th>Municipio</th>
                                 <th>Talla</th>
+                                <th>Comida</th>
                                 <th>Estado Pago</th>
                                 <th>Comprobante</th>
                                 <th style="text-align:center;">Acciones</th>
@@ -1097,7 +1341,7 @@
                         </thead>
                         <tbody id="table-body">
                             <tr>
-                                <td colspan="9" style="padding:48px 24px; text-align:center; color:#9CA3AF;">
+                                <td colspan="11" style="padding:48px 24px; text-align:center; color:#9CA3AF;">
                                     <span class="material-symbols-outlined"
                                         style="font-size:36px; display:block; margin-bottom:8px;">hourglass_empty</span>
                                     Cargando registros...

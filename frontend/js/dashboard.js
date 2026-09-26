@@ -62,6 +62,7 @@ function populateUI(d) {
     set("detail-email", d.email || "—");
     set("detail-municipio", d.municipio || "—");
     set("detail-talla", (d.tallaCamiseta || "—").toUpperCase());
+    set("detail-comida", d.opcion_comida || d.opcionComida || "—");
     set("detail-fecha", d.fechaRegistro
         ? new Date(d.fechaRegistro).toLocaleDateString("es-DO", { year: "numeric", month: "long", day: "numeric" })
         : "—");

@@ -81,7 +81,7 @@ async function loadRegistrations() {
     } catch (e) {
         console.error("Error loading registrations:", e);
         document.getElementById("table-body").innerHTML = `
-                    <tr><td colspan="9" class="px-6 py-12 text-center text-red-400">
+                    <tr><td colspan="11" class="px-6 py-12 text-center text-red-400">
                         <span class="material-symbols-outlined mb-2" style="font-size: 40px;">error</span>
                         <p>Error al cargar los registros.</p>
                     </td></tr>`;
@@ -105,9 +105,15 @@ function updateStats() {
 // Populate municipio filter
 function populateMunicipioFilter() {
     const municipios = [...new Set(allRegistros.map(r => r.municipio))].sort();
-    const select = document.getElementById("filter-municipio");
-    select.innerHTML = '<option value="">Todos los municipios</option>' +
-        municipios.map(m => `<option value="${m}">${m}</option>`).join("");
+    const container = document.getElementById("dropdown-municipios-container");
+    if (!container) return;
+    
+    let html = '<div class="odoo-dropdown-header">Por Municipio</div>';
+    municipios.forEach(m => {
+        if (!m) return;
+        html += `<div class="odoo-dropdown-item" onclick="syncOdooFilter('municipio', '${m.replace(/'/g, "\\'")}')">${m}</div>`;
+    });
+    container.innerHTML = html;
 }
 
 // Render comprobantes pending review
@@ -149,30 +155,83 @@ function renderComprobantes() {
 }
 
 // Apply filters to table
+// Toggle Odoo style dropdown
+function toggleOdooDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("odoo-filter-dropdown");
+    dropdown.classList.toggle("show");
+}
+
+// Close Odoo style dropdown when clicking outside
+document.addEventListener("click", function(event) {
+    const dropdown = document.getElementById("odoo-filter-dropdown");
+    if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+    }
+});
+
+// Sync Odoo style filter with the actual header select
+function syncOdooFilter(type, value) {
+    const selectEl = document.getElementById(`filter-${type}`);
+    let finalValue = value;
+    
+    if (selectEl) {
+        if (selectEl.value === value && value !== "") {
+            finalValue = ""; // Toggle off
+        }
+        selectEl.value = finalValue;
+        applyFilters();
+    }
+    
+    // Update active visual state in dropdown
+    const dropdown = document.getElementById("odoo-filter-dropdown");
+    const items = dropdown.querySelectorAll(".odoo-dropdown-item");
+    items.forEach(item => {
+        const onClickAttr = item.getAttribute("onclick") || "";
+        if (value === "") {
+            if (onClickAttr.includes(`'${type}', ''`)) {
+                item.classList.add("active");
+            } else if (onClickAttr.includes(`'${type}'`)) {
+                item.classList.remove("active");
+            }
+        } else {
+            if (onClickAttr.includes(`'${type}',`)) {
+                if (onClickAttr.includes(`'${type}', '${finalValue}'`) && finalValue !== "") {
+                    item.classList.add("active");
+                } else {
+                    item.classList.remove("active");
+                }
+            }
+        }
+    });
+}
+
 function applyFilters() {
     const search = document.getElementById("filter-search").value.toLowerCase();
     const pagoFilter = document.getElementById("filter-pago").value;
     const tallaFilter = document.getElementById("filter-talla").value;
     const municipioFilter = document.getElementById("filter-municipio").value;
+    const comidaFilter = document.getElementById("filter-comida").value;
 
     const filtered = allRegistros.filter(r => {
         const matchSearch = !search ||
             r.nombre_completo.toLowerCase().includes(search) ||
             r.telefono.includes(search) ||
             r.email.toLowerCase().includes(search);
-        const matchPago = !pagoFilter || r.estado_pago === pagoFilter;
+    const matchPago = !pagoFilter || r.estado_pago === pagoFilter;
         const matchTalla = !tallaFilter || r.talla_camiseta === tallaFilter;
         const matchMunicipio = !municipioFilter || r.municipio === municipioFilter;
-        return matchSearch && matchPago && matchTalla && matchMunicipio;
+        const matchComida = !comidaFilter || r.opcion_comida === comidaFilter || r.opcionComida === comidaFilter;
+        return matchSearch && matchPago && matchTalla && matchMunicipio && matchComida;
     });
 
-    document.getElementById("filter-count").textContent =
-        `Mostrando ${filtered.length} de ${allRegistros.length} registros`;
+    // Default to id ascending
+    filtered.sort((a, b) => a.id - b.id);
 
     const tbody = document.getElementById("table-body");
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="px-6 py-12 text-center text-slate-400">
+        tbody.innerHTML = `<tr><td colspan="11" class="px-6 py-12 text-center text-slate-400">
                     <span class="material-symbols-outlined mb-2" style="font-size: 40px;">search_off</span>
                     <p>No se encontraron registros con estos filtros.</p>
                 </td></tr>`;
@@ -181,16 +240,18 @@ function applyFilters() {
 
     tbody.innerHTML = filtered.map(r => `
                 <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-5 py-3.5 font-bold text-primary text-xs">${formatRegistroCode(r.id)}</td>
-                    <td class="px-5 py-3.5 font-semibold text-slate-800">${r.nombre_completo}</td>
-                    <td class="px-5 py-3.5 text-slate-600 font-mono text-xs">${r.telefono}</td>
-                    <td class="px-5 py-3.5 text-slate-600 text-xs">${r.email}</td>
-                    <td class="px-5 py-3.5 text-slate-600 text-xs">${r.municipio}</td>
-                    <td class="px-5 py-3.5">
+                    <td data-label="ID" class="px-5 py-3.5 font-bold text-primary text-xs">${formatRegistroCode(r.id)}</td>
+                    <td data-label="Nombre" class="px-5 py-3.5 font-semibold text-slate-800">${r.nombre_completo}</td>
+                    <td data-label="Edad" class="px-5 py-3.5 text-slate-600 text-xs font-mono">${r.edad || "—"}</td>
+                    <td data-label="Teléfono" class="px-5 py-3.5 text-slate-600 font-mono text-xs">${r.telefono}</td>
+                    <td data-label="Email" class="px-5 py-3.5 text-slate-600 text-xs">${r.email}</td>
+                    <td data-label="Municipio" class="px-5 py-3.5 text-slate-600 text-xs">${r.municipio}</td>
+                    <td data-label="Talla" class="px-5 py-3.5">
                         <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">${r.talla_camiseta.toUpperCase()}</span>
                     </td>
-                    <td class="px-5 py-3.5">${estadoBadge(r.estado_pago)}</td>
-                    <td class="px-5 py-3.5">
+                    <td data-label="Comida" class="px-5 py-3.5 text-slate-600 text-xs">${r.opcion_comida || r.opcionComida || "—"}</td>
+                    <td data-label="Estado Pago" class="px-5 py-3.5">${estadoBadge(r.estado_pago)}</td>
+                    <td data-label="Comprobante" class="px-5 py-3.5">
                         ${r.comprobante_pago
             ? `<button onclick="openModal(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}', '${r.telefono}', '${r.comprobante_pago}')"
                                 class="text-primary hover:bg-primary/5 p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-bold">
@@ -199,7 +260,7 @@ function applyFilters() {
             : `<span class="text-slate-300 text-xs">Sin enviar</span>`
         }
                     </td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Acciones" class="px-5 py-3.5 text-center">
                         <div class="flex items-center justify-center gap-1">
                             ${r.comprobante_pago ? `
                                 <button onclick="quickSetEstado(${r.id}, 'verificado')" title="Aprobar pago"
@@ -340,3 +401,62 @@ async function adminLogin() {
         btn.textContent = "Entrar";
     }
 }
+
+// ── Generic Table Sorter (Odoo Style) ──────────────────────────────────────────
+document.addEventListener('click', function (e) {
+    const th = e.target.closest('th');
+    if (!th) return;
+    
+    const table = th.closest('.sortable-table');
+    if (!table) return;
+    
+    const tbody = table.querySelector('tbody');
+    if (!tbody || tbody.rows.length <= 1) return; // Prevent sorting when loading or empty
+    
+    const thIndex = Array.from(th.parentNode.children).indexOf(th);
+    
+    // Ignore sort on "Acciones" column
+    if (th.textContent.trim().toLowerCase() === 'acciones') return;
+
+    // Get current sort direction
+    const isAscending = th.classList.contains('sort-asc');
+    
+    // Reset all headers in this table
+    table.querySelectorAll('th').forEach(header => {
+        header.classList.remove('sort-asc', 'sort-desc');
+    });
+
+    // Set new direction
+    const direction = isAscending ? -1 : 1;
+    th.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
+
+    // Sort rows
+    const rowsArray = Array.from(tbody.querySelectorAll('tr'));
+    
+    rowsArray.sort((rowA, rowB) => {
+        const cellA = rowA.children[thIndex].textContent.trim();
+        const cellB = rowB.children[thIndex].textContent.trim();
+        
+        const parseValue = (val) => {
+            // Remove currency symbols, commas, spaces for numeric check
+            const clean = val.replace(/[$,\s]/g, "");
+            if (/^-?\d+(\.\d+)?$/.test(clean)) {
+                return parseFloat(clean);
+            }
+            return val;
+        };
+
+        const valA = parseValue(cellA);
+        const valB = parseValue(cellB);
+        
+        if (typeof valA === 'number' && typeof valB === 'number') {
+            return (valA - valB) * direction;
+        }
+        
+        // Fallback to text compare
+        return cellA.localeCompare(cellB, 'es', { numeric: true, sensitivity: 'base' }) * direction;
+    });
+
+    // Re-append sorted rows
+    rowsArray.forEach(row => tbody.appendChild(row));
+});
