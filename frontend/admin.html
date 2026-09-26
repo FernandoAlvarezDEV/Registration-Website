@@ -269,12 +269,15 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9000;
-            padding: 16px;
+            padding: 12px;
+            box-sizing: border-box;
         }
 
         .modal-overlay.active {
@@ -283,11 +286,226 @@
 
         .modal-content {
             background: white;
-            border-radius: var(--radius);
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
-            max-width: 480px;
+            border: 3px solid var(--oscuro);
+            border-radius: 16px;
+            box-shadow: 6px 6px 0 var(--oscuro);
+            max-width: 440px;
             width: 100%;
+            max-height: calc(100dvh - 24px);
+            max-height: calc(100vh - 24px);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            flex-shrink: 0;
+            padding: 14px 18px;
+            border-bottom: 2px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+        }
+
+        .modal-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            color: var(--oscuro);
+        }
+
+        .modal-close-btn {
+            background: #f1f5f9;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.15s;
+        }
+
+        .modal-close-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .modal-body {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #ffffff;
+        }
+
+        .modal-user-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .modal-user-details p {
+            margin: 0;
+        }
+
+        .modal-user-name {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--oscuro);
+            font-family: 'Syne', sans-serif;
+        }
+
+        .modal-user-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-family: monospace;
+            margin-top: 2px !important;
+        }
+
+        .modal-open-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--fucsia);
+            background: #fdf2f8;
+            border: 1px solid #fbcfe8;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .modal-open-link:hover {
+            background: #fce7f3;
+            transform: translateY(-1px);
+        }
+
+        .modal-img-wrap {
+            position: relative;
+            background: #0f172a;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .modal-img-wrap img {
+            max-height: 48vh;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-footer {
+            flex-shrink: 0;
+            padding: 12px 18px;
+            border-top: 2px solid #E5E7EB;
+            display: flex;
+            gap: 10px;
+            background: #F8FAFC;
+        }
+
+        .modal-btn-approve,
+        .modal-btn-reject {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 11px 12px;
+            border: 2px solid var(--oscuro);
+            border-radius: 8px;
+            box-shadow: 2px 2px 0 var(--oscuro);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .modal-btn-approve {
+            background: #059669;
+        }
+
+        .modal-btn-approve:hover {
+            background: #047857;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--oscuro);
+        }
+
+        .modal-btn-reject {
+            background: #DC2626;
+        }
+
+        .modal-btn-reject:hover {
+            background: #B91C1C;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--oscuro);
+        }
+
+        .modal-btn-approve:active,
+        .modal-btn-reject:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--oscuro);
+        }
+
+        @media (max-height: 750px) {
+            .modal-img-wrap img {
+                max-height: 40vh;
+            }
+            .modal-header {
+                padding: 10px 14px;
+            }
+            .modal-body {
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .modal-footer {
+                padding: 10px 14px;
+            }
+            .modal-btn-approve,
+            .modal-btn-reject {
+                padding: 9px 10px;
+                font-size: 0.8rem;
+            }
         }
 
         /* ── Header Estandarizado ── */
@@ -1314,32 +1532,36 @@
         <!-- Modal ver comprobante -->
         <div id="modal-comprobante" class="modal-overlay" onclick="if(event.target===this)closeModal()">
             <div class="modal-content">
-                <div
-                    style="padding:18px 22px; border-bottom:2px solid #eee; display:flex; align-items:center; justify-content:space-between;">
-                    <h3
-                        style="font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                <div class="modal-header">
+                    <h3>
                         <span class="material-symbols-outlined" style="color:var(--fucsia);">receipt_long</span>
                         Comprobante de Pago
                     </h3>
-                    <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;color:#999;">
-                        <span class="material-symbols-outlined">close</span>
+                    <button class="modal-close-btn" onclick="closeModal()" title="Cerrar modal">
+                        <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
                     </button>
                 </div>
-                <div style="padding:20px;">
-                    <p id="modal-user-name" style="font-weight:800; color:var(--oscuro); margin-bottom:2px;"></p>
-                    <p id="modal-user-phone"
-                        style="font-size:0.75rem; color:#999; font-family:monospace; margin-bottom:14px;"></p>
-                    <img id="modal-img" style="width:100%; border-radius:10px; border:2px solid #E5E7EB;"
-                        alt="Comprobante" />
+                <div class="modal-body">
+                    <div class="modal-user-info">
+                        <div class="modal-user-details">
+                            <p id="modal-user-name" class="modal-user-name"></p>
+                            <p id="modal-user-phone" class="modal-user-meta"></p>
+                        </div>
+                        <a id="modal-img-link" href="#" target="_blank" rel="noopener noreferrer" class="modal-open-link" title="Abrir imagen en tamaño completo">
+                            <span>Ver completo</span>
+                            <span class="material-symbols-outlined" style="font-size:14px;">open_in_new</span>
+                        </a>
+                    </div>
+                    <div class="modal-img-wrap">
+                        <img id="modal-img" alt="Comprobante de pago" />
+                    </div>
                 </div>
-                <div style="padding:16px 20px; border-top:2px solid #eee; display:flex; gap:10px; background:#F9FAFB;">
-                    <button onclick="setEstado('verificado')"
-                        style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:#059669; color:white; font-family:'Syne',sans-serif; font-weight:800; font-size:0.85rem; padding:12px; border:2px solid var(--oscuro); border-radius:8px; box-shadow:2px 2px 0 var(--oscuro); cursor:pointer;">
-                        <span class="material-symbols-outlined" style="font-size:1rem;">check_circle</span> Aprobar
+                <div class="modal-footer">
+                    <button class="modal-btn-approve" onclick="setEstado('verificado')">
+                        <span class="material-symbols-outlined" style="font-size:1.05rem;">check_circle</span> Aprobar
                     </button>
-                    <button onclick="setEstado('rechazado')"
-                        style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:#DC2626; color:white; font-family:'Syne',sans-serif; font-weight:800; font-size:0.85rem; padding:12px; border:2px solid var(--oscuro); border-radius:8px; box-shadow:2px 2px 0 var(--oscuro); cursor:pointer;">
-                        <span class="material-symbols-outlined" style="font-size:1rem;">cancel</span> Rechazar
+                    <button class="modal-btn-reject" onclick="setEstado('rechazado')">
+                        <span class="material-symbols-outlined" style="font-size:1.05rem;">cancel</span> Rechazar
                     </button>
                 </div>
             </div>

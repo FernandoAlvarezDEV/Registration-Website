@@ -294,7 +294,10 @@ function openModal(id, name, phone, imgPath) {
     currentModalId = id;
     document.getElementById("modal-user-name").textContent = name;
     document.getElementById("modal-user-phone").textContent = `${phone} · ${formatRegistroCode(id)}`;
-    document.getElementById("modal-img").src = `${API_BASE}${imgPath}`;
+    const fullImgUrl = `${API_BASE}${imgPath}`;
+    document.getElementById("modal-img").src = fullImgUrl;
+    const linkEl = document.getElementById("modal-img-link");
+    if (linkEl) linkEl.href = fullImgUrl;
     document.getElementById("modal-comprobante").classList.add("active");
 }
 
@@ -302,6 +305,13 @@ function closeModal() {
     document.getElementById("modal-comprobante").classList.remove("active");
     currentModalId = null;
 }
+
+// Cerrar modal con tecla Escape
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && currentModalId) {
+        closeModal();
+    }
+});
 
 // Set payment status
 async function setEstado(estado) {
