@@ -731,17 +731,81 @@
             opacity: 1;
         }
 
-        /* Footer */
+        /* ── Footer Estandarizado ── */
         footer {
             background: var(--oscuro);
-            padding: 24px 40px;
-            text-align: center;
+            padding: 36px 40px;
             border-top: 3px solid var(--oscuro);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        footer p {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.45);
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .footer-brand img {
+            height: 34px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.55);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--amarillo);
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 10px 14px;
+            }
+
+            .header-logo img {
+                height: 36px;
+            }
+
+            .header-nav {
+                gap: 10px;
+            }
+
+            .header-nav a {
+                font-size: 0.76rem;
+            }
+
+            .btn-register-nav {
+                padding: 6px 10px;
+                font-size: 0.74rem;
+                box-shadow: 2px 2px 0 var(--oscuro);
+            }
+
+            footer {
+                padding: 24px 18px;
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+                gap: 14px 18px;
+            }
         }
     </style>
 </head>
@@ -764,7 +828,7 @@
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
-            <a href="dashboard.html">Revisar Mi Inscripción</a>
+            <a href="verificar.html">Mi Portal</a>
             <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
@@ -940,7 +1004,16 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2026 Onda Fest — Una Sola Onda. Todos los derechos reservados.</p>
+        <a href="index.html" class="footer-brand">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="verificar.html">Mi Portal</a>
+            <a href="inscripcion.html">Inscríbete</a>
+            <a href="index.html#contacto">Soporte</a>
+            <a href="admin.html">Panel de Administrador</a>
+        </div>
     </footer>
 
     <script src="js/success.js"></script>

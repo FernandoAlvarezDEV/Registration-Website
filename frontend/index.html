@@ -844,20 +844,13 @@
         .footer-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            text-decoration: none;
         }
 
         .footer-brand img {
-            width: 36px;
             height: 36px;
-            border-radius: 50%;
-        }
-
-        .footer-brand span {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 0.95rem;
-            color: var(--crema);
+            width: auto;
+            object-fit: contain;
         }
 
         .footer-links {
@@ -953,7 +946,13 @@
             }
 
             .header-nav {
-                display: none;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .header-nav a {
+                font-size: 0.8rem;
             }
 
             /* Hero */
@@ -1088,7 +1087,7 @@
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
-            <a href="dashboard.html">Mi Portal</a>
+            <a href="verificar.html">Mi Portal</a>
             <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
@@ -1360,11 +1359,13 @@
 
     <!-- ═══════════ FOOTER ═══════════ -->
     <footer>
-        <div class="footer-brand">
-            <img src="img/logo.png" alt="Onda Fest" />
-            <span>ONDA FEST 2026</span>
-        </div>
+        <a href="index.html" class="footer-brand">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
         <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="verificar.html">Mi Portal</a>
+            <a href="inscripcion.html">Inscríbete</a>
             <a href="#contacto">Soporte</a>
             <a href="admin.html">Panel de Administrador</a>
         </div>

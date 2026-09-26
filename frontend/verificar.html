@@ -143,11 +143,11 @@
             line-height: 1.6;
         }
 
-        /* ── Header ── */
+        /* ── Header Estandarizado ── */
         header {
-            background: var(--oscuro);
+            background: var(--crema);
             border-bottom: 3px solid var(--oscuro);
-            padding: 12px 36px;
+            padding: 12px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -164,44 +164,55 @@
         }
 
         .header-logo img {
-            height: 52px;
+            height: 48px;
             width: auto;
             object-fit: contain;
             transition: height 0.2s ease;
         }
 
-        .header-right {
+        .header-nav {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 20px;
         }
 
-        .header-nav-link {
+        .header-nav a {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--oscuro);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--fucsia);
+        }
+
+        .btn-register-nav {
+            background: var(--amarillo);
+            color: var(--oscuro) !important;
+            font-weight: 800;
+            font-size: 0.875rem;
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 2px solid var(--oscuro);
+            box-shadow: 3px 3px 0 var(--oscuro);
+            transition: all 0.15s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #F9F4E0;
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 7px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s;
             white-space: nowrap;
         }
 
-        .header-nav-link:hover {
-            background: rgba(255, 255, 255, 0.18);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.4);
+        .btn-register-nav:hover {
+            box-shadow: 1px 1px 0 var(--oscuro);
+            transform: translate(2px, 2px);
         }
 
         #header-name {
             font-size: 0.85rem;
             font-weight: 700;
-            color: var(--amarillo);
+            color: var(--oscuro);
             max-width: 180px;
             white-space: nowrap;
             overflow: hidden;
@@ -212,9 +223,9 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 0, 0, 0.15);
-            color: #fca5a5;
-            border: 1.5px solid rgba(255, 0, 0, 0.3);
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1.5px solid #f87171;
             border-radius: 8px;
             padding: 7px 14px;
             font-weight: 700;
@@ -225,8 +236,8 @@
         }
 
         .btn-logout:hover {
-            background: rgba(255, 0, 0, 0.25);
-            color: #f87171;
+            background: #fecaca;
+            color: #991b1b;
         }
 
         /* ── Main layout ── */
@@ -659,17 +670,45 @@
             color: var(--oscuro);
         }
 
-        /* ── Footer ── */
+        /* ── Footer Estandarizado ── */
         footer {
             background: var(--oscuro);
-            padding: 24px 40px;
+            padding: 36px 40px;
             border-top: 3px solid var(--oscuro);
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        footer p {
-            font-size: 0.78rem;
-            color: rgba(255, 255, 255, 0.3);
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .footer-brand img {
+            height: 34px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.55);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--amarillo);
         }
 
         /* ── Primary link button ── */
@@ -785,16 +824,21 @@
             }
 
             .header-logo img {
-                height: 38px;
+                height: 36px;
             }
 
-            .header-right {
-                gap: 6px;
+            .header-nav {
+                gap: 10px;
             }
 
-            .header-nav-link {
+            .header-nav a {
+                font-size: 0.76rem;
+            }
+
+            .btn-register-nav {
                 padding: 6px 10px;
-                font-size: 0.75rem;
+                font-size: 0.74rem;
+                box-shadow: 2px 2px 0 var(--oscuro);
             }
 
             #header-name {
@@ -866,7 +910,15 @@
 
             /* Footer */
             footer {
-                padding: 18px 16px;
+                padding: 24px 18px;
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+                gap: 14px 18px;
             }
         }
 
@@ -1050,22 +1102,21 @@
     <!-- Toast -->
     <div id="toast" role="alert"></div>
 
-    <!-- Header Asistentes (Visible tanto en Login como en Dashboard) -->
+    <!-- Header Asistentes (Estandarizado) -->
     <header>
         <a href="index.html" class="header-logo">
             <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
         </a>
-        <div class="header-right">
-            <a href="index.html" class="header-nav-link" id="header-home-link">
-                <span class="material-symbols-outlined" style="font-size:1.1rem;">home</span>
-                <span class="nav-text">Inicio</span>
-            </a>
+        <nav class="header-nav">
+            <a href="index.html">Inicio</a>
+            <a href="verificar.html">Mi Portal</a>
+            <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
             <span id="header-name" style="display:none;"></span>
             <button id="header-logout-btn" class="btn-logout" onclick="logout()" style="display:none;">
                 <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
                 <span class="logout-text">Cerrar Sesión</span>
             </button>
-        </div>
+        </nav>
     </header>
 
     <!-- ── LOADING SCREEN ── -->
@@ -1399,7 +1450,16 @@
 
         <!-- Footer -->
         <footer>
-            <p>© 2026 Onda Fest. Todos los derechos reservados.</p>
+            <a href="index.html" class="footer-brand">
+                <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+            </a>
+            <div class="footer-links">
+                <a href="index.html">Inicio</a>
+                <a href="verificar.html">Mi Portal</a>
+                <a href="inscripcion.html">Inscríbete</a>
+                <a href="index.html#contacto">Soporte</a>
+                <a href="admin.html">Panel de Administrador</a>
+            </div>
         </footer>
 
     </div><!-- end #dashboard-main -->

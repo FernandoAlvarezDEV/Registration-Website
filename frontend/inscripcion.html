@@ -496,6 +496,18 @@
             color: rgba(255, 255, 255, 0.35);
         }
 
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .footer-brand img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
         .footer-links {
             display: flex;
             gap: 24px;
@@ -530,7 +542,18 @@
             }
 
             .header-nav {
-                display: none;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .header-nav a {
+                font-size: 0.8rem;
+            }
+
+            .btn-register-nav {
+                padding: 6px 12px;
+                font-size: 0.76rem;
             }
 
             /* Page wrap */
@@ -604,7 +627,7 @@
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
-            <a href="dashboard.html">Mi Portal</a>
+            <a href="verificar.html">Mi Portal</a>
             <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
@@ -840,9 +863,14 @@
 
     <!-- Footer -->
     <footer>
+        <a href="index.html" class="footer-brand">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
         <div class="footer-links">
             <a href="index.html">Inicio</a>
-            <a href="#contacto">Soporte</a>
+            <a href="verificar.html">Mi Portal</a>
+            <a href="inscripcion.html">Inscríbete</a>
+            <a href="index.html#contacto">Soporte</a>
             <a href="admin.html">Panel de Administrador</a>
         </div>
     </footer>
