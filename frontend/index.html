@@ -855,7 +855,8 @@
 
         .footer-links {
             display: flex;
-            gap: 28px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .footer-links a {
@@ -925,7 +926,12 @@
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
-                padding: 32px;
+                padding: 32px 18px;
+            }
+
+            .footer-links {
+                justify-content: center;
+                gap: 12px 18px;
             }
         }
 
@@ -933,26 +939,29 @@
 
             /* Header */
             header {
-                padding: 10px 16px;
+                padding: 10px 12px;
             }
 
             .header-logo img {
-                height: 38px;
-            }
-
-            .btn-register-nav {
-                padding: 8px 14px;
-                font-size: 0.78rem;
+                height: 28px;
             }
 
             .header-nav {
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 8px;
             }
 
             .header-nav a {
-                font-size: 0.8rem;
+                font-size: 0.74rem;
+                font-weight: 700;
+            }
+
+            .btn-register-nav {
+                padding: 5px 10px;
+                font-size: 0.72rem;
+                box-shadow: 2px 2px 0 var(--oscuro);
+                white-space: nowrap;
             }
 
             /* Hero */

@@ -37,6 +37,12 @@
             scroll-behavior: smooth;
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
         body {
             background-color: var(--crema);
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -820,25 +826,27 @@
 
             /* Header */
             header {
-                padding: 10px 14px;
+                padding: 10px 12px;
             }
 
             .header-logo img {
-                height: 36px;
+                height: 28px;
             }
 
             .header-nav {
-                gap: 10px;
+                gap: 8px;
             }
 
             .header-nav a {
-                font-size: 0.76rem;
+                font-size: 0.74rem;
+                font-weight: 700;
             }
 
             .btn-register-nav {
-                padding: 6px 10px;
-                font-size: 0.74rem;
+                padding: 5px 9px;
+                font-size: 0.72rem;
                 box-shadow: 2px 2px 0 var(--oscuro);
+                white-space: nowrap;
             }
 
             #header-name {
@@ -846,8 +854,8 @@
             }
 
             .btn-logout {
-                padding: 6px 10px;
-                font-size: 0.75rem;
+                padding: 5px 8px;
+                font-size: 0.72rem;
             }
 
             .btn-logout .logout-text {
