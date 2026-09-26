@@ -59,6 +59,7 @@ function populateUI(d) {
     set("detail-nombre", d.nombreCompleto);
     set("detail-edad", d.edad ? `${d.edad} años` : "—");
     set("detail-telefono", d.telefono || "—");
+    set("detail-noonda", d.noOnda || "—");
     set("detail-email", d.email || "—");
     set("detail-municipio", d.municipio || "—");
     set("detail-talla", (d.tallaCamiseta || "—").toUpperCase());
@@ -96,9 +97,16 @@ function populateUI(d) {
     const loader = document.getElementById("loading-screen");
     const loginScreen = document.getElementById("user-login-screen");
     const main = document.getElementById("dashboard-main");
+    const headerName = document.getElementById("header-name");
+    const headerLogout = document.getElementById("header-logout-btn");
     if (loader) loader.style.display = "none";
     if (loginScreen) loginScreen.style.display = "none";
     if (main) main.style.display = "block";
+    if (headerName) {
+        headerName.textContent = d.nombreCompleto;
+        headerName.style.display = "inline-block";
+    }
+    if (headerLogout) headerLogout.style.display = "inline-flex";
 }
 
 // ── Iniciar sesión en el portal de participantes ───────────────────
@@ -118,7 +126,7 @@ async function loginUsuarioNormal() {
 
     if (!nombre || !telefono || !distrito || !email) {
         if (errorBox) {
-            errorBox.textContent = "Por favor completa todos los campos (Nombre, Teléfono, Distrito y Correo).";
+            errorBox.textContent = "Por favor completa todos los campos (Nombre, Teléfono, Distrito y Correo Electrónico).";
             errorBox.classList.remove("hidden");
         }
         return;
@@ -173,6 +181,11 @@ function initDashboard() {
     if (loader) loader.style.display = "none";
     if (main) main.style.display = "none";
     if (loginScreen) loginScreen.style.display = "flex";
+
+    const headerName = document.getElementById("header-name");
+    const headerLogout = document.getElementById("header-logout-btn");
+    if (headerName) headerName.style.display = "none";
+    if (headerLogout) headerLogout.style.display = "none";
 
     // 3. Pre-llenar campos si el usuario viene de registrarse en la misma pestaña
     const lastReg = JSON.parse(sessionStorage.getItem("eno_registration") || "null");

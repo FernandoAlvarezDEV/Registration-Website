@@ -7,7 +7,7 @@ from enum import Enum as PyEnum
 import re
 
 from sqlalchemy import Column, Integer, String, DateTime, Enum
-from pydantic import BaseModel, Field, field_validator, EmailStr
+from pydantic import BaseModel, Field, field_validator
 
 from database import Base
 
@@ -34,7 +34,7 @@ class Registro(Base):
     nombre_completo = Column(String(255), nullable=False)
     edad = Column(Integer, nullable=False)
     telefono = Column(String(20), nullable=False, unique=True, index=True)
-    email = Column(String(255), nullable=False, index=True)
+    email = Column(String(255), nullable=True, index=True)
     municipio = Column(String(255), nullable=False)
     talla_camiseta = Column(Enum(TallaCamiseta), nullable=False)
     no_onda = Column(String(100), nullable=False)
@@ -44,8 +44,6 @@ class Registro(Base):
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     comprobante_pago = Column(String(512), nullable=True, default=None)
     estado_pago = Column(String(20), nullable=False, default="pendiente")
-    magic_token = Column(String(128), nullable=True, unique=True, index=True)
-    token_expires = Column(DateTime, nullable=True)
 
     def __repr__(self):
         return f"<Registro(id={self.id}, nombre='{self.nombre_completo}', telefono='{self.telefono}')>"
@@ -89,7 +87,7 @@ class RegistroCreate(BaseModel):
     @field_validator("email")
     @classmethod
     def validar_email(cls, v: str) -> str:
-        v = v.strip()
+        v = v.strip().lower()
         if not v:
             raise ValueError("El correo electrónico es obligatorio.")
         if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', v):
@@ -102,6 +100,7 @@ class RegistroCreate(BaseModel):
                 "nombreCompleto": "Juan Pérez",
                 "edad": 25,
                 "telefono": "+1 809 555 1234",
+                "email": "juan@example.com",
                 "municipio": "Distrito Nacional",
                 "tallaCamiseta": "m",
                 "noOnda": "42",
@@ -124,7 +123,7 @@ class RegistroOut(BaseModel):
     nombre_completo: str
     edad: int
     telefono: str
-    email: str
+    email: str | None = None
     municipio: str
     talla_camiseta: str
     no_onda: str | None = None

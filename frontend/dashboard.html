@@ -147,10 +147,14 @@
         header {
             background: var(--oscuro);
             border-bottom: 3px solid var(--oscuro);
-            padding: 12px 40px;
+            padding: 12px 36px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
         }
 
         .header-logo {
@@ -163,48 +167,66 @@
             height: 52px;
             width: auto;
             object-fit: contain;
+            transition: height 0.2s ease;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
+        }
+
+        .header-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #F9F4E0;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .header-nav-link:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         #header-name {
             font-size: 0.85rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.55);
+            font-weight: 700;
+            color: var(--amarillo);
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .btn-logout {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
             background: rgba(255, 0, 0, 0.15);
             color: #fca5a5;
             border: 1.5px solid rgba(255, 0, 0, 0.3);
             border-radius: 8px;
-            padding: 8px 16px;
+            padding: 7px 14px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .btn-logout:hover {
             background: rgba(255, 0, 0, 0.25);
             color: #f87171;
-        }
-
-        @media (max-width: 640px) {
-            header {
-                padding: 12px 16px;
-            }
-
-            #header-name {
-                display: none;
-            }
         }
 
         /* ── Main layout ── */
@@ -759,20 +781,38 @@
 
             /* Header */
             header {
-                padding: 10px 16px;
+                padding: 10px 14px;
             }
 
             .header-logo img {
                 height: 38px;
             }
 
+            .header-right {
+                gap: 6px;
+            }
+
+            .header-nav-link {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+
             #header-name {
-                display: none;
+                display: none !important;
             }
 
             .btn-logout {
-                padding: 7px 10px;
+                padding: 6px 10px;
                 font-size: 0.75rem;
+            }
+
+            .btn-logout .logout-text {
+                display: none;
+            }
+
+            #user-login-screen {
+                min-height: calc(100vh - 58px);
+                padding: 24px 14px;
             }
 
             /* Main */
@@ -845,17 +885,31 @@
             }
         }
 
+        @media (max-width: 380px) {
+            header {
+                padding: 8px 10px;
+            }
+
+            .header-logo img {
+                height: 32px;
+            }
+
+            .header-nav-link .nav-text {
+                display: none;
+            }
+        }
+
         .hidden {
             display: none !important;
         }
 
         /* ── USER LOGIN SCREEN ── */
         #user-login-screen {
-            min-height: 100vh;
+            min-height: calc(100vh - 65px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 32px 16px;
             background: var(--crema);
         }
 
@@ -996,6 +1050,24 @@
     <!-- Toast -->
     <div id="toast" role="alert"></div>
 
+    <!-- Header Asistentes (Visible tanto en Login como en Dashboard) -->
+    <header>
+        <a href="index.html" class="header-logo">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
+        <div class="header-right">
+            <a href="index.html" class="header-nav-link" id="header-home-link">
+                <span class="material-symbols-outlined" style="font-size:1.1rem;">home</span>
+                <span class="nav-text">Inicio</span>
+            </a>
+            <span id="header-name" style="display:none;"></span>
+            <button id="header-logout-btn" class="btn-logout" onclick="logout()" style="display:none;">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </header>
+
     <!-- ── LOADING SCREEN ── -->
     <div id="loading-screen" class="overlay-screen" style="display:none;">
         <div class="spinner"></div>
@@ -1071,20 +1143,6 @@
     <!-- ── DASHBOARD MAIN ── -->
     <div id="dashboard-main" style="display:none;">
 
-        <!-- Header -->
-        <header>
-            <a href="index.html" class="header-logo">
-                <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
-            </a>
-            <div class="header-right">
-                <span id="header-name"></span>
-                <button class="btn-logout" onclick="logout()">
-                    <span class="material-symbols-outlined" style="font-size:1rem;">logout</span>
-                    Cerrar Sesión
-                </button>
-            </div>
-        </header>
-
         <!-- Main -->
         <main>
 
@@ -1141,6 +1199,13 @@
                             <div>
                                 <div class="detail-row-label">Teléfono</div>
                                 <div class="detail-row-value" id="detail-telefono">—</div>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <span class="material-symbols-outlined">tag</span>
+                            <div>
+                                <div class="detail-row-label">No. Onda</div>
+                                <div class="detail-row-value" id="detail-noonda">—</div>
                             </div>
                         </div>
                         <div class="detail-row">
@@ -1219,7 +1284,7 @@
                     <span class="material-symbols-outlined">location_on</span>
                     <div>
                         <div class="event-reminder-label">Lugar</div>
-                        <div class="event-reminder-val">Colegio Loyola, SD</div>
+                        <div class="event-reminder-val">Próximamente</div>
                     </div>
                 </div>
             </div>

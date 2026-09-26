@@ -35,7 +35,6 @@ from slowapi.errors import RateLimitExceeded
 from config import settings
 from database import get_db, init_db
 from models import Registro, RegistroCreate, RegistroResponse, RegistroOut
-from email_service import send_confirmation_email
 from storage_service import upload_comprobante
 
 logging.basicConfig(level=logging.INFO)
@@ -247,16 +246,13 @@ def root():
 def crear_registro(
     request: Request,
     registro: RegistroCreate,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     """
     Registra un nuevo participante.
-    Genera un magic_token y envía correo de confirmación en background.
     Limitado a 5 registros por minuto por IP.
     """
     telefono_limpio = clean_phone(registro.telefono)
-    email_limpio = registro.email.strip().lower()
 
     # Verificar duplicado por teléfono
     if db.query(Registro).filter(Registro.telefono == telefono_limpio).first():
@@ -265,32 +261,19 @@ def crear_registro(
             detail="Ya existe una inscripción con este número de teléfono.",
         )
 
-    # Verificar duplicado por correo
-    if db.query(Registro).filter(Registro.email == email_limpio).first():
-        raise HTTPException(
-            status_code=409,
-            detail="Ya existe una inscripción con este correo electrónico.",
-        )
-
-    # Generar magic token (expira en 72 horas)
-    token = secrets.token_urlsafe(64)
-    token_expires = datetime.utcnow() + timedelta(hours=72)
-
     comida_elegida = (registro.opcionComida or "Comida 1").strip()
 
     nuevo_registro = Registro(
         nombre_completo=registro.nombreCompleto,
         edad=registro.edad,
         telefono=telefono_limpio,
-        email=email_limpio,
+        email=registro.email.strip().lower() if registro.email else None,
         municipio=registro.municipio,
         talla_camiseta=registro.tallaCamiseta,
         no_onda=registro.noOnda,
         contacto_emergencia=registro.contactoEmergencia,
         parentesco=registro.parentesco,
         opcion_comida=comida_elegida,
-        magic_token=token,
-        token_expires=token_expires,
     )
 
     try:
@@ -317,8 +300,8 @@ def crear_registro(
             "codigoRegistro": codigo,
             "numericId": nuevo_registro.id,
             "nombreCompleto": nuevo_registro.nombre_completo,
-            "email": nuevo_registro.email,
             "telefono": nuevo_registro.telefono,
+            "email": nuevo_registro.email,
             "municipio": nuevo_registro.municipio,
             "opcionComida": nuevo_registro.opcion_comida,
         },
@@ -407,58 +390,8 @@ def eliminar_registro(
 
 
 # ─────────────────────────────────────────────────────────────────
-# 🔐 AUTENTICACIÓN
+# 🔐 AUTENTICACIÓN Y VERIFICACIÓN DE ASISTENTES
 # ─────────────────────────────────────────────────────────────────
-
-@app.get("/api/auth/verify", tags=["Auth"])
-@limiter.limit("10/minute")  # 🔒 Rate limit para prevenir brute-force de tokens
-def verify_magic_token(
-    request: Request,
-    token: str = Query(..., description="Magic token recibido por correo"),
-    db: Session = Depends(get_db),
-):
-    """
-    Valida el magic token del enlace del correo.
-    Si es válido, genera un token de sesión y devuelve los datos del participante.
-    🔒 El magic token original se invalida tras el primer uso (Vulnerabilidad #7).
-    """
-    registro = db.query(Registro).filter(Registro.magic_token == token).first()
-
-    if not registro:
-        raise HTTPException(status_code=401, detail="Enlace inválido o ya utilizado.")
-
-    if registro.token_expires and datetime.utcnow() > registro.token_expires:
-        raise HTTPException(status_code=401, detail="Este enlace ha expirado. Contacta al administrador.")
-
-    # 🔒 SECURITY: Generar token de sesión y invalidar magic token (Vulnerabilidad #7)
-    session_token = secrets.token_urlsafe(64)
-    registro.magic_token = session_token  # Reemplazar el token original
-    registro.token_expires = datetime.utcnow() + timedelta(hours=24)  # Sesión de 24h
-    db.commit()
-    db.refresh(registro)
-
-    return {
-        "success": True,
-        "message": f"Bienvenido, {registro.nombre_completo}.",
-        "role": "user",
-        "sessionToken": session_token,  # Nuevo token de sesión para uso continuo
-        "data": {
-            "id": registro.id,
-            "idLabel": f"ENO-{registro.id}",
-            "nombreCompleto": registro.nombre_completo,
-            "edad": registro.edad,
-            "telefono": registro.telefono,
-            "email": registro.email,
-            "municipio": registro.municipio,
-            "tallaCamiseta": registro.talla_camiseta.value,
-            "noOnda": registro.no_onda,
-            "contactoEmergencia": registro.contacto_emergencia,
-            "parentesco": registro.parentesco,
-            "fechaRegistro": str(registro.fecha_registro),
-            "comprobantePago": registro.comprobante_pago,
-            "estadoPago": registro.estado_pago,
-        },
-    }
 
 
 @app.post("/api/registros/verificar", tags=["Auth"])
@@ -527,10 +460,16 @@ def verificar_registro(
 
     registro = final_match
 
-    # 4. Validar correo si se suministró
-    if body.email and body.email.strip():
-        if normalize_str(registro.email or "") != normalize_str(body.email):
-            raise HTTPException(status_code=400, detail="El correo electrónico ingresado no coincide con el registrado.")
+    # 4. Validar correo electrónico obligatorio para acceder al panel
+    email_input = normalize_str(body.email)
+    if not email_input:
+        raise HTTPException(status_code=400, detail="Por favor ingresa tu correo electrónico registrado para acceder al panel.")
+
+    if registro.email and normalize_str(registro.email) != email_input:
+        raise HTTPException(
+            status_code=400,
+            detail="El correo electrónico ingresado no coincide con el registrado para esta inscripción."
+        )
 
     talla_val = registro.talla_camiseta.value if hasattr(registro.talla_camiseta, 'value') else str(registro.talla_camiseta or "")
     codigo = generar_codigo_registro(registro.id)

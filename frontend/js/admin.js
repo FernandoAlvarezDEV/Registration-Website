@@ -30,13 +30,20 @@ function getAdminHeaders(extra = {}) {
 
 // Check admin session — si no hay sesión admin, mostrar formulario de login
 const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
+const adminBadge = document.getElementById("admin-header-badge");
+const adminLogout = document.getElementById("admin-header-logout");
+
 if (!session || session.role !== "admin") {
     // Mostrar login form, ocultar dashboard
     document.getElementById("admin-login-screen").classList.remove("hidden");
     document.getElementById("admin-dashboard-content").classList.add("hidden");
+    if (adminBadge) adminBadge.style.display = "none";
+    if (adminLogout) adminLogout.style.display = "none";
 } else {
     document.getElementById("admin-login-screen").classList.add("hidden");
     document.getElementById("admin-dashboard-content").classList.remove("hidden");
+    if (adminBadge) adminBadge.style.display = "inline-flex";
+    if (adminLogout) adminLogout.style.display = "inline-flex";
     loadData();
 }
 
@@ -393,6 +400,8 @@ async function adminLogin() {
         // Mostrar dashboard, ocultar login
         document.getElementById("admin-login-screen").classList.add("hidden");
         document.getElementById("admin-dashboard-content").classList.remove("hidden");
+        if (adminBadge) adminBadge.style.display = "inline-flex";
+        if (adminLogout) adminLogout.style.display = "inline-flex";
         loadData();
     } catch (err) {
         errorEl.textContent = err.message;

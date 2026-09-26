@@ -347,6 +347,27 @@
             background: rgba(255, 0, 0, 0.25);
         }
 
+        .header-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #F9F4E0;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .header-nav-link:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
 
 
         /* Main */
@@ -1031,17 +1052,35 @@
             }
         }
 
-        /* Small phones (640px) — Card View for table */
+        /* Small phones (640px) */
         @media (max-width: 640px) {
+            header {
+                padding: 10px 14px;
+            }
+            .header-logo img {
+                height: 38px;
+            }
+            .header-right {
+                gap: 6px;
+            }
+            .header-nav-link {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
             .admin-badge span:last-child,
             .btn-logout span:last-child {
                 display: none;
             }
             .admin-badge {
-                padding: 4px 10px;
+                padding: 4px 8px;
+                font-size: 0.72rem;
             }
             .btn-logout {
                 padding: 6px 10px;
+            }
+            #admin-login-screen {
+                min-height: calc(100vh - 60px);
+                padding: 24px 14px;
             }
             .admin-main {
                 padding: 24px 14px 50px;
@@ -1105,6 +1144,19 @@
                 border-radius: 12px;
             }
         }
+
+        /* Tiny phones (380px) */
+        @media (max-width: 380px) {
+            header {
+                padding: 8px 10px;
+            }
+            .header-logo img {
+                height: 32px;
+            }
+            .header-nav-link .nav-text {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -1112,6 +1164,27 @@
 
     <!-- Toast -->
     <div id="toast" role="alert"></div>
+
+    <!-- Header Admin (Visible tanto en Login como en Dashboard) -->
+    <header class="admin-header">
+        <a href="index.html" class="header-logo">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
+        <div class="header-right">
+            <a href="index.html" class="header-nav-link" id="admin-header-home">
+                <span class="material-symbols-outlined" style="font-size:1.1rem;">home</span>
+                <span class="nav-text">Inicio</span>
+            </a>
+            <div id="admin-header-badge" class="admin-badge" style="display:none;">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;">shield</span>
+                <span>Admin</span>
+            </div>
+            <button id="admin-header-logout" class="btn-logout" onclick="logout()" style="display:none;">
+                <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
+                <span class="logout-text">Cerrar Sesión</span>
+            </button>
+        </div>
+    </header>
 
     <!-- ════════════════════════════════
          LOGIN SCREEN
@@ -1188,23 +1261,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Header -->
-        <header>
-            <a href="index.html" class="header-logo">
-                <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
-            </a>
-            <div class="header-right">
-                <div class="admin-badge">
-                    <span class="material-symbols-outlined" style="font-size:0.9rem;">shield</span>
-                    <span>Admin</span>
-                </div>
-                <button class="btn-logout" onclick="logout()">
-                    <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
-                    <span>Cerrar Sesión</span>
-                </button>
-            </div>
-        </header>
 
         <!-- Main -->
         <div class="admin-main">
