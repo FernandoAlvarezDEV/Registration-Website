@@ -40,6 +40,7 @@ class Registro(Base):
     no_onda = Column(String(100), nullable=False)
     contacto_emergencia = Column(String(255), nullable=False)
     parentesco = Column(String(100), nullable=False)
+    opcion_comida = Column(String(100), nullable=True, default="Comida 1")
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     comprobante_pago = Column(String(512), nullable=True, default=None)
     estado_pago = Column(String(20), nullable=False, default="pendiente")
@@ -65,6 +66,7 @@ class RegistroCreate(BaseModel):
     noOnda: str = Field(..., min_length=1, max_length=100, description="Número de Onda")
     contactoEmergencia: str = Field(..., min_length=1, max_length=255, description="Contacto de emergencia")
     parentesco: str = Field(..., min_length=1, max_length=100, description="Parentesco del contacto de emergencia")
+    opcionComida: str | None = Field(default="Comida 1", description="Opción de comida seleccionada (Comida 1, Comida 2, Comida 3)")
 
     @field_validator("nombreCompleto")
     @classmethod
@@ -131,6 +133,7 @@ class RegistroOut(BaseModel):
     fecha_registro: datetime
     comprobante_pago: str | None = None
     estado_pago: str = "pendiente"
+    opcion_comida: str | None = "Comida 1"
 
     class Config:
         from_attributes = True

@@ -5,29 +5,39 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Onda Fest 2026 — Una Sola Onda</title>
-    <meta name="description" content="Onda Fest 2026 — El festival juvenil más energético del año. 13 de Diciembre, Colegio Loyola, Santo Domingo. ¡Inscríbete ahora!" />
+    <meta name="description"
+        content="Onda Fest 2026 — El festival juvenil más energético del año. 13 de Diciembre, Colegio Loyola, Santo Domingo. ¡Inscríbete ahora!" />
     <link rel="icon" type="image/png" href="img/logo.png" />
     <!-- Google Fonts: Syne + Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
     <style>
         /* ── Design Tokens ── */
         :root {
-            --crema:    #F9F4E0;
-            --rojo:     #FF0000;
+            --crema: #F9F4E0;
+            --rojo: #FF0000;
             --amarillo: #FEB004;
-            --naranja:  #FF7D04;
-            --fucsia:   #ED008C;
-            --verde:    #3CE705;
-            --oscuro:   #1A1A1A;
-            --radius:   14px;
+            --naranja: #FF7D04;
+            --fucsia: #ED008C;
+            --verde: #3CE705;
+            --oscuro: #1A1A1A;
+            --radius: 14px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             background-color: var(--crema);
@@ -36,38 +46,96 @@
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .font-display {
+        h1,
+        h2,
+        h3,
+        .font-display {
             font-family: 'Syne', sans-serif;
         }
 
         /* ── Marquee ── */
         @keyframes marquee {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
         }
-        .marquee-track { display: flex; animation: marquee 18s linear infinite; width: max-content; }
-        .marquee-track:hover { animation-play-state: paused; }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee 18s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
 
         /* ── Animations ── */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(28px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes floatIcon {
-            0%, 100% { transform: translateY(0) rotate(-4deg); }
-            50%       { transform: translateY(-10px) rotate(4deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-4deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(4deg);
+            }
         }
+
         @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
-        .fade-up { animation: fadeUp 0.7s ease-out both; }
-        .d1 { animation-delay: 0.1s; }
-        .d2 { animation-delay: 0.2s; }
-        .d3 { animation-delay: 0.35s; }
-        .d4 { animation-delay: 0.5s; }
-        .float-icon { animation: floatIcon 4s ease-in-out infinite; }
-        .float-icon-2 { animation: floatIcon 5s ease-in-out infinite 1s; }
+
+        .fade-up {
+            animation: fadeUp 0.7s ease-out both;
+        }
+
+        .d1 {
+            animation-delay: 0.1s;
+        }
+
+        .d2 {
+            animation-delay: 0.2s;
+        }
+
+        .d3 {
+            animation-delay: 0.35s;
+        }
+
+        .d4 {
+            animation-delay: 0.5s;
+        }
+
+        .float-icon {
+            animation: floatIcon 4s ease-in-out infinite;
+        }
+
+        .float-icon-2 {
+            animation: floatIcon 5s ease-in-out infinite 1s;
+        }
 
         /* ── Header ── */
         header {
@@ -81,11 +149,37 @@
             align-items: center;
             justify-content: space-between;
         }
-        .header-logo { display: flex; align-items: center; text-decoration: none; }
-        .header-logo img { height: 52px; width: auto; object-fit: contain; }
-        .header-nav { display: flex; align-items: center; gap: 32px; }
-        .header-nav a { font-weight: 600; font-size: 0.875rem; color: var(--oscuro); text-decoration: none; transition: color 0.2s; }
-        .header-nav a:hover { color: var(--fucsia); }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .header-logo img {
+            height: 52px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .header-nav a {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--oscuro);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--fucsia);
+        }
+
         .btn-register-nav {
             background: var(--amarillo);
             color: var(--oscuro);
@@ -98,7 +192,11 @@
             box-shadow: 3px 3px 0 var(--oscuro);
             transition: all 0.15s;
         }
-        .btn-register-nav:hover { box-shadow: 1px 1px 0 var(--oscuro); transform: translate(2px, 2px); }
+
+        .btn-register-nav:hover {
+            box-shadow: 1px 1px 0 var(--oscuro);
+            transform: translate(2px, 2px);
+        }
 
         /* ── Hero ── */
         .hero {
@@ -113,23 +211,40 @@
             border-bottom: 3px solid var(--oscuro);
             overflow: hidden;
         }
+
         .hero::before {
             content: '';
             position: absolute;
-            top: -60px; right: -60px;
-            width: 380px; height: 380px;
+            top: -60px;
+            right: -60px;
+            width: 380px;
+            height: 380px;
             border-radius: 50%;
             background: var(--amarillo);
             opacity: 0.35;
             z-index: 0;
         }
-        .hero-content { position: relative; z-index: 1; }
-        .hero-tag {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: var(--oscuro); color: var(--crema);
-            font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-            padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--oscuro);
+            color: var(--crema);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
         .hero-title {
             font-family: 'Syne', sans-serif;
             font-size: clamp(3.5rem, 7vw, 6.5rem);
@@ -139,17 +254,29 @@
             color: var(--oscuro);
             margin-bottom: 28px;
         }
-        .hero-title span { color: var(--rojo); }
-        .hero-subtitle {
-            font-size: 1rem; font-weight: 500; color: #555;
-            max-width: 420px; line-height: 1.65; margin-bottom: 40px;
+
+        .hero-title span {
+            color: var(--rojo);
         }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555;
+            max-width: 420px;
+            line-height: 1.65;
+            margin-bottom: 40px;
+        }
+
         .btn-cta-hero {
-            display: inline-flex; align-items: center; gap: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
             background: var(--amarillo);
             color: var(--oscuro);
             font-family: 'Syne', sans-serif;
-            font-weight: 800; font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 1.1rem;
             padding: 18px 40px;
             border-radius: var(--radius);
             text-decoration: none;
@@ -157,21 +284,104 @@
             box-shadow: 5px 5px 0 var(--oscuro);
             transition: all 0.15s;
         }
-        .btn-cta-hero:hover { box-shadow: 2px 2px 0 var(--oscuro); transform: translate(3px, 3px); }
-        .hero-visual {
-            position: relative; z-index: 1;
-            display: flex; align-items: center; justify-content: center;
+
+        .btn-cta-hero:hover {
+            box-shadow: 2px 2px 0 var(--oscuro);
+            transform: translate(3px, 3px);
         }
+
+        /* ── "¿Ya te inscribiste?" Button ── */
+        .btn-ya-inscrito {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--oscuro) 0%, #2d2d2d 100%);
+            color: var(--amarillo);
+            font-family: 'Syne', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: var(--radius);
+            border: 3px solid var(--amarillo);
+            box-shadow: 4px 4px 0 rgba(254, 176, 4, 0.35);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ya-inscrito::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(254, 176, 4, 0.1) 40%,
+                    rgba(254, 176, 4, 0.2) 50%,
+                    rgba(254, 176, 4, 0.1) 60%,
+                    transparent 100%);
+            animation: shimmer-btn 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer-btn {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .btn-ya-inscrito .material-symbols-outlined {
+            font-size: 1.2rem;
+            color: var(--amarillo);
+        }
+
+        .btn-ya-inscrito:hover {
+            background: var(--amarillo);
+            color: var(--oscuro);
+            border-color: var(--oscuro);
+            box-shadow: 4px 4px 0 var(--oscuro), 0 0 20px rgba(254, 176, 4, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-ya-inscrito:hover .material-symbols-outlined {
+            color: var(--oscuro);
+        }
+
+        .hero-visual {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .hero-icon-main {
-            width: 260px; height: 260px;
+            width: 260px;
+            height: 260px;
             background: var(--rojo);
             border-radius: 50%;
             border: 4px solid var(--oscuro);
             box-shadow: 8px 8px 0 var(--oscuro);
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-        .hero-icon-main img { width: 180px; height: 180px; object-fit: contain; filter: brightness(0) invert(1); }
+
+        .hero-icon-main img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
         .hero-icon-float {
             position: absolute;
             background: var(--amarillo);
@@ -180,10 +390,29 @@
             padding: 12px;
             box-shadow: 4px 4px 0 var(--oscuro);
         }
-        .hero-icon-float img { width: 48px; height: 48px; object-fit: contain; }
-        .hif-1 { top: 30px; left: 20px; }
-        .hif-2 { bottom: 20px; right: 0; background: var(--fucsia); }
-        .hif-3 { top: 20px; right: 40px; background: var(--naranja); }
+
+        .hero-icon-float img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .hif-1 {
+            top: 30px;
+            left: 20px;
+        }
+
+        .hif-2 {
+            bottom: 20px;
+            right: 0;
+            background: var(--fucsia);
+        }
+
+        .hif-3 {
+            top: 20px;
+            right: 40px;
+            background: var(--naranja);
+        }
 
         /* ── Marquee Strip ── */
         .marquee-strip {
@@ -193,20 +422,35 @@
             padding: 14px 0;
             overflow: hidden;
         }
+
         .marquee-item {
-            display: inline-flex; align-items: center; gap: 20px;
-            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem;
-            letter-spacing: 1px; text-transform: uppercase; color: var(--oscuro);
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--oscuro);
             padding: 0 36px;
             white-space: nowrap;
         }
-        .marquee-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rojo); flex-shrink: 0; }
+
+        .marquee-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--rojo);
+            flex-shrink: 0;
+        }
 
         /* ── Info Cards ── */
         .info-section {
             background: var(--oscuro);
             padding: 80px;
         }
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -214,6 +458,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .info-card {
             background: var(--crema);
             border: 3px solid var(--crema);
@@ -222,18 +467,44 @@
             position: relative;
             overflow: hidden;
         }
+
         .info-card-label {
-            font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: #888; margin-bottom: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 8px;
         }
-        .info-card-value { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--oscuro); }
-        .info-card-sub { font-size: 0.85rem; color: #666; margin-top: 4px; }
+
+        .info-card-value {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--oscuro);
+        }
+
+        .info-card-sub {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
         .info-card-icon {
-            position: absolute; top: 16px; right: 16px;
-            font-size: 2rem; opacity: 0.15;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 2rem;
+            opacity: 0.15;
         }
-        .info-card.accent { background: var(--amarillo); }
-        .info-card.accent .info-card-label { color: rgba(0,0,0,0.5); }
+
+        .info-card.accent {
+            background: var(--amarillo);
+        }
+
+        .info-card.accent .info-card-label {
+            color: rgba(0, 0, 0, 0.5);
+        }
 
         /* ── About Section ── */
         .about-section {
@@ -241,19 +512,75 @@
             padding: 100px 80px;
             border-bottom: 3px solid var(--oscuro);
         }
-        .about-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-        .section-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--fucsia); margin-bottom: 12px; }
-        .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -1.5px; color: var(--oscuro); margin-bottom: 24px; }
-        .section-body { font-size: 0.95rem; line-height: 1.75; color: #555; margin-bottom: 32px; }
-        .check-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-        .check-list li { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.925rem; }
+
+        .about-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .section-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--fucsia);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.05;
+            letter-spacing: -1.5px;
+            color: var(--oscuro);
+            margin-bottom: 24px;
+        }
+
+        .section-body {
+            font-size: 0.95rem;
+            line-height: 1.75;
+            color: #555;
+            margin-bottom: 32px;
+        }
+
+        .check-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.925rem;
+        }
+
         .check-bullet {
-            width: 28px; height: 28px; border-radius: 50%;
-            background: var(--verde); border: 2px solid var(--oscuro);
-            display: flex; align-items: center; justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--verde);
+            border: 2px solid var(--oscuro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
-        .check-bullet span { font-size: 0.85rem; font-weight: 900; color: var(--oscuro); }
+
+        .check-bullet span {
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: var(--oscuro);
+        }
+
         .about-visual {
             background: var(--amarillo);
             border: 3px solid var(--oscuro);
@@ -262,12 +589,27 @@
             overflow: hidden;
             position: relative;
         }
-        .about-visual iframe { width: 100%; height: 380px; border: none; display: block; }
-        .about-icon-deco {
-            position: absolute; top: 16px; right: 16px;
-            width: 72px; height: 72px;
+
+        .about-visual iframe {
+            width: 100%;
+            height: 380px;
+            border: none;
+            display: block;
         }
-        .about-icon-deco img { width: 100%; height: 100%; object-fit: contain; }
+
+        .about-icon-deco {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 72px;
+            height: 72px;
+        }
+
+        .about-icon-deco img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
         /* ── Includes Section ── */
         .includes-section {
@@ -275,11 +617,31 @@
             padding: 100px 80px;
             border-bottom: 3px solid var(--oscuro);
         }
-        .includes-inner { max-width: 1200px; margin: 0 auto; }
-        .includes-header { text-align: center; margin-bottom: 60px; }
-        .includes-header .section-eyebrow { color: var(--amarillo); }
-        .includes-header .section-title { color: white; }
-        .includes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .includes-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .includes-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .includes-header .section-eyebrow {
+            color: var(--amarillo);
+        }
+
+        .includes-header .section-title {
+            color: white;
+        }
+
+        .includes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
         .include-card {
             background: var(--crema);
             border: 3px solid var(--oscuro);
@@ -289,12 +651,41 @@
             box-shadow: 5px 5px 0 var(--oscuro);
             transition: all 0.15s;
         }
-        .include-card:hover { transform: translate(-3px,-3px); box-shadow: 8px 8px 0 var(--oscuro); }
-        .include-icon { width: 72px; height: 72px; margin: 0 auto 20px; }
-        .include-icon img { width: 100%; height: 100%; object-fit: contain; }
-        .include-icon .mat-icon { font-size: 48px; color: var(--fucsia); }
-        .include-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
-        .include-desc { font-size: 0.875rem; color: #666; line-height: 1.6; }
+
+        .include-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 var(--oscuro);
+        }
+
+        .include-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+        }
+
+        .include-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .include-icon .mat-icon {
+            font-size: 48px;
+            color: var(--fucsia);
+        }
+
+        .include-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .include-desc {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.6;
+        }
 
         /* ── CTA Section ── */
         .cta-section {
@@ -302,22 +693,37 @@
             padding: 100px 80px;
             border-bottom: 3px solid var(--oscuro);
         }
+
         .cta-inner {
-            max-width: 900px; margin: 0 auto; text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
             position: relative;
         }
+
         .cta-price {
-            font-family: 'Syne', sans-serif; font-size: clamp(4rem, 8vw, 7rem);
-            font-weight: 800; color: var(--oscuro); line-height: 1;
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 7rem);
+            font-weight: 800;
+            color: var(--oscuro);
+            line-height: 1;
             margin: 20px 0 32px;
         }
-        .cta-price sub { font-size: 2rem; vertical-align: middle; }
+
+        .cta-price sub {
+            font-size: 1.4rem;
+            vertical-align: middle;
+        }
+
         .btn-cta-big {
-            display: inline-flex; align-items: center; gap: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
             background: var(--rojo);
             color: white;
             font-family: 'Syne', sans-serif;
-            font-weight: 800; font-size: 1.2rem;
+            font-weight: 800;
+            font-size: 1.2rem;
             padding: 22px 56px;
             border-radius: var(--radius);
             text-decoration: none;
@@ -325,11 +731,35 @@
             box-shadow: 6px 6px 0 var(--oscuro);
             transition: all 0.15s;
         }
-        .btn-cta-big:hover { box-shadow: 2px 2px 0 var(--oscuro); transform: translate(4px, 4px); }
-        .cta-note { font-size: 0.875rem; color: rgba(0,0,0,0.55); margin-top: 20px; font-weight: 500; }
-        .cta-deco { position: absolute; opacity: 0.18; }
-        .cta-deco-1 { width: 100px; top: -20px; left: -20px; }
-        .cta-deco-2 { width: 80px; bottom: 0; right: 0; }
+
+        .btn-cta-big:hover {
+            box-shadow: 2px 2px 0 var(--oscuro);
+            transform: translate(4px, 4px);
+        }
+
+        .cta-note {
+            font-size: 0.875rem;
+            color: rgba(0, 0, 0, 0.55);
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .cta-deco {
+            position: absolute;
+            opacity: 0.18;
+        }
+
+        .cta-deco-1 {
+            width: 100px;
+            top: -20px;
+            left: -20px;
+        }
+
+        .cta-deco-2 {
+            width: 80px;
+            bottom: 0;
+            right: 0;
+        }
 
         /* ── FAQ ── */
         .faq-section {
@@ -337,8 +767,17 @@
             padding: 100px 80px;
             border-bottom: 3px solid var(--oscuro);
         }
-        .faq-inner { max-width: 800px; margin: 0 auto; }
-        .faq-header { text-align: center; margin-bottom: 56px; }
+
+        .faq-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
         details.faq-item {
             background: white;
             border: 3px solid var(--oscuro);
@@ -346,49 +785,257 @@
             margin-bottom: 12px;
             overflow: hidden;
         }
+
         summary.faq-q {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 24px; cursor: pointer;
-            font-weight: 700; font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
             list-style: none;
         }
-        summary.faq-q::-webkit-details-marker { display: none; }
-        .faq-arrow { transition: transform 0.3s; }
-        details[open] .faq-arrow { transform: rotate(180deg); }
-        .faq-a { padding: 0 24px 20px; font-size: 0.9rem; color: #555; line-height: 1.7; }
+
+        summary.faq-q::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-arrow {
+            transition: transform 0.3s;
+        }
+
+        details[open] .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-a {
+            padding: 0 24px 20px;
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.7;
+        }
 
         /* ── Footer ── */
         footer {
             background: var(--oscuro);
             padding: 40px 80px;
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .footer-brand { display: flex; align-items: center; gap: 10px; }
-        .footer-brand img { width: 36px; height: 36px; border-radius: 50%; }
-        .footer-brand span { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--crema); }
-        .footer-links { display: flex; gap: 28px; }
-        .footer-links a { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--amarillo); }
-        .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
-        .footer-cruz { display: flex; align-items: center; gap: 6px; }
-        .footer-cruz img { width: 24px; height: 24px; opacity: 0.5; filter: brightness(0) invert(1); }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+        }
+
+        .footer-brand span {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--crema);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.45);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--amarillo);
+        }
+
+        .footer-copy {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .footer-cruz {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .footer-cruz img {
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+            filter: brightness(0) invert(1);
+        }
 
         /* ── Responsive ── */
         @media (max-width: 1024px) {
-            .hero { grid-template-columns: 1fr; padding: 60px 32px; min-height: auto; }
-            .hero-visual { display: none; }
-            .info-section, .about-section, .includes-section, .cta-section, .faq-section { padding: 64px 32px; }
-            .info-grid { grid-template-columns: repeat(2, 1fr); }
-            .about-inner { grid-template-columns: 1fr; gap: 40px; }
-            .includes-grid { grid-template-columns: 1fr; }
-            footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px; }
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 60px 32px;
+                min-height: auto;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .info-section,
+            .about-section,
+            .includes-section,
+            .cta-section,
+            .faq-section {
+                padding: 64px 32px;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-inner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .includes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                padding: 32px;
+            }
         }
+
         @media (max-width: 640px) {
-            header { padding: 12px 20px; }
-            .header-nav { display: none; }
-            .info-grid { grid-template-columns: 1fr 1fr; }
-            .hero { padding: 48px 20px; }
-            .hero-title { font-size: 3.2rem; letter-spacing: -2px; }
+
+            /* Header */
+            header {
+                padding: 10px 16px;
+            }
+
+            .header-logo img {
+                height: 38px;
+            }
+
+            .btn-register-nav {
+                padding: 8px 14px;
+                font-size: 0.78rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 36px 18px;
+            }
+
+            .hero-title {
+                font-size: clamp(2.4rem, 10vw, 3.2rem);
+                letter-spacing: -1.5px;
+            }
+
+            .btn-cta-hero {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .btn-ya-inscrito {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+
+            /* Info section */
+            .info-section {
+                padding: 40px 18px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            /* About / Includes / FAQ sections */
+            .about-section,
+            .includes-section,
+            .faq-section {
+                padding: 48px 18px;
+            }
+
+            .about-visual iframe {
+                height: 240px;
+            }
+
+            /* CTA section */
+            .cta-section {
+                padding: 56px 18px;
+            }
+
+            .cta-price {
+                font-size: 3rem;
+            }
+
+            .cta-price sub {
+                font-size: 1.1rem;
+            }
+
+            .btn-cta-big {
+                width: 100%;
+                justify-content: center;
+                padding: 16px 20px;
+                font-size: 1.05rem;
+            }
+
+            /* Ocultar iconos decorativos que pueden causar scroll horizontal */
+            .cta-deco {
+                display: none;
+            }
+
+            /* Footer */
+            footer {
+                padding: 24px 18px;
+            }
+        }
+
+        /* ── Pantallas muy pequeñas (≤ 480px) ── */
+        @media (max-width: 480px) {
+
+            /* 1 columna para tarjetas de info en móviles estrechos */
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            /* Reducir sombras para que no causen overflow */
+            .info-card,
+            .include-card {
+                box-shadow: 3px 3px 0 var(--oscuro);
+            }
+
+            /* Ocultar íconos flotantes que sobresalen en el hero */
+            .hif-1,
+            .hif-2,
+            .hif-3 {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -402,6 +1049,7 @@
         </a>
         <nav class="header-nav">
             <a href="index.html">Inicio</a>
+            <a href="dashboard.html">Mi Portal</a>
             <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
         </nav>
     </header>
@@ -411,15 +1059,20 @@
         <div class="hero-content">
             <div class="hero-tag fade-up">
                 <span>🔥</span>
-                <span>13 de Diciembre · Colegio Loyola, SD</span>
+                <span>Proximamente</span>
             </div>
             <h1 class="hero-title fade-up d1">ONDA<br /><span>FEST</span><br />2026</h1>
             <p class="hero-subtitle fade-up d2">
-                En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido. Vive la experiencia donde la fe se siente desde la alegría y la creatividad.
+                En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido. Vive la experiencia donde la
+                fe se siente desde la alegría y la creatividad.
             </p>
             <a href="inscripcion.html" class="btn-cta-hero fade-up d3">
                 <span class="material-symbols-outlined">confirmation_number</span>
-                ¡Consigue tu entrada!
+                ¡Inscríbete Ahora!
+            </a>
+            <a href="verificar.html" class="btn-ya-inscrito fade-up d3">
+                <span class="material-symbols-outlined">manage_search</span>
+                ¿Ya te inscribiste? Verifica aquí
             </a>
         </div>
         <div class="hero-visual fade-up d2">
@@ -445,15 +1098,15 @@
             <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST</div>
             <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>13 DIC 2026</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>COLEGIO LOYOLA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>PROXIMAMENTE</div>
             <div class="marquee-item"><span class="marquee-dot"></span>INSCRÍBETE YA</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>RD$700</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>RD$600</div>
             <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST</div>
             <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
             <div class="marquee-item"><span class="marquee-dot"></span>13 DIC 2026</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>COLEGIO LOYOLA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>PROXIMAMENTE</div>
             <div class="marquee-item"><span class="marquee-dot"></span>INSCRÍBETE YA</div>
-            <div class="marquee-item"><span class="marquee-dot"></span>RD$700</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>RD$600</div>
         </div>
     </div>
 
@@ -469,18 +1122,17 @@
             <div class="info-card fade-up d1">
                 <div class="info-card-label">Horario</div>
                 <div class="info-card-value">8AM – 5PM</div>
-                <div class="info-card-sub">Jornada completa</div>
                 <span class="material-symbols-outlined info-card-icon">schedule</span>
             </div>
             <div class="info-card fade-up d2">
                 <div class="info-card-label">Lugar</div>
-                <div class="info-card-value">Loyola</div>
-                <div class="info-card-sub">Av. Abraham Lincoln, SD</div>
+                <div class="info-card-value" style="font-size: 1.25rem !important;">Proximamente...</div>
+                <div class="info-card-sub"></div>
                 <span class="material-symbols-outlined info-card-icon">location_on</span>
             </div>
             <div class="info-card accent fade-up d3">
                 <div class="info-card-label">Precio</div>
-                <div class="info-card-value">RD$700</div>
+                <div class="info-card-value">RD$600</div>
                 <div class="info-card-sub">Incluye camiseta y almuerzo</div>
                 <span class="material-symbols-outlined info-card-icon">payments</span>
             </div>
@@ -494,17 +1146,20 @@
                 <p class="section-eyebrow">Sobre el Evento</p>
                 <h2 class="section-title">Somos una sola iglesia</h2>
                 <p class="section-body">
-                    En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido y una misma misión, unidos por un movimiento que trasciende y nos recuerda que más allá de individuos, somos una sola iglesia.<br /><br />
-                    Este festival juvenil transforma ese encuentro en una experiencia vibrante donde la fe se vive desde la alegría, la creatividad y la conexión.
+                    En cada rincón de nuestra nación, jóvenes de fe comparten un mismo latido y una misma misión, unidos
+                    por un movimiento que trasciende y nos recuerda que más allá de individuos, somos una sola
+                    iglesia.<br /><br />
+                    Este festival juvenil transforma ese encuentro en una experiencia vibrante donde la fe se vive desde
+                    la alegría, la creatividad y la conexión.
                 </p>
                 <ul class="check-list">
                     <li>
                         <div class="check-bullet"><span>✓</span></div>
-                        Camiseta oficial del evento incluida
+                        Camiseta oficial del evento
                     </li>
                     <li>
                         <div class="check-bullet"><span>✓</span></div>
-                        Refrigerios y almuerzo durante el evento
+                        Almuerzo incluido
                     </li>
                     <li>
                         <div class="check-bullet"><span>✓</span></div>
@@ -512,7 +1167,7 @@
                     </li>
                     <li>
                         <div class="check-bullet"><span>✓</span></div>
-                        Música en vivo, talleres y dinámica espiritual
+                        Música en vivo y dinámicas espirituales
                     </li>
                 </ul>
             </div>
@@ -520,11 +1175,37 @@
                 <div class="about-icon-deco">
                     <img src="./img/iconos/CUSTODIA.png" alt="Custodia Festivalera" />
                 </div>
-                <iframe
-                    src="https://maps.google.com/maps?q=Colegio+Loyola,+Av.+Abraham+Lincoln,+Santo+Domingo&t=&z=16&ie=UTF8&iwloc=B&output=embed"
-                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                    title="Ubicación Colegio Loyola">
-                </iframe>
+                <!-- Placeholder: Ubicación próximamente (mismo tamaño que el iframe del mapa: 100% × 380px) -->
+                <div style="
+                    width: 100%; height: 380px;
+                    display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    background: linear-gradient(145deg, var(--amarillo), #FFD54F);
+                    gap: 12px; padding: 32px;
+                    text-align: center;
+                ">
+                    <span class="material-symbols-outlined" style="
+                        font-size: 64px; color: var(--oscuro); opacity: 0.7;
+                    ">location_on</span>
+                    <h3 style="
+                        font-family: 'Syne', sans-serif; font-weight: 800;
+                        font-size: 1.6rem; color: var(--oscuro);
+                        letter-spacing: -0.5px; text-transform: uppercase;
+                    ">Ubicación</h3>
+                    <p style="
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                        font-size: 1.05rem; font-weight: 600;
+                        color: var(--oscuro); opacity: 0.7;
+                        max-width: 280px; line-height: 1.5;
+                    ">El mapa con la ubicación exacta estará disponible próximamente</p>
+                    <div style="
+                        margin-top: 8px; padding: 8px 20px;
+                        background: var(--oscuro); color: var(--amarillo);
+                        border-radius: 8px; font-size: 0.8rem;
+                        font-weight: 800; text-transform: uppercase;
+                        letter-spacing: 1px;
+                    ">Próximamente</div>
+                </div>
             </div>
         </div>
     </section>
@@ -542,21 +1223,26 @@
                         <span class="material-symbols-outlined mat-icon">checkroom</span>
                     </div>
                     <h3 class="include-title">Camiseta Oficial</h3>
-                    <p class="include-desc">Recibe la camiseta exclusiva de Onda Fest 2026 en la talla que elijas al inscribirte.</p>
+                    <p class="include-desc">Recibe la camiseta exclusiva de Onda Fest 2026 en la talla que elijas al
+                        inscribirte.</p>
                 </div>
                 <div class="include-card">
                     <div class="include-icon" style="display:flex;align-items:center;justify-content:center;">
-                        <img src="./img/iconos/MICROFONO.png" alt="Música en vivo" style="width:64px;height:64px;object-fit:contain;" />
+                        <img src="./img/iconos/MICROFONO.png" alt="Música en vivo"
+                            style="width:64px;height:64px;object-fit:contain;" />
                     </div>
                     <h3 class="include-title">Música en Vivo</h3>
-                    <p class="include-desc">Artistas y bandas que llevan la alabanza a otro nivel en una atmósfera de festival.</p>
+                    <p class="include-desc">Artistas y bandas que llevan la alabanza a otro nivel en una atmósfera de
+                        festival.</p>
                 </div>
                 <div class="include-card">
                     <div class="include-icon">
-                        <span class="material-symbols-outlined mat-icon" style="color:var(--naranja);">lunch_dining</span>
+                        <span class="material-symbols-outlined mat-icon"
+                            style="color:var(--naranja);">lunch_dining</span>
                     </div>
                     <h3 class="include-title">Alimentación</h3>
-                    <p class="include-desc">Almuerzo completo y refrigerios durante toda la jornada para que disfrutes sin preocuparte.</p>
+                    <p class="include-desc">Almuerzo completo y refrigerios durante toda la jornada para que disfrutes
+                        sin preocuparte.</p>
                 </div>
             </div>
         </div>
@@ -568,8 +1254,9 @@
             <img src="./img/iconos/SUNGLASSES.png" alt="" class="cta-deco cta-deco-1 float-icon" />
             <img src="./img/iconos/CRUZ.png" alt="" class="cta-deco cta-deco-2 float-icon-2" />
             <p class="section-eyebrow" style="text-align:center; color:var(--fucsia);">Cupos Limitados</p>
-            <h2 class="section-title" style="text-align:center; font-size:clamp(2rem,5vw,3.5rem);">¡Asegura tu lugar en<br />Onda Fest 2026!</h2>
-            <div class="cta-price">RD$<span>700</span></div>
+            <h2 class="section-title" style="text-align:center; font-size:clamp(2rem,5vw,3.5rem);">¡Asegura tu lugar
+                en<br />Onda Fest 2026!</h2>
+            <div class="cta-price">RD$<span>600</span></div>
             <a href="inscripcion.html" class="btn-cta-big">
                 <span class="material-symbols-outlined">confirmation_number</span>
                 ¡Inscríbete Ahora!
@@ -590,28 +1277,41 @@
                     <span>¿Cómo puedo pagar mi inscripción?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">Después de inscribirte, recibirás un correo con los datos bancarios para transferencia. El pago debe realizarse antes del 30 de Noviembre, 2026.</div>
+                <div class="faq-a">Después de inscribirte, veras los datos bancarios para
+                    transferencia. El pago debe realizarse antes del 30 de Noviembre, 2026.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
                     <span>¿Puedo cancelar mi inscripción?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">No se aceptan devoluciones ni cancelaciones una vez realizado el pago. Asegúrate de poder asistir antes de inscribirte.</div>
+                <div class="faq-a">No se aceptan devoluciones ni cancelaciones una vez realizado el pago. Asegúrate de
+                    poder asistir antes de inscribirte.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
                     <span>¿Qué debo llevar el día del evento?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">Ropa y tenis cómodos, muchas ganas de vivir Onda Fest, y tu código de registro o correo de confirmación para recoger tu camiseta.</div>
+                <div class="faq-a">Ropa y tenis cómodos, muchas ganas de vivir Onda Fest, y tu código de registro o
+                    correo de confirmación para recoger tu camiseta.</div>
             </details>
             <details class="faq-item">
                 <summary class="faq-q">
                     <span>¿Cómo accedo a mi cuenta después de registrarme?</span>
                     <span class="material-symbols-outlined faq-arrow">expand_more</span>
                 </summary>
-                <div class="faq-a">No necesitas contraseña. Te enviamos un enlace mágico a tu correo. Al hacer clic, accedes directamente a tu panel para subir el comprobante de pago.</div>
+                <div class="faq-a">En el siguiente link podrar revisar tus datos de inscripcion y subir tu comprobante
+                    de pago <a href="verificar.html">Ir a mi inscripcion</a></div>
+            </details>
+            <details class="faq-item">
+                <summary class="faq-q">
+                    <span>¿Necesito ayuda con mi inscripcion?</span>
+                    <span class="material-symbols-outlined faq-arrow">expand_more</span>
+                </summary>
+                <div class="faq-a">
+                    Comunicate con el soporte técnico dejendo un whatsapp al 829-753-4583
+                </div>
             </details>
         </div>
     </section>
@@ -622,16 +1322,11 @@
             <img src="img/logo.png" alt="Onda Fest" />
             <span>ONDA FEST 2026</span>
         </div>
-        <div class="footer-cruz">
-            <img src="./img/iconos/CRUZ.png" alt="Cruz" />
-            <span style="color:rgba(255,255,255,0.35); font-size:0.78rem;">© 2026 Onda Fest. Todos los derechos reservados.</span>
-        </div>
         <div class="footer-links">
-            <a href="#">Privacidad</a>
-            <a href="#">Términos</a>
             <a href="#contacto">Soporte</a>
         </div>
     </footer>
 
 </body>
+
 </html>

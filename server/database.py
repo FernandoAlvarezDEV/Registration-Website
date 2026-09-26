@@ -2,7 +2,7 @@
 Configuración de la base de datos PostgreSQL con SQLAlchemy.
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 from config import settings
 
@@ -36,8 +36,14 @@ def get_db():
 
 def init_db():
     """
-    Crea todas las tablas definidas en los modelos.
+    Crea todas las tablas definidas en los modelos y asegura nuevas columnas.
     Se ejecuta al iniciar el servidor.
     """
     Base.metadata.create_all(bind=engine)
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE registros ADD COLUMN IF NOT EXISTS opcion_comida VARCHAR(100) DEFAULT 'Comida 1';"))
+            conn.commit()
+    except Exception as e:
+        pass
     print("[OK] Tablas de la base de datos creadas/verificadas.")

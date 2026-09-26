@@ -1,25 +1,36 @@
 """
-ENO Portal - Backend API V2
-===========================
+ENO Portal - Backend API V2 (Hardened)
+======================================
 FastAPI + PostgreSQL (Supabase) con:
   - Magic Link authentication (sin contraseñas)
-  - Envío de correo automático (Gmail SMTP)
+  - Envío de correo automático (Resend API)
   - Compresión y almacenamiento de imágenes (Supabase Storage)
+  - Security headers, rate limiting, admin auth
 
 Ejecutar con:
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    uvicorn main:app --host 0.0.0.0 --port 8000
 """
 
 import secrets
 import re
 import logging
+import hashlib
+import hmac
+import unicodedata
+from pathlib import Path
 from datetime import datetime, timedelta
 
-from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File, BackgroundTasks
+from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File, BackgroundTasks, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from pydantic import BaseModel
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from config import settings
 from database import get_db, init_db
@@ -30,19 +41,144 @@ from storage_service import upload_comprobante
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ── Utilidad: Limpiar teléfono ──────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────────
+# 🔒 SECURITY: Rate Limiter (Vulnerabilidad #6)
+# ─────────────────────────────────────────────────────────────────
+limiter = Limiter(key_func=get_remote_address)
+
+
+# ─────────────────────────────────────────────────────────────────
+# 🔒 SECURITY: Headers de Seguridad Middleware (Vulnerabilidad #2.2)
+# ─────────────────────────────────────────────────────────────────
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Agrega headers de seguridad HTTP a todas las respuestas."""
+    async def dispatch(self, request: Request, call_next):
+        response: Response = await call_next(request)
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+        return response
+
+
+# ── Utilidad: Limpiar teléfono y normalizar texto ───────────────
 def clean_phone(phone: str) -> str:
     """Elimina espacios, guiones, paréntesis, puntos y el prefijo +1."""
+    if not phone:
+        return ""
     cleaned = re.sub(r'[\s\-().]+', '', phone)
     if cleaned.startswith('+1'):
         cleaned = cleaned[2:]
     return cleaned
 
 
+def normalize_str(s: str) -> str:
+    """Elimina acentos, espacios extras y convierte a minúsculas para comparaciones insensibles."""
+    if not s:
+        return ""
+    normalized = unicodedata.normalize('NFKD', s).encode('ASCII', 'ignore').decode('utf-8')
+    return re.sub(r'\s+', ' ', normalized).strip().lower()
+
+
+def generar_codigo_registro(db_id: int) -> str:
+    """
+    Asigna un código de registro secuencial:
+    ENO-A001 a ENO-A100 para los primeros 100
+    ENO-B001 a ENO-B100 para los siguientes 100
+    ...
+    Hasta ENO-Z100 (26 letras * 100 = 2600 máximo)
+    """
+    try:
+        raw_id = int(str(db_id).replace("ENO-", "").replace("ONDA-", ""))
+    except Exception:
+        raw_id = 1
+    idx = max(0, raw_id - 1)
+    letra_idx = min(25, idx // 100)
+    letra = chr(ord('A') + letra_idx)
+    num = (idx % 100) + 1
+    return f"ENO-{letra}{num:03d}"
+
+
+
+# ─────────────────────────────────────────────────────────────────
+# 🔒 SECURITY: Admin Token Authentication (Vulnerabilidad #2)
+# ─────────────────────────────────────────────────────────────────
+_ADMIN_SECRET = secrets.token_urlsafe(48)  # Generado al iniciar el servidor
+
+def _generate_admin_token() -> str:
+    """
+    Genera un token de sesión admin firmado con HMAC.
+    El token contiene un timestamp y una firma para verificar autenticidad.
+    """
+    timestamp = str(int(datetime.utcnow().timestamp()))
+    signature = hmac.new(
+        _ADMIN_SECRET.encode(),
+        timestamp.encode(),
+        hashlib.sha256
+    ).hexdigest()
+    return f"{timestamp}.{signature}"
+
+
+def _verify_admin_token(token: str) -> bool:
+    """Verifica que un token admin sea válido y no haya expirado (8 horas)."""
+    try:
+        parts = token.split(".")
+        if len(parts) != 2:
+            return False
+        timestamp_str, signature = parts
+        # Verificar firma HMAC
+        expected_sig = hmac.new(
+            _ADMIN_SECRET.encode(),
+            timestamp_str.encode(),
+            hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(signature, expected_sig):
+            return False
+        # Verificar expiración (8 horas)
+        token_time = datetime.utcfromtimestamp(int(timestamp_str))
+        if datetime.utcnow() - token_time > timedelta(hours=8):
+            return False
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+def require_admin(request: Request):
+    """
+    Dependency de FastAPI que verifica autenticación de admin.
+    Espera el header: Authorization: Bearer <admin_token>
+    """
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="Acceso no autorizado. Se requiere autenticación de administrador.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    token = auth_header.replace("Bearer ", "")
+    if not _verify_admin_token(token):
+        raise HTTPException(
+            status_code=401,
+            detail="Token de administrador inválido o expirado.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return True
+
+
 # ── Modelos de Request/Response ─────────────────────────────────
 class AdminLoginRequest(BaseModel):
     email: str
     phone: str
+
+class VerificarRegistroRequest(BaseModel):
+    nombre: str
+    telefono: str
+    distrito: str = ""
+    email: str = ""
 
 class UpdateEstadoPago(BaseModel):
     estado_pago: str
@@ -59,19 +195,33 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# Registrar rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# 🔒 SECURITY: Middleware de headers de seguridad
+app.add_middleware(SecurityHeadersMiddleware)
+
+# 🔒 SECURITY: CORS restringido (Vulnerabilidad #3)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
 )
+
+# Servir archivos estáticos de comprobantes subidos
+uploads_dir = Path(__file__).parent / "uploads"
+uploads_dir.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
 
 @app.on_event("startup")
 def on_startup():
-    print("[OK] Iniciando ENO Portal API V2...")
-    print(f"[DB] Base de datos: {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
+    # 🔒 SECURITY: No loguear detalles de conexión en producción (Vulnerabilidad #5)
+    logger.info("[OK] Iniciando ENO Portal API V2...")
+    logger.info(f"[DB] Conectando a base de datos en puerto {settings.DB_PORT}")
     init_db()
 
 
@@ -85,7 +235,6 @@ def root():
     return {
         "message": "🎉 ENO Portal API V2 está funcionando",
         "version": "2.0.0",
-        "docs": "/docs",
     }
 
 
@@ -94,7 +243,9 @@ def root():
 # ─────────────────────────────────────────────────────────────────
 
 @app.post("/api/registros", response_model=RegistroResponse, tags=["Registros"])
+@limiter.limit("5/minute")  # 🔒 SECURITY: Rate limit en registros (Vulnerabilidad #6)
 def crear_registro(
+    request: Request,
     registro: RegistroCreate,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
@@ -102,6 +253,7 @@ def crear_registro(
     """
     Registra un nuevo participante.
     Genera un magic_token y envía correo de confirmación en background.
+    Limitado a 5 registros por minuto por IP.
     """
     telefono_limpio = clean_phone(registro.telefono)
     email_limpio = registro.email.strip().lower()
@@ -124,6 +276,8 @@ def crear_registro(
     token = secrets.token_urlsafe(64)
     token_expires = datetime.utcnow() + timedelta(hours=72)
 
+    comida_elegida = (registro.opcionComida or "Comida 1").strip()
+
     nuevo_registro = Registro(
         nombre_completo=registro.nombreCompleto,
         edad=registro.edad,
@@ -134,6 +288,7 @@ def crear_registro(
         no_onda=registro.noOnda,
         contacto_emergencia=registro.contactoEmergencia,
         parentesco=registro.parentesco,
+        opcion_comida=comida_elegida,
         magic_token=token,
         token_expires=token_expires,
     )
@@ -147,41 +302,46 @@ def crear_registro(
         raise HTTPException(status_code=409, detail="Ya existe una inscripción con estos datos.")
     except Exception as e:
         db.rollback()
-        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
+        logger.error(f"[REGISTRO] Error interno al crear registro: {type(e).__name__}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor.")
 
-    # Enviar correo de confirmación en background (no bloquea la respuesta)
-    background_tasks.add_task(
-        send_confirmation_email,
-        to_email=nuevo_registro.email,
-        nombre=nuevo_registro.nombre_completo,
-        token=token,
-    )
-
-    logger.info(f"[REGISTRO] Nuevo participante: {nuevo_registro.nombre_completo} | ID: {nuevo_registro.id}")
+    # Asignar código secuencial ENO-A001 a ENO-Z100 (0 correos, 0 magic links)
+    codigo = generar_codigo_registro(nuevo_registro.id)
+    logger.info(f"[REGISTRO] Nuevo participante registrado | ID: {nuevo_registro.id} -> Código: {codigo}")
 
     return RegistroResponse(
         success=True,
-        message="¡Registro exitoso! Revisa tu correo para acceder a tu portal.",
+        message="¡Registro exitoso! Guarda tu código de registro y realiza tu transferencia bancaria.",
         data={
-            "id": f"ENO-{nuevo_registro.id}",
+            "id": codigo,
+            "codigoRegistro": codigo,
+            "numericId": nuevo_registro.id,
             "nombreCompleto": nuevo_registro.nombre_completo,
             "email": nuevo_registro.email,
+            "telefono": nuevo_registro.telefono,
+            "municipio": nuevo_registro.municipio,
+            "opcionComida": nuevo_registro.opcion_comida,
         },
     )
 
 
+# 🔒 SECURITY: Endpoint protegido con autenticación admin (Vulnerabilidad #2)
 @app.get("/api/registros", response_model=list[RegistroOut], tags=["Registros"])
 def listar_registros(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
+    _admin: bool = Depends(require_admin),
 ):
-    """Lista todos los registros (paginado). Solo para Admin."""
+    """Lista todos los registros (paginado). Solo para Admin autenticado."""
     return db.query(Registro).order_by(Registro.fecha_registro.desc()).offset(skip).limit(limit).all()
 
 
 @app.get("/api/registros/buscar", response_model=RegistroResponse, tags=["Registros"])
+@limiter.limit("10/minute")  # 🔒 Rate limit en búsquedas
 def buscar_por_telefono(
+    request: Request,
     telefono: str = Query(..., description="Número de teléfono a buscar"),
     db: Session = Depends(get_db),
 ):
@@ -196,9 +356,15 @@ def buscar_por_telefono(
     return RegistroResponse(success=True, message="Teléfono no registrado.", data={"exists": False})
 
 
+
+# 🔒 SECURITY: Endpoint protegido con autenticación admin (Vulnerabilidad #2)
 @app.get("/api/registros/stats", tags=["Registros"])
-def estadisticas(db: Session = Depends(get_db)):
-    """Estadísticas generales (para Admin dashboard)."""
+def estadisticas(
+    request: Request,
+    db: Session = Depends(get_db),
+    _admin: bool = Depends(require_admin),
+):
+    """Estadísticas generales (para Admin dashboard). Solo Admin autenticado."""
     from sqlalchemy import func
 
     total = db.query(func.count(Registro.id)).scalar()
@@ -222,14 +388,21 @@ def estadisticas(db: Session = Depends(get_db)):
     }
 
 
+# 🔒 SECURITY: Endpoint protegido con autenticación admin (Vulnerabilidad #2)
 @app.delete("/api/registros/{registro_id}", tags=["Registros"])
-def eliminar_registro(registro_id: int, db: Session = Depends(get_db)):
-    """Elimina un registro por ID."""
+def eliminar_registro(
+    request: Request,
+    registro_id: int,
+    db: Session = Depends(get_db),
+    _admin: bool = Depends(require_admin),
+):
+    """Elimina un registro por ID. Solo Admin autenticado."""
     registro = db.query(Registro).filter(Registro.id == registro_id).first()
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
     db.delete(registro)
     db.commit()
+    logger.info(f"[ADMIN] Registro ENO-{registro_id} eliminado por administrador.")
     return {"success": True, "message": f"Registro ENO-{registro_id} eliminado."}
 
 
@@ -238,13 +411,16 @@ def eliminar_registro(registro_id: int, db: Session = Depends(get_db)):
 # ─────────────────────────────────────────────────────────────────
 
 @app.get("/api/auth/verify", tags=["Auth"])
+@limiter.limit("10/minute")  # 🔒 Rate limit para prevenir brute-force de tokens
 def verify_magic_token(
+    request: Request,
     token: str = Query(..., description="Magic token recibido por correo"),
     db: Session = Depends(get_db),
 ):
     """
     Valida el magic token del enlace del correo.
-    Si es válido, devuelve los datos del participante.
+    Si es válido, genera un token de sesión y devuelve los datos del participante.
+    🔒 El magic token original se invalida tras el primer uso (Vulnerabilidad #7).
     """
     registro = db.query(Registro).filter(Registro.magic_token == token).first()
 
@@ -254,10 +430,18 @@ def verify_magic_token(
     if registro.token_expires and datetime.utcnow() > registro.token_expires:
         raise HTTPException(status_code=401, detail="Este enlace ha expirado. Contacta al administrador.")
 
+    # 🔒 SECURITY: Generar token de sesión y invalidar magic token (Vulnerabilidad #7)
+    session_token = secrets.token_urlsafe(64)
+    registro.magic_token = session_token  # Reemplazar el token original
+    registro.token_expires = datetime.utcnow() + timedelta(hours=24)  # Sesión de 24h
+    db.commit()
+    db.refresh(registro)
+
     return {
         "success": True,
         "message": f"Bienvenido, {registro.nombre_completo}.",
         "role": "user",
+        "sessionToken": session_token,  # Nuevo token de sesión para uso continuo
         "data": {
             "id": registro.id,
             "idLabel": f"ENO-{registro.id}",
@@ -277,19 +461,131 @@ def verify_magic_token(
     }
 
 
+@app.post("/api/registros/verificar", tags=["Auth"])
+@limiter.limit("15/minute")
+def verificar_registro(
+    request: Request,
+    body: VerificarRegistroRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Verifica el registro de un asistente mediante Nombre, Teléfono y Distrito/Municipio.
+    Devuelve los datos del participante para mostrar su panel y permitir subir el comprobante.
+    """
+    nombre_input = normalize_str(body.nombre)
+    phone_clean = clean_phone(body.telefono)
+    distrito_input = normalize_str(body.distrito)
+
+    if not phone_clean or len(phone_clean) < 7:
+        raise HTTPException(status_code=400, detail="Por favor ingresa un número de teléfono válido.")
+    if not nombre_input or len(nombre_input) < 2:
+        raise HTTPException(status_code=400, detail="Por favor ingresa tu nombre completo.")
+
+    registros = db.query(Registro).all()
+
+    # 1. Filtrar por teléfono (últimos 7 a 10 dígitos)
+    target_digits = phone_clean[-10:] if len(phone_clean) >= 10 else phone_clean[-7:]
+    phone_matches = []
+    for r in registros:
+        r_phone = clean_phone(r.telefono or "")
+        if r_phone and (r_phone.endswith(target_digits) or phone_clean.endswith(r_phone[-7:] if len(r_phone) >= 7 else r_phone)):
+            phone_matches.append(r)
+
+    if not phone_matches:
+        raise HTTPException(status_code=404, detail="No se encontró ninguna inscripción con este número de teléfono.")
+
+    # 2. Filtrar por nombre
+    name_matches = []
+    input_words = set(nombre_input.split())
+    for r in phone_matches:
+        r_name = normalize_str(r.nombre_completo or "")
+        r_words = set(r_name.split())
+        if nombre_input in r_name or r_name in nombre_input or bool(input_words.intersection(r_words)):
+            name_matches.append(r)
+
+    if not name_matches:
+        raise HTTPException(status_code=404, detail="El nombre ingresado no coincide con el registrado para este número telefónico.")
+
+    # 3. Filtrar por distrito/municipio si se suministró
+    final_match = None
+    if distrito_input:
+        for r in name_matches:
+            r_dist = normalize_str(r.municipio or "")
+            if (
+                distrito_input in r_dist
+                or r_dist in distrito_input
+                or distrito_input == "otro"
+                or (distrito_input == "san francisco" and "francisco" in r_dist)
+                or (distrito_input == "higuey" and "higuey" in r_dist)
+            ):
+                final_match = r
+                break
+        if not final_match:
+            raise HTTPException(status_code=400, detail="El distrito/municipio seleccionado no coincide con los datos de tu registro.")
+    else:
+        final_match = name_matches[0]
+
+    registro = final_match
+
+    # 4. Validar correo si se suministró
+    if body.email and body.email.strip():
+        if normalize_str(registro.email or "") != normalize_str(body.email):
+            raise HTTPException(status_code=400, detail="El correo electrónico ingresado no coincide con el registrado.")
+
+    talla_val = registro.talla_camiseta.value if hasattr(registro.talla_camiseta, 'value') else str(registro.talla_camiseta or "")
+    codigo = generar_codigo_registro(registro.id)
+
+    return {
+        "success": True,
+        "message": f"Registro encontrado para {registro.nombre_completo}.",
+        "data": {
+            "id": registro.id,
+            "idLabel": codigo,
+            "codigoRegistro": codigo,
+            "nombreCompleto": registro.nombre_completo,
+            "edad": registro.edad,
+            "telefono": registro.telefono,
+            "email": registro.email,
+            "municipio": registro.municipio,
+            "tallaCamiseta": talla_val,
+            "noOnda": registro.no_onda,
+            "contactoEmergencia": registro.contacto_emergencia,
+            "parentesco": registro.parentesco,
+            "fechaRegistro": str(registro.fecha_registro) if registro.fecha_registro else None,
+            "comprobantePago": registro.comprobante_pago,
+            "estadoPago": registro.estado_pago,
+            "opcionComida": getattr(registro, "opcion_comida", "Comida 1") or "Comida 1",
+        },
+    }
+
+
+
 @app.post("/api/auth/admin", tags=["Auth"])
-def admin_login(credentials: AdminLoginRequest, db: Session = Depends(get_db)):
-    """Login manual solo para administradores."""
+@limiter.limit("5/minute")  # 🔒 Rate limit estricto en login admin (Vulnerabilidad #6)
+def admin_login(
+    request: Request,
+    credentials: AdminLoginRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Login manual solo para administradores.
+    Devuelve un token de sesión admin firmado con HMAC.
+    """
     if (
         credentials.email.strip().upper() == settings.ADMIN_EMAIL.strip().upper()
         and clean_phone(credentials.phone) == settings.ADMIN_PHONE
     ):
+        admin_token = _generate_admin_token()
+        logger.info("[AUTH] Inicio de sesión de administrador exitoso.")
         return {
             "success": True,
             "role": "admin",
             "message": "Bienvenido, Administrador.",
+            "token": admin_token,  # Token para usar en endpoints protegidos
             "data": {"nombreCompleto": "Administrador ENO", "isAdmin": True},
         }
+    # 🔒 SECURITY: Loguear intentos fallidos sin exponer credenciales
+    logger.warning(f"[AUTH] Intento de login admin fallido desde IP: {request.client.host}")
     raise HTTPException(status_code=401, detail="Credenciales de administrador incorrectas.")
 
 
@@ -298,7 +594,9 @@ def admin_login(credentials: AdminLoginRequest, db: Session = Depends(get_db)):
 # ─────────────────────────────────────────────────────────────────
 
 @app.post("/api/registros/{registro_id}/comprobante", tags=["Pagos"])
+@limiter.limit("3/minute")  # 🔒 Rate limit en subida de archivos
 async def subir_comprobante_endpoint(
+    request: Request,
     registro_id: int,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -352,13 +650,16 @@ async def subir_comprobante_endpoint(
     }
 
 
+# 🔒 SECURITY: Endpoint protegido con autenticación admin (Vulnerabilidad #2)
 @app.patch("/api/registros/{registro_id}/estado-pago", tags=["Pagos"])
 def actualizar_estado_pago(
+    request: Request,
     registro_id: int,
     body: UpdateEstadoPago,
     db: Session = Depends(get_db),
+    _admin: bool = Depends(require_admin),
 ):
-    """Actualiza el estado de pago de un registro (Admin)."""
+    """Actualiza el estado de pago de un registro. Solo Admin autenticado."""
     estados_validos = ["pendiente", "en revisión", "verificado", "rechazado"]
     if body.estado_pago not in estados_validos:
         raise HTTPException(status_code=400, detail=f"Estado no válido. Opciones: {', '.join(estados_validos)}")
@@ -371,6 +672,8 @@ def actualizar_estado_pago(
     db.commit()
     db.refresh(registro)
 
+    logger.info(f"[ADMIN] Estado de pago de ENO-{registro_id} actualizado a '{body.estado_pago}'.")
+
     return {
         "success": True,
         "message": f"Estado de pago actualizado a '{body.estado_pago}'.",
@@ -379,46 +682,9 @@ def actualizar_estado_pago(
 
 
 # ─────────────────────────────────────────────────────────────────
-# 🧪 DIAGNÓSTICO TEMPORAL — Eliminar después de verificar correo
+# 🔒 SECURITY: Endpoint /api/test-email ELIMINADO (Vulnerabilidad #1)
+# Anteriormente exponía credenciales SMTP y permitía envío arbitrario.
 # ─────────────────────────────────────────────────────────────────
-
-@app.get("/api/test-email", tags=["Debug"])
-def test_email(to: str = Query(..., description="Correo destino de prueba")):
-    """
-    Envía un correo de prueba de forma síncrona y retorna el resultado detallado.
-    ELIMINAR después de confirmar que el correo funciona.
-    """
-    import smtplib
-    from email.mime.text import MIMEText
-
-    result = {
-        "gmail_user_configured": bool(settings.GMAIL_USER),
-        "gmail_password_configured": bool(settings.GMAIL_APP_PASSWORD),
-        "frontend_url": settings.FRONTEND_URL,
-        "gmail_user": settings.GMAIL_USER,
-    }
-
-    if not settings.GMAIL_USER or not settings.GMAIL_APP_PASSWORD:
-        return {"success": False, "error": "Variables GMAIL_USER o GMAIL_APP_PASSWORD no configuradas.", **result}
-
-    try:
-        msg = MIMEText("<h2>Prueba de correo ENO 2026</h2><p>Si ves esto, el correo funciona ✅</p>", "html")
-        msg["Subject"] = "🧪 Test Email — ENO Portal"
-        msg["From"] = settings.GMAIL_USER
-        msg["To"] = to
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(settings.GMAIL_USER, settings.GMAIL_APP_PASSWORD)
-            server.sendmail(settings.GMAIL_USER, to, msg.as_string())
-
-        return {"success": True, "message": f"Correo enviado a {to} ✅", **result}
-
-    except smtplib.SMTPAuthenticationError as e:
-        return {"success": False, "error": f"Error de autenticación Gmail: {str(e)}", "hint": "Verifica GMAIL_USER y GMAIL_APP_PASSWORD. El App Password debe tener verificación en 2 pasos activa.", **result}
-    except smtplib.SMTPException as e:
-        return {"success": False, "error": f"Error SMTP: {str(e)}", **result}
-    except Exception as e:
-        return {"success": False, "error": f"Error inesperado: {str(e)}", **result}
 
 
 # ─────────────────────────────────────────────────────────────────

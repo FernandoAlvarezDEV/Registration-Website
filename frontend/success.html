@@ -4,53 +4,57 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>¡Registro Exitoso! - Onda Fest</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <title>¡Ya tienes tu pase! — Onda Fest 2026</title>
+    <meta name="description" content="Tu inscripción a Onda Fest 2026 fue exitosa. ¡Guarda tu código y realiza tu pago!" />
     <link rel="icon" type="image/png" href="img/logo.png" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300;1,9..40,400;1,9..40,500&display=swap"
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#ED008C",
-                        "background-light": "#F9F4E0",
-                        "background-dark": "#0E0E0E",
-                    },
-                    fontFamily: {
-                        "display": ["DM Sans", "sans-serif"],
-                        "brand": ["DM Serif Display", "serif"]
-                    },
-                },
-            },
-        }
-    </script>
     <style>
-        @keyframes checkmark {
-            0% {
-                transform: scale(0) rotate(-45deg);
-                opacity: 0;
-            }
-
-            50% {
-                transform: scale(1.2) rotate(0deg);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
+        :root {
+            --crema: #F9F4E0;
+            --rojo: #FF0000;
+            --amarillo: #FEB004;
+            --naranja: #FF7D04;
+            --fucsia: #ED008C;
+            --verde: #3CE705;
+            --oscuro: #1A1A1A;
+            --radius: 14px;
         }
 
-        @keyframes fadeInUp {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--crema);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--oscuro);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Animaciones */
+        @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(28px);
             }
 
             to {
@@ -59,333 +63,918 @@
             }
         }
 
-        @keyframes confetti {
+        @keyframes popIn {
             0% {
-                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+                transform: scale(0.4) rotate(-15deg);
+            }
+
+            60% {
+                transform: scale(1.15) rotate(4deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
                 opacity: 1;
             }
 
             100% {
-                transform: translateY(-200px) rotate(720deg);
+                transform: translateY(105vh) rotate(720deg);
                 opacity: 0;
             }
         }
 
-        .animate-checkmark {
-            animation: checkmark 0.6s ease-out 0.3s both;
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
         }
 
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out both;
+        .fade-up {
+            animation: fadeUp 0.65s ease-out both;
         }
 
-        .delay-1 {
-            animation-delay: 0.5s;
+        .d1 {
+            animation-delay: 0.15s;
         }
 
-        .delay-2 {
-            animation-delay: 0.7s;
+        .d2 {
+            animation-delay: 0.3s;
         }
 
-        .delay-3 {
-            animation-delay: 0.9s;
+        .d3 {
+            animation-delay: 0.45s;
         }
 
-        .delay-4 {
-            animation-delay: 1.1s;
+        .d4 {
+            animation-delay: 0.6s;
+        }
+
+        .pop-in {
+            animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
         .confetti-piece {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: confetti 1.5s ease-out forwards;
+            border-radius: 3px;
+            animation: confettiFall linear forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header */
+        header {
+            background: var(--crema);
+            border-bottom: 3px solid var(--oscuro);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .header-logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--oscuro);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--fucsia);
+        }
+
+        .btn-register-nav {
+            background: var(--amarillo);
+            color: var(--oscuro);
+            font-weight: 800;
+            font-size: 0.875rem;
+            padding: 10px 22px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 2px solid var(--oscuro);
+            box-shadow: 3px 3px 0 var(--oscuro);
+            transition: all 0.15s;
+        }
+
+        .btn-register-nav:hover {
+            box-shadow: 1px 1px 0 var(--oscuro);
+            transform: translate(2px, 2px);
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 12px 18px;
+            }
+
+            .header-nav {
+                display: none;
+            }
+        }
+
+        /* Hero */
+        .success-hero {
+            background: var(--verde);
+            border-bottom: 4px solid var(--oscuro);
+            padding: 60px 24px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-icon-wrap {
+            width: 96px;
+            height: 96px;
+            background: white;
+            border: 4px solid var(--oscuro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 5px 5px 0 var(--oscuro);
+        }
+
+        .success-icon-wrap span {
+            font-size: 52px;
+            color: var(--verde);
+        }
+
+        .success-hero h1 {
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            color: var(--oscuro);
+            line-height: 1.05;
+            margin-bottom: 12px;
+        }
+
+        .success-hero p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.75);
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        /* Código de registro asignado */
+        .reg-code-container {
+            margin-top: 22px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--oscuro);
+            border: 3px solid var(--oscuro);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            padding: 14px 28px;
+            color: var(--crema);
+        }
+
+        .reg-code-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--amarillo);
+            margin-bottom: 4px;
+        }
+
+        .reg-code-val {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: white;
+        }
+
+        /* Marquee strip */
+        .marquee-strip {
+            background: var(--amarillo);
+            border-top: 3px solid var(--oscuro);
+            border-bottom: 3px solid var(--oscuro);
+            padding: 12px 0;
+            overflow: hidden;
+        }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee 14s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--oscuro);
+            padding: 0 28px;
+            white-space: nowrap;
+        }
+
+        .marquee-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--rojo);
+            flex-shrink: 0;
+        }
+
+        /* Contenedor principal */
+        .content-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 44px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        /* Tarjetas */
+        .card {
+            background: white;
+            border: 3px solid var(--oscuro);
+            border-radius: var(--radius);
+            box-shadow: 5px 5px 0 var(--oscuro);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #FAFAFA;
+        }
+
+        .card-header h3 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .card-header span.material-symbols-outlined {
+            color: var(--fucsia);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Resumen de inscripción */
+        #summary-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 560px) {
+            #summary-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: #FCF9F0;
+            border: 2px solid var(--oscuro);
+            border-radius: 10px;
+            box-shadow: 2px 2px 0 var(--oscuro);
+        }
+
+        .summary-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--crema);
+            border: 1.5px solid var(--oscuro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fucsia);
+            flex-shrink: 0;
+        }
+
+        .summary-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        .summary-val {
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--oscuro);
+            font-family: 'Syne', sans-serif;
+            word-break: break-word;
+        }
+
+        /* Pasos */
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            background: var(--oscuro);
+            color: var(--crema);
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--oscuro);
+            box-shadow: 2px 2px 0 var(--oscuro);
+        }
+
+        .step-content p {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .step-content strong {
+            color: var(--oscuro);
+            font-weight: 800;
+        }
+
+        /* Tarjeta de pago */
+        .bank-card {
+            background: #F0FFF0;
+            border: 2px solid var(--verde);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+
+        .bank-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1.5px dashed rgba(60, 231, 5, 0.4);
+        }
+
+        .bank-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bank-brand strong {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #1a5200;
+        }
+
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 520px) {
+            .bank-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bank-field {
+            background: white;
+            border: 1.5px solid #c9ecc5;
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .bank-field label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #5a9a40;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .bank-field-val-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .bank-field p {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #1a5200;
+            font-family: 'Syne', sans-serif;
+        }
+
+        .btn-copy-chip {
+            background: #E8F9E5;
+            border: 1.5px solid var(--oscuro);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--oscuro);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s;
+        }
+
+        .btn-copy-chip:hover {
+            background: var(--amarillo);
+            transform: translate(1px, 1px);
+        }
+
+        /* Caja de concepto */
+        .transfer-memo-highlight {
+            background: var(--amarillo);
+            border: 2px solid var(--oscuro);
+            border-radius: 10px;
+            padding: 16px 20px;
+            box-shadow: 3px 3px 0 var(--oscuro);
+            margin-bottom: 20px;
+        }
+
+        .transfer-memo-highlight p {
+            font-size: 0.82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--oscuro);
+            margin-bottom: 6px;
+        }
+
+        .transfer-memo-box {
+            background: white;
+            border: 2px solid var(--oscuro);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: 'Syne', monospace;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--oscuro);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* Tarjeta de soporte */
+        .support-card {
+            background: white;
+            border: 3px solid var(--oscuro);
+            border-radius: var(--radius);
+            box-shadow: 5px 5px 0 var(--oscuro);
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .support-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .support-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #E8F9E5;
+            border: 2px solid var(--oscuro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a5200;
+            flex-shrink: 0;
+        }
+
+        .support-info h4 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--oscuro);
+            margin-bottom: 2px;
+        }
+
+        .support-info p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--verde);
+            color: var(--oscuro);
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 12px 22px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 2px solid var(--oscuro);
+            box-shadow: 3px 3px 0 var(--oscuro);
+            transition: all 0.15s;
+        }
+
+        .btn-whatsapp:hover {
+            box-shadow: 1px 1px 0 var(--oscuro);
+            transform: translate(2px, 2px);
+        }
+
+        /* Botones principales de acción */
+        .action-btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-action-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--fucsia);
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 18px 36px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 3px solid var(--oscuro);
+            box-shadow: 4px 4px 0 var(--oscuro);
+            transition: all 0.15s;
+        }
+
+        .btn-action-primary:hover {
+            box-shadow: 2px 2px 0 var(--oscuro);
+            transform: translate(2px, 2px);
+            background: #d4007d;
+        }
+
+        .btn-action-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: var(--oscuro);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 18px 28px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            border: 3px solid var(--oscuro);
+            box-shadow: 4px 4px 0 var(--oscuro);
+            transition: all 0.15s;
+        }
+
+        .btn-action-secondary:hover {
+            box-shadow: 2px 2px 0 var(--oscuro);
+            transform: translate(2px, 2px);
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--oscuro);
+            color: var(--crema);
+            padding: 14px 22px;
+            border-radius: 10px;
+            border: 2px solid var(--amarillo);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            box-shadow: 4px 4px 0 var(--oscuro);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--oscuro);
+            padding: 24px 40px;
+            text-align: center;
+            border-top: 3px solid var(--oscuro);
+        }
+
+        footer p {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.45);
         }
     </style>
 </head>
 
-<body class="bg-background-light font-display text-slate-900 min-h-screen">
-    <!-- Confetti container -->
+<body>
+
+    <!-- Confetti -->
     <div id="confetti-container"></div>
 
-    <div class="relative flex h-auto min-h-screen w-full flex-col">
-        <div class="layout-container flex h-full grow flex-col">
-            <!-- Header -->
-            <header
-                class="flex flex-wrap items-center justify-between gap-3 border-b border-solid border-slate-200 bg-white px-4 sm:px-10 py-3 sticky top-0 z-50">
-                <div class="flex items-center gap-4 text-primary">
-                    <img src="img/logo.png" alt="OndaFest Logo" class="h-10 w-auto object-contain rounded-full shadow-sm" />
-                </div>
-            </header>
+    <!-- Toast Notification -->
+    <div id="toast">
+        <span class="material-symbols-outlined" style="color:var(--verde);">check_circle</span>
+        <span id="toast-text">Copiado al portapapeles</span>
+    </div>
 
-            <!-- Main Content -->
-            <main class="flex-1 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6">
-                <div class="max-w-[700px] w-full text-center">
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="header-logo">
+            <img src="img/LOGO VERSI HORIZONTAL 1.png" alt="Onda Fest Logo" />
+        </a>
+        <nav class="header-nav">
+            <a href="index.html">Inicio</a>
+            <a href="dashboard.html">Revisar Mi Inscripción</a>
+            <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
+        </nav>
+    </header>
 
-                    <!-- Success Icon -->
-                    <div class="mb-8">
-                        <div
-                            class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-100 animate-checkmark">
-                            <span class="material-symbols-outlined text-emerald-600"
-                                style="font-size: 56px; font-variation-settings: 'FILL' 1;">check_circle</span>
-                        </div>
-                    </div>
+    <!-- Success Hero -->
+    <section class="success-hero">
+        <div class="success-icon-wrap pop-in">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">check_circle</span>
+        </div>
+        <h1 class="fade-up d1">¡YA TIENES TU NÚMERO DE REGISTRO!</h1>
+        <p class="fade-up d2">Tu inscripción a <strong>Onda Fest 2026</strong> fue completada. Guarda tu código para realizar tu pago y consultar tu estado.</p>
+        
+        <div class="reg-code-container fade-up d3">
+            <span class="reg-code-label">Tu Número de Registro Oficial</span>
+            <span class="reg-code-val" id="code-value">ENO-A001</span>
+        </div>
+    </section>
 
-                    <!-- Title -->
-                    <h1 class="text-4xl font-black tracking-tight text-slate-900 mb-3 animate-fade-in-up delay-1">
-                        ¡Inscripción Exitosa!
-                    </h1>
-                    <p class="text-lg text-slate-500 mb-2 animate-fade-in-up delay-1">
-                        Tu registro para el evento <strong class="text-primary">Onda Fest</strong> ha sido confirmado.
-                    </p>
-                    <p id="registration-code" class="text-sm text-slate-400 mb-10 animate-fade-in-up delay-1 font-mono">
-                        <!-- Se llena con JS -->
-                    </p>
-
-                    <!-- Registration Summary Card -->
-                    <div id="summary-card"
-                        class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 mb-10 text-left animate-fade-in-up delay-2">
-                        <h3 class="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary">badge</span>
-                            Resumen de tu Inscripción
-                        </h3>
-                        <div id="summary-details" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <!-- Se llena con JS -->
-                        </div>
-                    </div>
-
-                    <!-- Next Steps -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-left animate-fade-in-up delay-3">
-                        <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary">checklist</span>
-                            Próximos Pasos
-                        </h3>
-                        <div class="space-y-5">
-                            <!-- Step 1 -->
-                            <div class="flex gap-4 items-start">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-sm">1</span>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 mb-1">Revisa tu correo electrónico</p>
-                                    <p class="text-slate-500 text-sm">Te enviamos un correo a <strong id="magic-link-email" class="text-primary"></strong> con los
-                                        detalles de tu inscripción y un <strong>enlace mágico</strong> para acceder a tu cuenta. Si no lo ves, revisa la
-                                        carpeta de spam.</p>
-                                </div>
-                            </div>
-
-                            <!-- Step 2 -->
-                            <div class="flex gap-4 items-start">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-sm">2</span>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 mb-1">Realiza el pago de RD$700</p>
-                                    <p class="text-slate-500 text-sm">Completa tu pago para confirmar tu lugar. Los
-                                        detalles de pago fueron enviados al correo que proporcionaste. El pago debe
-                                        realizarse antes del <strong>30 de Noviembre, 2026</strong>.</p>
-                                </div>
-                            </div>
-
-                            <!-- Step 3 -->
-                            <div class="flex gap-4 items-start">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-sm">3</span>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 mb-1">Guarda la fecha</p>
-                                    <p class="text-slate-500 text-sm">El evento se celebrará el <strong>13 de Diciembre,
-                                            2026</strong> de 08:00 AM a 05:00 PM en el <strong>Colegio Loyola</strong>,
-                                        Av. Abraham Lincoln #1, Centro de los Héroes, Santo Domingo.</p>
-                                </div>
-                            </div>
-
-                            <!-- Step 4 -->
-                            <div class="flex gap-4 items-start">
-                                <div
-                                    class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-sm">4</span>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-slate-800 mb-1">Recoge tu camiseta el día del evento</p>
-                                    <p class="text-slate-500 text-sm">Llega al menos 30 minutos antes para registrarte
-                                        presencialmente y recibir tu camiseta en la talla que seleccionaste. Presenta tu
-                                        código de registro o el correo de confirmación.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Formas de Pago -->
-                    <div
-                        class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-left mt-8 animate-fade-in-up delay-3">
-                        <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-emerald-600">account_balance</span>
-                            Formas de Pago
-                        </h3>
-                        <p class="text-slate-500 text-sm mb-6">Realiza tu pago mediante transferencia bancaria siguiendo
-                            estas instrucciones:</p>
-
-                        <!-- Bank Details Card -->
-                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="material-symbols-outlined text-emerald-700">assured_workload</span>
-                                <p class="font-bold text-emerald-900 text-base">Banco Popular Dominicano</p>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <p
-                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                                        Titular de la cuenta</p>
-                                    <p class="text-emerald-900 font-bold text-base">Hamlet</p>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                                        Número de Cuenta</p>
-                                    <p class="text-emerald-900 font-bold text-base font-mono">123-456789-0</p>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                                        Cédula</p>
-                                    <p class="text-emerald-900 font-bold text-base font-mono">001-1234567-8</p>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-emerald-700/70 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                                        Monto</p>
-                                    <p class="text-emerald-900 font-bold text-base">RD$700.00</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Transfer Instructions -->
-                        <div class="space-y-4 mb-6">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary text-lg">checklist_rtl</span>
-                                Instrucciones para la transferencia:
-                            </h4>
-                            <div class="flex gap-3 items-start">
-                                <div
-                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-xs">1</span>
-                                </div>
-                                <p class="text-slate-600 text-sm">Ingresa a tu banca en línea o aplicación del banco y
-                                    selecciona <strong>Transferencia</strong>.</p>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div
-                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-xs">2</span>
-                                </div>
-                                <p class="text-slate-600 text-sm">Ingresa los datos de la cuenta indicados arriba (Banco
-                                    Popular, cuenta de <strong>Hamlet</strong>).</p>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div
-                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-xs">3</span>
-                                </div>
-                                <p class="text-slate-600 text-sm">En el campo de <strong>nombre del remitente</strong>,
-                                    coloca tu <strong>Nombre Completo</strong> tal como te registraste.</p>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div
-                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-50 flex items-center justify-center">
-                                    <span class="text-amber-600 font-black text-xs">4</span>
-                                </div>
-                                <div>
-                                    <p class="text-slate-600 text-sm">En la <strong>descripción o concepto</strong> de
-                                        la
-                                        transferencia escribe:</p>
-                                    <div
-                                        class="bg-slate-100 rounded-lg px-4 py-2 mt-2 font-mono text-sm text-slate-800">
-                                        <strong>Tu Nombre Completo - Tu Municipio</strong>
-                                    </div>
-                                    <p class="text-slate-400 text-xs mt-1">Ejemplo: Juan Pérez - Santo Domingo Este</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div
-                                    class="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span class="text-primary font-black text-xs">5</span>
-                                </div>
-                                <p class="text-slate-600 text-sm">Confirma la transferencia por el monto de
-                                    <strong>RD$700.00</strong>.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Important notice -->
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3 items-start">
-                            <span class="material-symbols-outlined text-amber-600 mt-0.5">warning</span>
-                            <div>
-                                <p class="font-bold text-amber-900 text-sm mb-1">¡Importante!</p>
-                                <p class="text-amber-800 text-sm">Una vez realizada la transferencia, <strong>inicia
-                                        sesión</strong> en tu cuenta y <strong>sube la imagen del comprobante</strong>
-                                    de la
-                                    transferencia en tu Dashboard para validar tu pago. Sin el comprobante, tu
-                                    inscripción
-                                    no será confirmada.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Magic Link CTA -->
-                    <div
-                        class="bg-primary/5 border border-primary/20 rounded-2xl p-8 text-center mt-8 animate-fade-in-up delay-4">
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4">
-                            <span class="material-symbols-outlined text-primary"
-                                style="font-size: 28px;">mark_email_unread</span>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-900 mb-2">¿Cómo accedo a mi cuenta?</h3>
-                        <p class="text-slate-500 text-sm max-w-md mx-auto">
-                            No necesitas contraseña. Te enviamos un <strong class="text-primary">enlace mágico</strong>
-                            directamente a tu correo electrónico. Al hacer clic en ese enlace, accederás
-                            automáticamente a tu portal para ver el estado de tu inscripción y subir tu comprobante de pago.
-                        </p>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up delay-4">
-                        <a href="index.html"
-                            class="inline-flex items-center justify-center gap-2 bg-primary text-white font-bold py-4 px-8 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
-                            <span class="material-symbols-outlined">home</span>
-                            Volver al Inicio
-                        </a>
-                        <a href="https://www.google.com/maps/place/Colegio+Loyola/@18.45105,-69.92322,17z/data=!4m6!3m5!1s0x8eaf89d0093af269:0xa5c4f0fc8ef03d00!8m2!3d18.45105!4d-69.92322!16s"
-                            target="_blank" rel="noopener noreferrer"
-                            class="inline-flex items-center justify-center gap-2 bg-white text-slate-700 font-bold py-4 px-8 rounded-lg shadow-sm border border-slate-200 hover:bg-slate-50 transition-all">
-                            <span class="material-symbols-outlined">map</span>
-                            Ver Ubicación
-                        </a>
-                    </div>
-
-                </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="border-t border-slate-200 bg-white py-8 px-4 sm:px-10">
-                <div
-                    class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
-                    <p>© 2026 Onda Fest. Todos los derechos reservados.</p>
-                    <div class="flex gap-6">
-                        <a class="hover:text-primary" href="#">Política de Privacidad</a>
-                        <a class="hover:text-primary" href="#">Términos de Servicio</a>
-                        <a class="hover:text-primary" href="#">Soporte</a>
-                    </div>
-                </div>
-            </footer>
+    <!-- Marquee -->
+    <div class="marquee-strip">
+        <div class="marquee-track">
+            <div class="marquee-item"><span class="marquee-dot"></span>¡INSCRIPCIÓN COMPLETADA!</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST 2026</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>13 DE DICIEMBRE</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>PAGA TU ENTRADA POR TRANSFERENCIA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>¡INSCRIPCIÓN COMPLETADA!</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>ONDA FEST 2026</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>13 DE DICIEMBRE</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>PAGA TU ENTRADA POR TRANSFERENCIA</div>
+            <div class="marquee-item"><span class="marquee-dot"></span>UNA SOLA ONDA</div>
         </div>
     </div>
 
+    <!-- Main content -->
+    <main>
+        <div class="content-wrap">
+
+            <!-- Summary card -->
+            <div class="card fade-up d1" id="summary-card">
+                <div class="card-header">
+                    <span class="material-symbols-outlined">badge</span>
+                    <h3>Resumen de tus Datos Registrados</h3>
+                </div>
+                <div class="card-body">
+                    <div id="summary-details">
+                        <!-- Rellenado por js/success.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Pago Bancario -->
+            <div class="card fade-up d2">
+                <div class="card-header">
+                    <span class="material-symbols-outlined" style="color:var(--verde);">account_balance</span>
+                    <h3>Datos para Realizar tu Transferencia Bancaria</h3>
+                </div>
+                <div class="card-body">
+                    <div class="bank-card">
+                        <div class="bank-card-header">
+                            <div class="bank-brand">
+                                <span class="material-symbols-outlined" style="color:#2d8c00;">assured_workload</span>
+                                <strong>Banco Popular Dominicano</strong>
+                            </div>
+                            <span style="font-size:0.75rem; background:white; border:1px solid #c9ecc5; padding:3px 8px; border-radius:6px; font-weight:700; color:#1a5200;">Cuenta Corriente</span>
+                        </div>
+                        <div class="bank-grid">
+                            <div class="bank-field">
+                                <label>Titular de la Cuenta</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-holder">Hamlet</p>
+                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('Hamlet', 'Titular copiado')">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bank-field">
+                                <label>Número de Cuenta</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-account">123-456789-0</p>
+                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('1234567890', 'No. de cuenta copiado')">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bank-field">
+                                <label>Cédula / Identificación</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-id">001-1234567-8</p>
+                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('00112345678', 'Cédula copiada')">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bank-field" style="background:#EBFEEB; border-color:var(--verde);">
+                                <label style="color:#1a5200;">Monto Exacto</label>
+                                <div class="bank-field-val-wrap">
+                                    <p style="color:var(--verde); font-size:1.25rem;">RD$600.00</p>
+                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('600', 'Monto copiado')">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Concepto obligatorio con Número de Registro -->
+                    <div class="transfer-memo-highlight">
+                        <p>⚠️ OBLIGATORIO: En la descripción o concepto de la transferencia escribe:</p>
+                        <div class="transfer-memo-box">
+                            <span id="transfer-memo">ENO-A001 - Tu Nombre - Tu Distrito</span>
+                            <button type="button" class="btn-copy-chip" onclick="copyTransferMemo()">
+                                <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar Concepto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pasos siguientes -->
+                    <div class="steps-list">
+                        <div class="step-row">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <p>Realiza la transferencia por <strong>RD$600.00</strong> a los datos bancarios de arriba antes del <strong>30 de Noviembre 2026</strong>.</p>
+                            </div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <p>Toma una <strong>captura de pantalla o foto</strong> del comprobante emitido por tu banco.</p>
+                            </div>
+                        </div>
+                        <div class="step-row">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <p>Haz clic en el botón <strong>"Revisar mi inscripción / Subir comprobante"</strong> para acceder a tu panel de usuario y subir la foto del comprobante.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soporte Técnico Oficial -->
+            <div class="support-card fade-up d3">
+                <div class="support-left">
+                    <div class="support-icon">
+                        <span class="material-symbols-outlined">support_agent</span>
+                    </div>
+                    <div class="support-info">
+                        <h4>¿Necesitas ayuda con tu pago o inscripción?</h4>
+                        <p>Contáctanos directamente vía WhatsApp: <strong>(829) 753-4583</strong></p>
+                    </div>
+                </div>
+                <a href="https://wa.me/18297534583?text=Hola,%20necesito%20ayuda%20con%20mi%20inscripción%20en%20Onda%20Fest%202026" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                    <span class="material-symbols-outlined">chat</span>
+                    WhatsApp 829-753-4583
+                </a>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="action-btns fade-up d4">
+                <a href="dashboard.html" class="btn-action-primary" id="btn-portal">
+                    <span class="material-symbols-outlined">badge</span>
+                    Revisar Mi Inscripción / Subir Comprobante →
+                </a>
+                <a href="index.html" class="btn-action-secondary">
+                    <span class="material-symbols-outlined">home</span>
+                    Volver al Inicio
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Onda Fest — Una Sola Onda. Todos los derechos reservados.</p>
+    </footer>
+
     <script src="js/success.js"></script>
+    <script>
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccessToast(message || "¡Copiado con éxito!");
+            }).catch(() => {
+                const temp = document.createElement("input");
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand("copy");
+                document.body.removeChild(temp);
+                showSuccessToast(message || "¡Copiado con éxito!");
+            });
+        }
+
+        function copyTransferMemo() {
+            const memo = document.getElementById("transfer-memo").textContent;
+            copyToClipboard(memo, "Concepto de transferencia copiado");
+        }
+
+        function showSuccessToast(msg) {
+            const toast = document.getElementById("toast");
+            const toastText = document.getElementById("toast-text");
+            if (!toast || !toastText) return;
+            toastText.textContent = msg;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2500);
+        }
+    </script>
 </body>
 
 </html>

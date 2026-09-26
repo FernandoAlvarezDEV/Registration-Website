@@ -279,7 +279,8 @@ async function simulateBackendResponse(formData) {
         success: true,
         message: "Registro exitoso",
         data: {
-            id: `ONDA-${Date.now()}`,
+            id: "ENO-A001",
+            codigoRegistro: "ENO-A001",
             ...formData,
             registeredAt: new Date().toISOString(),
         },
@@ -399,13 +400,14 @@ async function handleSubmit(event) {
         // Guardar en sessionStorage para la página de éxito
         const registrationInfo = {
             ...formData,
-            id: result.data?.id || `ONDA-${Date.now()}`,
+            id: result.data?.id || result.data?.codigoRegistro || "ENO-A001",
+            codigoRegistro: result.data?.id || result.data?.codigoRegistro || "ENO-A001",
             fechaRegistro: result.data?.fechaRegistro || new Date().toISOString(),
         };
         sessionStorage.setItem("eno_registration", JSON.stringify(registrationInfo));
 
         // Redirigir a la página de confirmación
-        window.location.href = "succes.html";
+        window.location.href = "success.html";
     } catch (error) {
         // 7. Error
         console.error("Error al registrar:", error);

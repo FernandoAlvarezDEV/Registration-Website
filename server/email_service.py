@@ -91,7 +91,7 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
                 <tr>
                   <td style="padding:10px 0;">
                     <span style="color:#FF0000;font-size:13px;font-weight:700;text-transform:uppercase;">Precio</span><br/>
-                    <span style="font-size:15px;font-weight:600;">RD$700 Pesos Dominicanos</span>
+                    <span style="font-size:15px;font-weight:600;">RD$600 Pesos Dominicanos</span>
                   </td>
                 </tr>
               </table>
