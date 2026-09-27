@@ -494,6 +494,16 @@
             .bank-grid {
                 grid-template-columns: 1fr;
             }
+            .bank-field-val-wrap, .transfer-memo-box {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 12px !important;
+            }
+            .btn-copy-chip {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+            }
         }
 
         .bank-field {
@@ -854,18 +864,6 @@
             <span class="reg-code-label">Tu Número de Registro Oficial</span>
             <span class="reg-code-val" id="code-value">ENO-A001</span>
         </div>
-        
-        <!-- Botones de Acción -->
-        <div class="action-btns fade-up d4" style="margin-top:20px;">
-            <a href="dashboard.html" class="btn-action-primary" id="btn-portal" style="background-color: var(--verde); color: white; border-color: var(--verde); box-shadow: none;">
-                <span class="material-symbols-outlined">badge</span>
-                Revisar Mi Inscripción / Subir Comprobante →
-            </a>
-            <a href="index.html" class="btn-action-secondary" style="background-color: transparent; color: var(--oscuro); border: 2px solid var(--oscuro);">
-                <span class="material-symbols-outlined">home</span>
-                Volver al Inicio
-            </a>
-        </div>
     </section>
 
     <!-- Marquee -->
@@ -887,7 +885,18 @@
     <!-- Main content -->
     <main>
         <div class="content-wrap">
-
+            
+            <!-- Botones de Acción -->
+            <div class="action-btns fade-up d4" style="margin-bottom: 24px;">
+                <a href="dashboard.html" class="btn-action-primary" id="btn-portal">
+                    <span class="material-symbols-outlined">badge</span>
+                    Revisar Mi Inscripción / Subir Comprobante →
+                </a>
+                <a href="index.html" class="btn-action-secondary">
+                    <span class="material-symbols-outlined">home</span>
+                    Volver al Inicio
+                </a>
+            </div>
             <!-- Datos de Pago Bancario -->
             <div class="card fade-up d2">
                 <div class="card-header">
