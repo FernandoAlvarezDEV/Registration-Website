@@ -274,6 +274,7 @@ def crear_registro(
         talla_camiseta=registro.tallaCamiseta,
         no_onda=registro.noOnda,
         contacto_emergencia=registro.contactoEmergencia,
+        contacto_emergencia_telefono=clean_phone(registro.contactoEmergenciaTelefono),
         parentesco=registro.parentesco,
         opcion_comida=comida_elegida,
     )
@@ -491,6 +492,7 @@ def verificar_registro(
             "tallaCamiseta": talla_val,
             "noOnda": registro.no_onda,
             "contactoEmergencia": registro.contacto_emergencia,
+            "contactoEmergenciaTelefono": registro.contacto_emergencia_telefono,
             "parentesco": registro.parentesco,
             "fechaRegistro": str(registro.fecha_registro) if registro.fecha_registro else None,
             "comprobantePago": registro.comprobante_pago,

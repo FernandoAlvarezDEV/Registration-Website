@@ -266,6 +266,10 @@
             grid-template-columns: 1fr 1fr;
         }
 
+        .form-row.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
         .form-field {
             display: flex;
             flex-direction: column;
@@ -567,7 +571,7 @@
 
             /* Page wrap */
             .page-wrap {
-                padding: 24px 16px 48px;
+                padding: 20px 10px 48px;
             }
 
             /* Page header: icono debajo, texto arriba */
@@ -575,6 +579,7 @@
                 flex-direction: column-reverse;
                 align-items: flex-start;
                 gap: 12px;
+                padding: 0 4px;
             }
 
             .page-header-icon {
@@ -584,8 +589,10 @@
 
             /* Form card */
             .form-card {
-                padding: 20px 16px;
+                padding: 20px 12px;
                 box-shadow: 4px 4px 0 var(--oscuro);
+                width: 100%;
+                overflow: hidden;
             }
 
             .form-card-header {
@@ -598,8 +605,9 @@
                 height: 40px;
             }
 
-            /* Campos 2 columnas → 1 columna */
-            .form-row.cols-2 {
+            /* Campos 2/3 columnas → 1 columna */
+            .form-row.cols-2,
+            .form-row.cols-3 {
                 grid-template-columns: 1fr;
             }
 
@@ -751,12 +759,18 @@
                     </div>
 
                     <!-- Row 5: Contacto Emergencia + Parentesco -->
-                    <div class="form-row cols-2">
+                    <div class="form-row cols-3">
                         <div class="form-field">
-                            <label class="form-label" for="input-contacto-emergencia">Contacto de Emergencia *</label>
+                            <label class="form-label" for="input-contacto-emergencia">Nombre de Contacto *</label>
                             <input id="input-contacto-emergencia" class="form-input" type="text"
-                                placeholder="Nombre y teléfono" required />
+                                placeholder="Nombre de emergencia" required />
                             <span id="error-contacto-emergencia" class="field-error"></span>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="input-contacto-emergencia-telefono">Teléfono de Contacto *</label>
+                            <input id="input-contacto-emergencia-telefono" class="form-input" type="tel"
+                                placeholder="Ej: 809-555-1234" required />
+                            <span id="error-contacto-emergencia-telefono" class="field-error"></span>
                         </div>
                         <div class="form-field">
                             <label class="form-label" for="input-parentesco">Parentesco *</label>

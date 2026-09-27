@@ -44,6 +44,7 @@ const fields = {
     municipio: { input: document.getElementById("input-municipio"), error: document.getElementById("error-municipio") },
     talla: { input: document.getElementById("input-talla"), error: document.getElementById("error-talla") },
     contactoEmergencia: { input: document.getElementById("input-contacto-emergencia"), error: document.getElementById("error-contacto-emergencia") },
+    contactoEmergenciaTelefono: { input: document.getElementById("input-contacto-emergencia-telefono"), error: document.getElementById("error-contacto-emergencia-telefono") },
     parentesco: { input: document.getElementById("input-parentesco"), error: document.getElementById("error-parentesco") },
     comida: { input: document.getElementById("input-comida"), error: document.getElementById("error-comida") },
 };
@@ -101,7 +102,13 @@ const validators = {
     },
 
     contactoEmergencia(value) {
-        if (!value.trim()) return "El contacto de emergencia es obligatorio.";
+        if (!value.trim()) return "El nombre de contacto es obligatorio.";
+        return null;
+    },
+
+    contactoEmergenciaTelefono(value) {
+        const cleaned = value.replace(/\D/g, "");
+        if (cleaned.length < 10) return "El teléfono de emergencia no es válido.";
         return null;
     },
 
@@ -343,6 +350,7 @@ function getFormData() {
         municipio: fields.municipio.input.value,
         tallaCamiseta: fields.talla.input.value,
         contactoEmergencia: fields.contactoEmergencia.input.value.trim(),
+        contactoEmergenciaTelefono: fields.contactoEmergenciaTelefono.input.value.trim(),
         parentesco: fields.parentesco.input.value.trim(),
         opcionComida: fields.comida.input.value,
     };

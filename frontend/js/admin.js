@@ -145,7 +145,7 @@ function renderComprobantes() {
                             <span class="material-symbols-outlined text-blue-600">receipt_long</span>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-800">${r.nombre_completo}</p>
+                            <p class="font-bold text-slate-800 max-w-[150px] truncate" title="${r.nombre_completo}">${r.nombre_completo}</p>
                             <p class="text-slate-400 text-xs font-mono">${r.telefono} · ${formatRegistroCode(r.id)}</p>
                         </div>
                     </div>
@@ -248,7 +248,7 @@ function applyFilters() {
     tbody.innerHTML = filtered.map(r => `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td data-label="ID" class="px-5 py-3.5 font-bold text-primary text-xs">${formatRegistroCode(r.id)}</td>
-                    <td data-label="Nombre" class="px-5 py-3.5 font-semibold text-slate-800">${r.nombre_completo}</td>
+                    <td data-label="Nombre" class="px-5 py-3.5 font-semibold text-slate-800 max-w-[150px] truncate" title="${r.nombre_completo}">${r.nombre_completo}</td>
                     <td data-label="Edad" class="px-5 py-3.5 text-slate-600 text-xs font-mono">${r.edad || "—"}</td>
                     <td data-label="Teléfono" class="px-5 py-3.5 text-slate-600 font-mono text-xs">${r.telefono}</td>
                     <td data-label="Email" class="px-5 py-3.5 text-slate-600 text-xs">${r.email}</td>

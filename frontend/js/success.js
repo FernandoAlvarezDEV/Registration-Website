@@ -28,6 +28,7 @@ if (registrationData) {
             { label: "Correo Electrónico", value: registrationData.email, icon: "alternate_email" },
             { label: "Municipio / Distrito", value: registrationData.municipio, icon: "location_on" },
             { label: "Talla de Camiseta", value: (registrationData.tallaCamiseta || "—").toUpperCase(), icon: "checkroom" },
+            { label: "Estado del Registro", value: "Registrado - Pago Pendiente", icon: "schedule" },
         ];
 
         summaryEl.innerHTML = fields.map(f => `

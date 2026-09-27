@@ -29,9 +29,9 @@ function renderPaymentStatus(estadoPago) {
     const badge = document.getElementById("pago-badge");
     if (!badge) return;
     const statusMap = {
-        "pendiente":   { bg: "background-color: rgba(245, 158, 11, 0.9); color: white;",  icon: "schedule",      text: "Pago Pendiente" },
-        "en revisión": { bg: "background-color: rgba(59, 130, 246, 0.9); color: white;",   icon: "hourglass_top", text: "En Revisión" },
-        "verificado":  { bg: "background-color: rgba(16, 185, 129, 0.9); color: white;",  icon: "verified",      text: "Pago Verificado" },
+        "pendiente":   { bg: "background-color: rgba(245, 158, 11, 0.9); color: white;",  icon: "schedule",      text: "Registrado - Pago Pendiente" },
+        "en revisión": { bg: "background-color: rgba(59, 130, 246, 0.9); color: white;",   icon: "hourglass_top", text: "Registrado - Pago en Revisión" },
+        "verificado":  { bg: "background-color: rgba(16, 185, 129, 0.9); color: white;",  icon: "verified",      text: "Registrado y Pagado" },
         "rechazado":   { bg: "background-color: rgba(239, 68, 68, 0.9); color: white;",    icon: "cancel",        text: "Pago Rechazado" },
     };
     const status = statusMap[estadoPago] || statusMap["pendiente"];
@@ -177,7 +177,33 @@ function initDashboard() {
         return;
     }
 
-    // 2. Si no hay sesión activa, preparar pantalla de consulta
+    // 2. Revisar si hay un magic link en la URL (?tel=...&email=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const magicTel = urlParams.get('tel');
+    const magicEmail = urlParams.get('email');
+    if (magicTel && magicEmail) {
+        // Mostrar loader y auto-llenar
+        const loader = document.getElementById("loading-screen");
+        const loginScreen = document.getElementById("user-login-screen");
+        if (loader) loader.style.display = "flex";
+        if (loginScreen) loginScreen.style.display = "none";
+        
+        // Auto-llenar campos
+        const telEl = document.getElementById("login-telefono");
+        const emailEl = document.getElementById("login-email");
+        if (telEl) telEl.value = magicTel;
+        if (emailEl) emailEl.value = magicEmail;
+        
+        // Ejecutar login
+        setTimeout(() => {
+            loginUsuarioNormal().then(() => {
+                showToast("success", "Bienvenido de vuelta");
+            });
+        }, 500);
+        return;
+    }
+
+    // 3. Si no hay sesión activa ni magic link, preparar pantalla de consulta
     const loginScreen = document.getElementById("user-login-screen");
     const main = document.getElementById("dashboard-main");
     const loader = document.getElementById("loading-screen");

@@ -39,6 +39,7 @@ class Registro(Base):
     talla_camiseta = Column(Enum(TallaCamiseta), nullable=False)
     no_onda = Column(String(100), nullable=False)
     contacto_emergencia = Column(String(255), nullable=False)
+    contacto_emergencia_telefono = Column(String(20), nullable=True) # made True temporarily for old records
     parentesco = Column(String(100), nullable=False)
     opcion_comida = Column(String(100), nullable=True, default="Comida 1")
     fecha_registro = Column(DateTime, default=datetime.utcnow)
@@ -62,7 +63,8 @@ class RegistroCreate(BaseModel):
     municipio: str = Field(..., min_length=2, max_length=255, description="Municipio de residencia")
     tallaCamiseta: TallaCamiseta = Field(..., description="Talla de camiseta (xs, s, m, l, xl, xxl)")
     noOnda: str = Field(..., min_length=1, max_length=100, description="Número de Onda")
-    contactoEmergencia: str = Field(..., min_length=1, max_length=255, description="Contacto de emergencia")
+    contactoEmergencia: str = Field(..., min_length=1, max_length=255, description="Nombre del contacto de emergencia")
+    contactoEmergenciaTelefono: str = Field(..., min_length=7, max_length=20, description="Teléfono del contacto de emergencia")
     parentesco: str = Field(..., min_length=1, max_length=100, description="Parentesco del contacto de emergencia")
     opcionComida: str | None = Field(default="Comida 1", description="Opción de comida seleccionada (Comida 1, Comida 2, Comida 3)")
 
@@ -104,7 +106,8 @@ class RegistroCreate(BaseModel):
                 "municipio": "Distrito Nacional",
                 "tallaCamiseta": "m",
                 "noOnda": "42",
-                "contactoEmergencia": "María Pérez - 809-555-9876",
+                "contactoEmergencia": "María Pérez",
+                "contactoEmergenciaTelefono": "809-555-9876",
                 "parentesco": "Madre",
             }
         }
@@ -128,6 +131,7 @@ class RegistroOut(BaseModel):
     talla_camiseta: str
     no_onda: str | None = None
     contacto_emergencia: str | None = None
+    contacto_emergencia_telefono: str | None = None
     parentesco: str | None = None
     fecha_registro: datetime
     comprobante_pago: str | None = None
