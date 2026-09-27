@@ -15,10 +15,12 @@ _is_remote_db = "supabase" in settings.DATABASE_URL or settings.DB_HOST != "loca
 # Argumentos de conexión: SSL requerido para Supabase
 _connect_args = {}
 if _is_remote_db:
+    # sslmode=require: encripta la conexión pero no verifica el hostname
+    # (necesario porque resolvemos el hostname a IP para forzar IPv4)
     _connect_args["sslmode"] = "require"
-    logger.info(f"[DB] Conectando a base de datos REMOTA (SSL habilitado)")
+    logger.info("[DB] Conectando a base de datos REMOTA (SSL habilitado)")
 else:
-    logger.info(f"[DB] Conectando a base de datos LOCAL")
+    logger.info("[DB] Conectando a base de datos LOCAL")
 
 # Crear el motor de conexión a PostgreSQL
 engine = create_engine(

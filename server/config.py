@@ -45,6 +45,9 @@ class Settings:
 
     @property
     def DATABASE_URL(self) -> str:
+        import socket
+        import re as _re
+        
         # Si existe DATABASE_URL (inyectado por Railway/Render), lo usamos
         db_url = os.getenv("DATABASE_URL")
         if db_url:
@@ -53,9 +56,19 @@ class Settings:
                 db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
             elif db_url.startswith("postgresql://"):
                 db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-            # Supabase: forzar puerto 6543 (pooler) si viene con 5432 (directo)
-            if "supabase" in db_url and ":5432/" in db_url:
-                db_url = db_url.replace(":5432/", ":6543/", 1)
+            
+            # Railway no puede conectar a Supabase via IPv6.
+            # Resolvemos el hostname a IPv4 y lo sustituimos en la URL.
+            host_match = _re.search(r"@([^:/]+)", db_url)
+            if host_match:
+                hostname = host_match.group(1)
+                try:
+                    ipv4 = socket.getaddrinfo(hostname, None, socket.AF_INET)[0][4][0]
+                    db_url = db_url.replace(f"@{hostname}", f"@{ipv4}")
+                    print(f"[DB] Resolved {hostname} -> {ipv4} (IPv4)")
+                except Exception as e:
+                    print(f"[DB WARN] No se pudo resolver IPv4 para {hostname}: {e}")
+            
             return db_url
             
         return (
