@@ -31,9 +31,9 @@ class Settings:
         "ALLOWED_ORIGINS", "http://localhost:5500,http://127.0.0.1:5500"
     ).split(",")
 
-    # ── Resend (Envío de Correos via API HTTP) ──
-    RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
-    RESEND_FROM_EMAIL: str = os.getenv("RESEND_FROM_EMAIL", "onboarding@resend.dev")
+    # ── Brevo (Envío de Correos via API HTTP) ──
+    BREVO_API_KEY: str = os.getenv("BREVO_API_KEY", "")
+    BREVO_FROM_EMAIL: str = os.getenv("BREVO_FROM_EMAIL", "no-reply@ondafest2026.com")
 
     # ── URLs ──
     # URL pública del frontend (usada en los enlaces de los correos)
