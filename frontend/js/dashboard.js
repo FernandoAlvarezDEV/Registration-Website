@@ -1,7 +1,7 @@
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168") || window.location.protocol === "file:";
 const API_BASE = isLocal
     ? "http://localhost:8000"
-    : "https://eno-portal-backend-production.up.railway.app";
+    : "https://api.ondafest2026.com";
 
 // ── Formateador oficial de Código de Registro (ENO-A001 a ENO-Z100) ──
 function formatRegistroCode(id) {
