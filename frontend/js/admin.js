@@ -544,7 +544,11 @@ async function adminLogin() {
         if (adminLogout) adminLogout.style.display = "inline-flex";
         loadData();
     } catch (err) {
-        errorEl.textContent = err.message;
+        if (err.name === "TypeError" || (err.message && err.message.toLowerCase().includes("failed to fetch"))) {
+            errorEl.textContent = "El servidor está despertando de inactividad o hay un problema de conexión. Por favor reintenta en unos segundos.";
+        } else {
+            errorEl.textContent = err.message;
+        }
         errorEl.classList.remove("hidden");
         btn.disabled = false;
         btn.textContent = "Entrar";

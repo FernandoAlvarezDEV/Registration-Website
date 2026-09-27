@@ -153,7 +153,11 @@ async function loginUsuarioNormal() {
         populateUI(data.data);
     } catch (err) {
         if (errorBox) {
-            errorBox.textContent = err.message;
+            if (err.name === "TypeError" || (err.message && err.message.toLowerCase().includes("failed to fetch"))) {
+                errorBox.textContent = "El servidor está despertando o hay un problema de conexión. Por favor reintenta en unos momentos.";
+            } else {
+                errorBox.textContent = err.message;
+            }
             errorBox.classList.remove("hidden");
         }
     } finally {

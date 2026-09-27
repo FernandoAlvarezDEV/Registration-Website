@@ -201,13 +201,15 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # 🔒 SECURITY: Middleware de headers de seguridad
 app.add_middleware(SecurityHeadersMiddleware)
 
-# 🔒 SECURITY: CORS restringido (Vulnerabilidad #3)
+# 🔒 SECURITY: CORS configurado con allow_origins y regex para subdominios legítimos
+cleaned_origins = [o.strip() for o in settings.ALLOWED_ORIGINS if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=cleaned_origins,
+    allow_origin_regex=r"https?://(([a-zA-Z0-9-]+\.)*(onrender\.com|railway\.app|vercel\.app|github\.io|ondafest\.com|localhost)|127\.0\.0\.1)(:\d+)?",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "Accept"],
+    allow_headers=["*"],
 )
 
 # Servir archivos estáticos de comprobantes subidos
