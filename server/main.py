@@ -206,7 +206,7 @@ cleaned_origins = [o.strip() for o in settings.ALLOWED_ORIGINS if o.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cleaned_origins,
-    allow_origin_regex=r"https?://(([a-zA-Z0-9-]+\.)*(onrender\.com|railway\.app|vercel\.app|github\.io|ondafest\.com|localhost)|127\.0\.0\.1)(:\d+)?",
+    allow_origin_regex=r"https?://(([a-zA-Z0-9-]+\.)*(onrender\.com|railway\.app|vercel\.app|github\.io|ondafest2026\.com|localhost)|127\.0\.0\.1)(:\d+)?",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],

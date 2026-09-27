@@ -48,33 +48,35 @@ class Settings:
         import socket
         import re as _re
         
-        # Si existe DATABASE_URL (inyectado por Railway/Render), lo usamos
+        # Obtener URL desde variable o construirla
         db_url = os.getenv("DATABASE_URL")
-        if db_url:
-            # SQLAlchemy requiere postgresql+psycopg2://
-            if db_url.startswith("postgres://"):
-                db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
-            elif db_url.startswith("postgresql://"):
-                db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        if not db_url:
+            db_url = (
+                f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}"
+                f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            )
             
-            # Railway no puede conectar a Supabase via IPv6.
-            # Resolvemos el hostname a IPv4 y lo sustituimos en la URL.
-            host_match = _re.search(r"@([^:/]+)", db_url)
-            if host_match:
-                hostname = host_match.group(1)
+        # SQLAlchemy requiere postgresql+psycopg2://
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif db_url.startswith("postgresql://"):
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        
+        # Railway no puede conectar a Supabase via IPv6.
+        # Resolvemos el hostname a IPv4 y lo sustituimos en la URL.
+        host_match = _re.search(r"@([^:/]+)", db_url)
+        if host_match:
+            hostname = host_match.group(1)
+            # Ignorar localhost o IPs ya numéricas
+            if hostname != "localhost" and not _re.match(r"^\d{1,3}(\.\d{1,3}){3}$", hostname):
                 try:
                     ipv4 = socket.getaddrinfo(hostname, None, socket.AF_INET)[0][4][0]
                     db_url = db_url.replace(f"@{hostname}", f"@{ipv4}")
                     print(f"[DB] Resolved {hostname} -> {ipv4} (IPv4)")
                 except Exception as e:
                     print(f"[DB WARN] No se pudo resolver IPv4 para {hostname}: {e}")
-            
-            return db_url
-            
-        return (
-            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-        )
+        
+        return db_url
 
 
 settings = Settings()
