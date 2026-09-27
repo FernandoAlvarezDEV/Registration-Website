@@ -45,6 +45,16 @@ class Settings:
 
     @property
     def DATABASE_URL(self) -> str:
+        # Si existe DATABASE_URL (inyectado por Railway/Render), lo usamos
+        db_url = os.getenv("DATABASE_URL")
+        if db_url:
+            # SQLAlchemy require postgresql:// (o postgresql+psycopg2://)
+            if db_url.startswith("postgres://"):
+                db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+            elif db_url.startswith("postgresql://"):
+                db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            return db_url
+            
         return (
             f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
