@@ -48,11 +48,14 @@ class Settings:
         # Si existe DATABASE_URL (inyectado por Railway/Render), lo usamos
         db_url = os.getenv("DATABASE_URL")
         if db_url:
-            # SQLAlchemy require postgresql:// (o postgresql+psycopg2://)
+            # SQLAlchemy requiere postgresql+psycopg2://
             if db_url.startswith("postgres://"):
                 db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
             elif db_url.startswith("postgresql://"):
                 db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            # Supabase: forzar puerto 6543 (pooler) si viene con 5432 (directo)
+            if "supabase" in db_url and ":5432/" in db_url:
+                db_url = db_url.replace(":5432/", ":6543/", 1)
             return db_url
             
         return (

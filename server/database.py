@@ -4,14 +4,31 @@ Configuración de la base de datos PostgreSQL con SQLAlchemy.
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
+import logging
 from config import settings
+
+logger = logging.getLogger(__name__)
+
+# Determinar si estamos en producción (Supabase remoto)
+_is_remote_db = "supabase" in settings.DATABASE_URL or settings.DB_HOST != "localhost"
+
+# Argumentos de conexión: SSL requerido para Supabase
+_connect_args = {}
+if _is_remote_db:
+    _connect_args["sslmode"] = "require"
+    logger.info(f"[DB] Conectando a base de datos REMOTA (SSL habilitado)")
+else:
+    logger.info(f"[DB] Conectando a base de datos LOCAL")
 
 # Crear el motor de conexión a PostgreSQL
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,       # Verifica conexión antes de usarla
-    pool_size=10,              # Máximo de conexiones en el pool
-    max_overflow=20,           # Conexiones extra permitidas
+    pool_size=5,               # Reducido para plan gratuito
+    max_overflow=10,           # Conexiones extra permitidas
+    pool_timeout=30,           # Timeout de espera por conexión
+    pool_recycle=300,          # Reciclar conexiones cada 5 min
+    connect_args=_connect_args,
     echo=False,                # Cambiar a True para ver queries SQL en consola
 )
 
