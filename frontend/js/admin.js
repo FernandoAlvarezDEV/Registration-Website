@@ -1,7 +1,7 @@
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname.startsWith("192.168") || window.location.protocol === "file:";
 const API_BASE = isLocal
     ? "http://localhost:8000"
-    : "https://api.ondafest2026.com";
+    : "https://eno-portal-backend-production.up.railway.app";
 let allRegistros = [];
 let currentModalId = null;
 
@@ -502,7 +502,7 @@ function logout() {
 // ── Admin Login form ──────────────────────────────────────────
 const API_BASE_ADMIN = isLocal
     ? "http://localhost:8000"
-    : "https://api.ondafest2026.com";
+    : "https://eno-portal-backend-production.up.railway.app";
 
 async function adminLogin() {
     const email = document.getElementById("admin-email").value.trim();
