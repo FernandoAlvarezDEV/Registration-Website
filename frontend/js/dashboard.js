@@ -76,8 +76,10 @@ function populateUI(d) {
 
     renderPaymentStatus(d.estadoPago || "pendiente");
 
-    // Comprobante ya subido
-    if (d.comprobantePago) {
+    // Comprobante UI
+    const isRechazado = (d.estadoPago || "").toLowerCase() === "rechazado";
+    
+    if (d.comprobantePago && !isRechazado) {
         const uploaded = document.getElementById("comprobante-uploaded");
         const uploadZone = document.getElementById("upload-zone-container");
         const preview = document.getElementById("comprobante-preview-existing");
@@ -90,7 +92,13 @@ function populateUI(d) {
         const uploaded = document.getElementById("comprobante-uploaded");
         const uploadZone = document.getElementById("upload-zone-container");
         if (uploaded) uploaded.style.display = "none";
-        if (uploadZone) uploadZone.style.display = "block";
+        if (uploadZone) {
+            uploadZone.style.display = "block";
+            if (isRechazado) {
+                const msg = uploadZone.parentElement.querySelector("p");
+                if (msg) msg.innerHTML = "<strong style='color:red;'>Tu comprobante anterior fue rechazado.</strong> Por favor, verifica y sube un comprobante válido.";
+            }
+        }
     }
 
     // Mostrar panel, ocultar login y loader

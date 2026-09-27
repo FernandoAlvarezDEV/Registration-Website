@@ -36,6 +36,7 @@ from config import settings
 from database import get_db, init_db
 from models import Registro, RegistroCreate, RegistroResponse, RegistroOut
 from storage_service import upload_comprobante
+from email_service import send_confirmation_email, send_receipt_uploaded_email, send_payment_status_email
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -248,6 +249,7 @@ def root():
 def crear_registro(
     request: Request,
     registro: RegistroCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     """
@@ -291,9 +293,15 @@ def crear_registro(
         logger.error(f"[REGISTRO] Error interno al crear registro: {type(e).__name__}")
         raise HTTPException(status_code=500, detail="Error interno del servidor.")
 
-    # Asignar código secuencial ENO-A001 a ENO-Z100 (0 correos, 0 magic links)
+    # Asignar código secuencial ENO-A001 a ENO-Z100
     codigo = generar_codigo_registro(nuevo_registro.id)
     logger.info(f"[REGISTRO] Nuevo participante registrado | ID: {nuevo_registro.id} -> Código: {codigo}")
+
+    # Enviar correo de confirmación en segundo plano
+    if nuevo_registro.email:
+        # Aquí se usa un token simple, puedes implementar JWT después si lo deseas.
+        # Por ahora pasamos el id como token para que el enlace abra el login o dashboard directamente.
+        background_tasks.add_task(send_confirmation_email, nuevo_registro.email, nuevo_registro.nombre_completo, str(nuevo_registro.id))
 
     return RegistroResponse(
         success=True,
@@ -541,6 +549,7 @@ def admin_login(
 async def subir_comprobante_endpoint(
     request: Request,
     registro_id: int,
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
@@ -583,6 +592,10 @@ async def subir_comprobante_endpoint(
     db.commit()
     db.refresh(registro)
 
+    # Enviar correo de comprobante subido en segundo plano
+    if registro.email:
+        background_tasks.add_task(send_receipt_uploaded_email, registro.email, registro.nombre_completo)
+
     return {
         "success": True,
         "message": "Comprobante subido exitosamente. Será verificado pronto.",
@@ -599,6 +612,7 @@ def actualizar_estado_pago(
     request: Request,
     registro_id: int,
     body: UpdateEstadoPago,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     _admin: bool = Depends(require_admin),
 ):
@@ -616,6 +630,10 @@ def actualizar_estado_pago(
     db.refresh(registro)
 
     logger.info(f"[ADMIN] Estado de pago de ENO-{registro_id} actualizado a '{body.estado_pago}'.")
+
+    # Enviar correo al participante informando el cambio de estado de pago
+    if registro.email and body.estado_pago in ["verificado", "rechazado"]:
+        background_tasks.add_task(send_payment_status_email, registro.email, registro.nombre_completo, body.estado_pago)
 
     return {
         "success": True,
