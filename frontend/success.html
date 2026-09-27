@@ -5,7 +5,8 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>¡Ya tienes tu pase! — Onda Fest 2026</title>
-    <meta name="description" content="Tu inscripción a Onda Fest 2026 fue exitosa. ¡Guarda tu código y realiza tu pago!" />
+    <meta name="description"
+        content="Tu inscripción a Onda Fest 2026 fue exitosa. ¡Guarda tu código y realiza tu pago!" />
     <link rel="icon" type="image/png" href="img/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -517,6 +518,11 @@
             align-items: center;
             justify-content: space-between;
             gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .bank-field-val-wrap p {
+            word-break: break-word;
         }
 
         .bank-field p {
@@ -841,11 +847,24 @@
             <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">pending_actions</span>
         </div>
         <h1 class="fade-up d1">¡YA TIENES TU NÚMERO DE REGISTRO!</h1>
-        <p class="fade-up d2">Tu inscripción a <strong>Onda Fest 2026</strong> fue completada. Guarda tu código para realizar tu pago y consultar tu estado.</p>
-        
+        <p class="fade-up d2">Tu inscripción a <strong>Onda Fest 2026</strong> fue completada. Guarda tu código para
+            realizar tu pago y consultar tu estado.</p>
+
         <div class="reg-code-container fade-up d3">
             <span class="reg-code-label">Tu Número de Registro Oficial</span>
             <span class="reg-code-val" id="code-value">ENO-A001</span>
+        </div>
+        
+        <!-- Botones de Acción -->
+        <div class="action-btns fade-up d4" style="margin-top:20px;">
+            <a href="dashboard.html" class="btn-action-primary" id="btn-portal" style="background-color: var(--verde); color: white; border-color: var(--verde); box-shadow: none;">
+                <span class="material-symbols-outlined">badge</span>
+                Revisar Mi Inscripción / Subir Comprobante →
+            </a>
+            <a href="index.html" class="btn-action-secondary" style="background-color: transparent; color: var(--oscuro); border: 2px solid var(--oscuro);">
+                <span class="material-symbols-outlined">home</span>
+                Volver al Inicio
+            </a>
         </div>
     </section>
 
@@ -882,15 +901,19 @@
                                 <span class="material-symbols-outlined" style="color:#2d8c00;">assured_workload</span>
                                 <strong>Banco Popular Dominicano</strong>
                             </div>
-                            <span style="font-size:0.75rem; background:white; border:1px solid #c9ecc5; padding:3px 8px; border-radius:6px; font-weight:700; color:#1a5200;">Cuenta Corriente</span>
+                            <span
+                                style="font-size:0.75rem; background:white; border:1px solid #c9ecc5; padding:3px 8px; border-radius:6px; font-weight:700; color:#1a5200;">Cuenta
+                                Corriente</span>
                         </div>
                         <div class="bank-grid">
                             <div class="bank-field">
                                 <label>Titular de la Cuenta</label>
                                 <div class="bank-field-val-wrap">
-                                    <p id="bank-holder">Hamlet</p>
-                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('Hamlet', 'Titular copiado')">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    <p id="bank-holder">Hamlet A Rodriguez Siri</p>
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('Hamlet A Rodriguez Siri', 'Titular copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
                                     </button>
                                 </div>
                             </div>
@@ -898,8 +921,10 @@
                                 <label>Número de Cuenta</label>
                                 <div class="bank-field-val-wrap">
                                     <p id="bank-account">123-456789-0</p>
-                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('1234567890', 'No. de cuenta copiado')">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('1234567890', 'No. de cuenta copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
                                     </button>
                                 </div>
                             </div>
@@ -907,8 +932,10 @@
                                 <label>Cédula / Identificación</label>
                                 <div class="bank-field-val-wrap">
                                     <p id="bank-id">001-1234567-8</p>
-                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('00112345678', 'Cédula copiada')">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('00112345678', 'Cédula copiada')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
                                     </button>
                                 </div>
                             </div>
@@ -916,8 +943,10 @@
                                 <label style="color:#1a5200;">Monto Exacto</label>
                                 <div class="bank-field-val-wrap">
                                     <p style="color:var(--verde); font-size:1.25rem;">RD$600.00</p>
-                                    <button type="button" class="btn-copy-chip" onclick="copyToClipboard('600', 'Monto copiado')">
-                                        <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('600', 'Monto copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
                                     </button>
                                 </div>
                             </div>
@@ -930,7 +959,8 @@
                         <div class="transfer-memo-box">
                             <span id="transfer-memo">ENO-A001 - Tu Nombre - Tu Distrito</span>
                             <button type="button" class="btn-copy-chip" onclick="copyTransferMemo()">
-                                <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span> Copiar Concepto
+                                <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span>
+                                Copiar Concepto
                             </button>
                         </div>
                     </div>
@@ -940,19 +970,22 @@
                         <div class="step-row">
                             <div class="step-num">1</div>
                             <div class="step-content">
-                                <p>Realiza la transferencia por <strong>RD$600.00</strong> a los datos bancarios de arriba antes del <strong>30 de Noviembre 2026</strong>.</p>
+                                <p>Realiza la transferencia por <strong>RD$600.00</strong> a los datos bancarios de
+                                    arriba antes del <strong>30 de Noviembre 2026</strong>.</p>
                             </div>
                         </div>
                         <div class="step-row">
                             <div class="step-num">2</div>
                             <div class="step-content">
-                                <p>Toma una <strong>captura de pantalla o foto</strong> del comprobante emitido por tu banco.</p>
+                                <p>Toma una <strong>captura de pantalla o foto</strong> del comprobante emitido por tu
+                                    banco.</p>
                             </div>
                         </div>
                         <div class="step-row">
                             <div class="step-num">3</div>
                             <div class="step-content">
-                                <p>Haz clic en el botón <strong>"Revisar mi inscripción / Subir comprobante"</strong> para acceder a tu panel de usuario y subir la foto del comprobante.</p>
+                                <p>Haz clic en el botón <strong>"Revisar mi inscripción / Subir comprobante"</strong>
+                                    para acceder a tu panel de usuario y subir la foto del comprobante.</p>
                             </div>
                         </div>
                     </div>
@@ -983,25 +1016,12 @@
                         <p>Contáctanos directamente vía WhatsApp: <strong>(829) 753-4583</strong></p>
                     </div>
                 </div>
-                <a href="https://wa.me/18297534583?text=Hola,%20necesito%20ayuda%20con%20mi%20inscripción%20en%20Onda%20Fest%202026" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                <a href="https://wa.me/18297534583?text=Hola,%20necesito%20ayuda%20con%20mi%20inscripción%20en%20Onda%20Fest%202026"
+                    target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
                     <span class="material-symbols-outlined">chat</span>
                     WhatsApp 829-753-4583
                 </a>
-            </div>
-
-            <!-- Botones de Acción -->
-            <div class="action-btns fade-up d4">
-                <a href="dashboard.html" class="btn-action-primary" id="btn-portal">
-                    <span class="material-symbols-outlined">badge</span>
-                    Revisar Mi Inscripción / Subir Comprobante →
-                </a>
-                <a href="index.html" class="btn-action-secondary">
-                    <span class="material-symbols-outlined">home</span>
-                    Volver al Inicio
-                </a>
-            </div>
-
-        </div>
+            </div>        </div>
     </main>
 
     <!-- Footer -->
