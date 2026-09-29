@@ -109,42 +109,43 @@ def generar_codigo_registro(db_id: int) -> str:
 # ─────────────────────────────────────────────────────────────────
 _ADMIN_SECRET = secrets.token_urlsafe(48)  # Generado al iniciar el servidor
 
-def _generate_admin_token() -> str:
+def _generate_admin_token(username: str) -> str:
     """
-    Genera un token de sesión admin firmado con HMAC.
-    El token contiene un timestamp y una firma para verificar autenticidad.
+    Genera un token de sesión admin firmado con HMAC que incluye el username.
     """
     timestamp = str(int(datetime.utcnow().timestamp()))
+    payload = f"{username}.{timestamp}"
     signature = hmac.new(
         _ADMIN_SECRET.encode(),
-        timestamp.encode(),
+        payload.encode(),
         hashlib.sha256
     ).hexdigest()
-    return f"{timestamp}.{signature}"
+    return f"{payload}.{signature}"
 
 
-def _verify_admin_token(token: str) -> bool:
-    """Verifica que un token admin sea válido y no haya expirado (8 horas)."""
+def _verify_admin_token(token: str) -> str | None:
+    """Verifica que un token admin sea válido y no haya expirado (8 horas). Retorna el username."""
     try:
         parts = token.split(".")
-        if len(parts) != 2:
-            return False
-        timestamp_str, signature = parts
+        if len(parts) != 3:
+            return None
+        username, timestamp_str, signature = parts
+        payload = f"{username}.{timestamp_str}"
         # Verificar firma HMAC
         expected_sig = hmac.new(
             _ADMIN_SECRET.encode(),
-            timestamp_str.encode(),
+            payload.encode(),
             hashlib.sha256
         ).hexdigest()
         if not hmac.compare_digest(signature, expected_sig):
-            return False
+            return None
         # Verificar expiración (8 horas)
         token_time = datetime.utcfromtimestamp(int(timestamp_str))
         if datetime.utcnow() - token_time > timedelta(hours=8):
-            return False
-        return True
+            return None
+        return username
     except (ValueError, TypeError):
-        return False
+        return None
 
 
 def require_admin(request: Request):
@@ -160,19 +161,18 @@ def require_admin(request: Request):
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = auth_header.replace("Bearer ", "")
-    if not _verify_admin_token(token):
+    username = _verify_admin_token(token)
+    if not username:
         raise HTTPException(
             status_code=401,
             detail="Token de administrador inválido o expirado.",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return True
+    return username
 
 
 # ── Modelos de Request/Response ─────────────────────────────────
-class AdminLoginRequest(BaseModel):
-    email: str
-    phone: str
+
 
 class VerificarRegistroRequest(BaseModel):
     nombre: str
@@ -324,12 +324,19 @@ def crear_registro(
 def listar_registros(
     request: Request,
     skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=200),
+    limit: int = Query(500, ge=1, le=1000),  # Aumenté el límite por si hay muchos registros
     db: Session = Depends(get_db),
-    _admin: bool = Depends(require_admin),
+    admin_username: str = Depends(require_admin),
 ):
-    """Lista todos los registros (paginado). Solo para Admin autenticado."""
-    return db.query(Registro).order_by(Registro.fecha_registro.desc()).offset(skip).limit(limit).all()
+    """Lista todos los registros (paginado). Filtra por municipio según el Admin."""
+    query = db.query(Registro)
+    
+    # Aplicar filtro por municipio si no es admin_all
+    admin_data = ADMIN_USERS.get(admin_username)
+    if admin_data and admin_data["municipio"] != "ALL":
+        query = query.filter(Registro.municipio == admin_data["municipio"])
+        
+    return query.order_by(Registro.fecha_registro.desc()).offset(skip).limit(limit).all()
 
 
 @app.get("/api/registros/buscar", response_model=RegistroResponse, tags=["Registros"])
@@ -356,22 +363,31 @@ def buscar_por_telefono(
 def estadisticas(
     request: Request,
     db: Session = Depends(get_db),
-    _admin: bool = Depends(require_admin),
+    admin_username: str = Depends(require_admin),
 ):
     """Estadísticas generales (para Admin dashboard). Solo Admin autenticado."""
     from sqlalchemy import func
 
-    total = db.query(func.count(Registro.id)).scalar()
-    promedio_edad = db.query(func.avg(Registro.edad)).scalar()
-    tallas = db.query(Registro.talla_camiseta, func.count(Registro.id)).group_by(Registro.talla_camiseta).all()
+    admin_data = ADMIN_USERS.get(admin_username)
+    municipio_filter = admin_data["municipio"] if admin_data and admin_data["municipio"] != "ALL" else None
+
+    # Helper function to apply filter
+    def apply_filter(query):
+        if municipio_filter:
+            return query.filter(Registro.municipio == municipio_filter)
+        return query
+
+    total = apply_filter(db.query(func.count(Registro.id))).scalar()
+    promedio_edad = apply_filter(db.query(func.avg(Registro.edad))).scalar()
+    tallas = apply_filter(db.query(Registro.talla_camiseta, func.count(Registro.id)).group_by(Registro.talla_camiseta)).all()
     municipios = (
-        db.query(Registro.municipio, func.count(Registro.id))
+        apply_filter(db.query(Registro.municipio, func.count(Registro.id)))
         .group_by(Registro.municipio)
         .order_by(func.count(Registro.id).desc())
         .limit(10)
         .all()
     )
-    verificados = db.query(func.count(Registro.id)).filter(Registro.estado_pago == "verificado").scalar()
+    verificados = apply_filter(db.query(func.count(Registro.id)).filter(Registro.estado_pago == "verificado")).scalar()
 
     return {
         "totalRegistros": total or 0,
@@ -388,15 +404,21 @@ def eliminar_registro(
     request: Request,
     registro_id: int,
     db: Session = Depends(get_db),
-    _admin: bool = Depends(require_admin),
+    admin_username: str = Depends(require_admin),
 ):
-    """Elimina un registro por ID. Solo Admin autenticado."""
+    """Elimina un registro por ID. Solo Admin autenticado y autorizado para ese municipio."""
     registro = db.query(Registro).filter(Registro.id == registro_id).first()
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
+        
+    admin_data = ADMIN_USERS.get(admin_username)
+    if admin_data and admin_data["municipio"] != "ALL":
+        if registro.municipio != admin_data["municipio"]:
+            raise HTTPException(status_code=403, detail="No tienes permisos para eliminar este registro.")
+            
     db.delete(registro)
     db.commit()
-    logger.info(f"[ADMIN] Registro ENO-{registro_id} eliminado por administrador.")
+    logger.info(f"[ADMIN] Registro ENO-{registro_id} eliminado por administrador {admin_username}.")
     return {"success": True, "message": f"Registro ENO-{registro_id} eliminado."}
 
 
@@ -511,6 +533,29 @@ def verificar_registro(
 
 
 
+class AdminLoginRequest(BaseModel):
+    username: str
+    password: str
+
+# ── Mapa de administradores por municipio ──
+# admin_all ve todos los registros
+ADMIN_USERS = {
+    "admin_all": {"password": "OndaFest2026!", "municipio": "ALL"},
+    "admin_guaranas": {"password": "OndaFest2026!", "municipio": "Las Guáranas"},
+    "admin_sfm": {"password": "OndaFest2026!", "municipio": "San Francisco"},
+    "admin_cotui": {"password": "OndaFest2026!", "municipio": "Cotuí"},
+    "admin_nagua": {"password": "OndaFest2026!", "municipio": "Nagua"},
+    "admin_lavega": {"password": "OndaFest2026!", "municipio": "La Vega"},
+    "admin_bonao": {"password": "OndaFest2026!", "municipio": "Bonao"},
+    "admin_maimon": {"password": "OndaFest2026!", "municipio": "Maimón"},
+    "admin_fantino": {"password": "OndaFest2026!", "municipio": "Fantino"},
+    "admin_villatapia": {"password": "OndaFest2026!", "municipio": "Villa Tapia"},
+    "admin_salcedo": {"password": "OndaFest2026!", "municipio": "Salcedo"},
+    "admin_sde": {"password": "OndaFest2026!", "municipio": "Santo Domingo Este"},
+    "admin_dn": {"password": "OndaFest2026!", "municipio": "Distrito Nacional"},
+}
+
+
 @app.post("/api/auth/admin", tags=["Auth"])
 @limiter.limit("5/minute")  # 🔒 Rate limit estricto en login admin (Vulnerabilidad #6)
 def admin_login(
@@ -522,21 +567,21 @@ def admin_login(
     Login manual solo para administradores.
     Devuelve un token de sesión admin firmado con HMAC.
     """
-    if (
-        credentials.email.strip().upper() == settings.ADMIN_EMAIL.strip().upper()
-        and clean_phone(credentials.phone) == settings.ADMIN_PHONE
-    ):
-        admin_token = _generate_admin_token()
-        logger.info("[AUTH] Inicio de sesión de administrador exitoso.")
+    username = credentials.username.strip().lower()
+    
+    if username in ADMIN_USERS and credentials.password == ADMIN_USERS[username]["password"]:
+        admin_token = _generate_admin_token(username)
+        municipio = ADMIN_USERS[username]["municipio"]
+        logger.info(f"[AUTH] Inicio de sesión de administrador exitoso: {username} ({municipio}).")
         return {
             "success": True,
             "role": "admin",
-            "message": "Bienvenido, Administrador.",
+            "message": f"Bienvenido, Administrador de {municipio}.",
             "token": admin_token,  # Token para usar en endpoints protegidos
-            "data": {"nombreCompleto": "Administrador ENO", "isAdmin": True},
+            "data": {"nombreCompleto": f"Admin {municipio}", "isAdmin": True, "municipio": municipio},
         }
     # 🔒 SECURITY: Loguear intentos fallidos sin exponer credenciales
-    logger.warning(f"[AUTH] Intento de login admin fallido desde IP: {request.client.host}")
+    logger.warning(f"[AUTH] Intento de login admin fallido ({username}) desde IP: {request.client.host}")
     raise HTTPException(status_code=401, detail="Credenciales de administrador incorrectas.")
 
 
@@ -614,9 +659,9 @@ def actualizar_estado_pago(
     body: UpdateEstadoPago,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    _admin: bool = Depends(require_admin),
+    admin_username: str = Depends(require_admin),
 ):
-    """Actualiza el estado de pago de un registro. Solo Admin autenticado."""
+    """Actualiza el estado de pago de un registro. Solo Admin autenticado y autorizado."""
     estados_validos = ["pendiente", "en revisión", "verificado", "rechazado"]
     if body.estado_pago not in estados_validos:
         raise HTTPException(status_code=400, detail=f"Estado no válido. Opciones: {', '.join(estados_validos)}")
@@ -625,11 +670,16 @@ def actualizar_estado_pago(
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
 
+    admin_data = ADMIN_USERS.get(admin_username)
+    if admin_data and admin_data["municipio"] != "ALL":
+        if registro.municipio != admin_data["municipio"]:
+            raise HTTPException(status_code=403, detail="No tienes permisos para editar este registro.")
+
     registro.estado_pago = body.estado_pago
     db.commit()
     db.refresh(registro)
 
-    logger.info(f"[ADMIN] Estado de pago de ENO-{registro_id} actualizado a '{body.estado_pago}'.")
+    logger.info(f"[ADMIN] Estado de pago de ENO-{registro_id} actualizado a '{body.estado_pago}' por {admin_username}.")
 
     # Enviar correo al participante informando el cambio de estado de pago
     if registro.email and body.estado_pago in ["verificado", "rechazado"]:

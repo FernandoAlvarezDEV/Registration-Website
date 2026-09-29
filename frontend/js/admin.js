@@ -111,13 +111,30 @@ function updateStats() {
 
 // Populate municipio filter
 function populateMunicipioFilter() {
-    const municipios = [...new Set(allRegistros.map(r => r.municipio))].sort();
+    const session = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
     const container = document.getElementById("dropdown-municipios-container");
     if (!container) return;
+
+    if (session.municipio && session.municipio !== "ALL") {
+        container.style.display = "none";
+        return;
+    }
+
+    const defaultMunicipios = [
+        "Las Guáranas", "San Francisco", "Cotuí", "Nagua", "La Vega", 
+        "Bonao", "Maimón", "Fantino", "Villa Tapia", "Salcedo", 
+        "Santo Domingo Este", "Distrito Nacional"
+    ];
+    
+    // Incluir también cualquier municipio extra que esté en la DB pero no en la lista
+    const extraMunicipios = [...new Set(allRegistros.map(r => r.municipio))]
+        .filter(m => m && !defaultMunicipios.includes(m))
+        .sort();
+
+    const allMunicipios = [...defaultMunicipios, ...extraMunicipios];
     
     let html = '<div class="odoo-dropdown-header">Por Municipio</div>';
-    municipios.forEach(m => {
-        if (!m) return;
+    allMunicipios.forEach(m => {
         html += `<div class="odoo-dropdown-item" onclick="syncOdooFilter('municipio', '${m.replace(/'/g, "\\'")}')">${m}</div>`;
     });
     container.innerHTML = html;
@@ -505,12 +522,12 @@ const API_BASE_ADMIN = isLocal
     : "https://eno-portal-backend-production.up.railway.app";
 
 async function adminLogin() {
-    const email = document.getElementById("admin-email").value.trim();
-    const phone = document.getElementById("admin-phone").value.trim();
+    const username = document.getElementById("admin-username").value.trim();
+    const password = document.getElementById("admin-password").value.trim();
     const errorEl = document.getElementById("admin-login-error");
     const btn = document.getElementById("admin-login-btn");
 
-    if (!email || !phone) {
+    if (!username || !password) {
         errorEl.textContent = "Por favor completa todos los campos.";
         errorEl.classList.remove("hidden");
         return;
@@ -524,7 +541,7 @@ async function adminLogin() {
         const res = await fetch(`${API_BASE_ADMIN}/api/auth/admin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, phone }),
+            body: JSON.stringify({ username, password }),
         });
         const data = await res.json();
 
@@ -535,6 +552,7 @@ async function adminLogin() {
             role: "admin",
             token: data.token,
             data: data.data,
+            municipio: data.data.municipio // Guarda el municipio del admin
         }));
 
         // Mostrar dashboard, ocultar login

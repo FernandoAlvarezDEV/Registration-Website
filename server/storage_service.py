@@ -63,7 +63,7 @@ def compress_image(image_bytes: bytes, max_width: int = 1200, quality: int = 80)
     return compressed_bytes
 
 
-def upload_comprobante(registro_id: int, image_bytes: bytes, bucket: str = "Comprobantes") -> str | None:
+def upload_comprobante(registro_id: int, image_bytes: bytes, bucket: str = "comprobantes") -> str | None:
     """
     Comprime la imagen y la sube a Supabase Storage.
     Retorna la URL pública del archivo o None si falla.

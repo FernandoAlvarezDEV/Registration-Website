@@ -274,6 +274,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            height: 100%;
         }
 
         .form-label {
@@ -286,6 +287,7 @@
 
         .form-input,
         .form-select {
+            margin-top: auto;
             height: 48px;
             padding: 0 16px;
             border: 2px solid #D1D5DB;
@@ -730,16 +732,18 @@
                             <label class="form-label" for="input-municipio">Municipio *</label>
                             <select id="input-municipio" class="form-select" required>
                                 <option disabled selected value="">Selecciona tu municipio</option>
-                                <option value="Distrito Nacional">Distrito Nacional</option>
-                                <option value="Santo Domingo Este">Santo Domingo Este</option>
-                                <option value="Santo Domingo Norte">Santo Domingo Norte</option>
-                                <option value="Santo Domingo Oeste">Santo Domingo Oeste</option>
+                                <option value="Las Guáranas">Las Guáranas</option>
+                                <option value="San Francisco">San Francisco</option>
+                                <option value="Cotuí">Cotuí</option>
+                                <option value="Nagua">Nagua</option>
                                 <option value="La Vega">La Vega</option>
-                                <option value="Santiago">Santiago</option>
-                                <option value="San Francisco">San Francisco de Macorís</option>
-                                <option value="Higuey">Higüey</option>
-                                <option value="San Pedro de Macorís">San Pedro de Macorís</option>
-                                <option value="Otro">Otro</option>
+                                <option value="Bonao">Bonao</option>
+                                <option value="Maimón">Maimón</option>
+                                <option value="Fantino">Fantino</option>
+                                <option value="Villa Tapia">Villa Tapia</option>
+                                <option value="Salcedo">Salcedo</option>
+                                <option value="Santo Domingo Este">Santo Domingo Este</option>
+                                <option value="Distrito Nacional">Distrito Nacional</option>
                             </select>
                             <span id="error-municipio" class="field-error"></span>
                         </div>
