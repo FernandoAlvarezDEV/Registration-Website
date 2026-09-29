@@ -311,7 +311,10 @@ function openModal(id, name, phone, imgPath) {
     currentModalId = id;
     document.getElementById("modal-user-name").textContent = name;
     document.getElementById("modal-user-phone").textContent = `${phone} · ${formatRegistroCode(id)}`;
-    const fullImgUrl = `${API_BASE}${imgPath}`;
+    
+    // Check if imgPath is already a full URL (like Supabase) or a relative path
+    const fullImgUrl = imgPath.startsWith("http") ? imgPath : `${API_BASE}${imgPath}`;
+    
     document.getElementById("modal-img").src = fullImgUrl;
     const linkEl = document.getElementById("modal-img-link");
     if (linkEl) linkEl.href = fullImgUrl;
