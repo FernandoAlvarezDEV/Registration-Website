@@ -634,3 +634,65 @@ document.addEventListener('click', function (e) {
     // Re-append sorted rows
     rowsArray.forEach(row => tbody.appendChild(row));
 });
+
+// ── Exportar a Excel (CSV) ──
+function exportToExcel() {
+    if (!allRegistros || allRegistros.length === 0) {
+        showToast("error", "No hay datos para exportar.");
+        return;
+    }
+
+    // Cabeceras (iguales a como están registrados)
+    const headers = [
+        "Código Registro",
+        "Nombre",
+        "Edad",
+        "Teléfono",
+        "Email",
+        "Municipio",
+        "Talla",
+        "Comida",
+        "Estado Pago",
+        "Contacto Emergencia",
+        "Teléfono Emergencia",
+        "Parentesco",
+        "Es de Onda?",
+        "Fecha Registro"
+    ];
+
+    const escapeCsv = (text) => {
+        if (text === null || text === undefined) return '""';
+        const str = String(text).replace(/"/g, '""');
+        return `"${str}"`;
+    };
+
+    const rows = allRegistros.map(r => {
+        return [
+            formatRegistroCode(r.id),
+            r.nombre_completo,
+            r.edad,
+            r.telefono,
+            r.email,
+            r.municipio,
+            r.talla_camiseta,
+            r.opcion_comida,
+            r.estado_pago,
+            r.contacto_emergencia,
+            r.contacto_emergencia_telefono,
+            r.parentesco,
+            r.no_onda,
+            new Date(r.fecha_registro).toLocaleString("es-DO")
+        ].map(escapeCsv).join(",");
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `OndaFest_Registros_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast("success", "Exportación a Excel completada.");
+}

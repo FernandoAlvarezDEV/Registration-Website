@@ -1822,10 +1822,16 @@
                         <span class="material-symbols-outlined" style="color:var(--fucsia);">group</span>
                         Registros
                     </h3>
-                    <button class="btn-refresh" onclick="loadData()">
-                        <span class="material-symbols-outlined" style="font-size:0.9rem;">refresh</span>
-                        Actualizar
-                    </button>
+                    <div style="display:flex;gap:10px;">
+                        <button class="btn-refresh" onclick="exportToExcel()" style="display:flex;align-items:center;gap:6px;background:#059669;color:white;font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
+                            <span class="material-symbols-outlined" style="font-size:0.9rem;">download</span>
+                            Exportar Excel
+                        </button>
+                        <button class="btn-refresh" onclick="loadData()" style="display:flex;align-items:center;gap:6px;background:white;color:var(--oscuro);font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
+                            <span class="material-symbols-outlined" style="font-size:0.9rem;">refresh</span>
+                            Actualizar
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Hidden inputs to maintain compatibility with JS applyFilters() -->
