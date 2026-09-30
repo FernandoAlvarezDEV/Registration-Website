@@ -1,6 +1,6 @@
-﻿# ENO Portal — Formulario de Inscripción 2026
+# ENO Portal — Formulario de Inscripción 2026
 
-Portal web de inscripción para el evento ENO del grupo religioso Onda.
+Portal web de inscripción para el evento Onda Fest.
 
 ## Estructura del Proyecto
 

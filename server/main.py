@@ -189,7 +189,7 @@ class UpdateEstadoPago(BaseModel):
 # ─────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="ENO Portal API V2",
-    description="API para la inscripción al evento ENO del grupo religioso Onda - 13 de Diciembre, 2026",
+    description="API para la inscripción al evento Onda Fest - 13 de Diciembre, 2026",
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
