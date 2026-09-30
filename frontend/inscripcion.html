@@ -690,13 +690,13 @@
                         <div class="form-field">
                             <label class="form-label" for="input-nombre">Nombre Completo *</label>
                             <input id="input-nombre" class="form-input" type="text" placeholder="Ej: Juan Pérez"
-                                required />
+                                required oninput="this.value = this.value.replace(/[0-9]/g, '')" />
                             <span id="error-nombre" class="field-error"></span>
                         </div>
                         <div class="form-field">
                             <label class="form-label" for="input-telefono">Teléfono *</label>
                             <input id="input-telefono" class="form-input" type="tel" placeholder="809-555-1234"
-                                required />
+                                required oninput="this.value = this.value.replace(/[^0-9-() ]/g, '')" />
                             <span id="error-telefono" class="field-error"></span>
                         </div>
                     </div>
@@ -767,13 +767,13 @@
                         <div class="form-field">
                             <label class="form-label" for="input-contacto-emergencia">Nombre de Contacto *</label>
                             <input id="input-contacto-emergencia" class="form-input" type="text"
-                                placeholder="Nombre de emergencia" required />
+                                placeholder="Nombre de emergencia" required oninput="this.value = this.value.replace(/[0-9]/g, '')" />
                             <span id="error-contacto-emergencia" class="field-error"></span>
                         </div>
                         <div class="form-field">
                             <label class="form-label" for="input-contacto-emergencia-telefono">Teléfono de Contacto *</label>
                             <input id="input-contacto-emergencia-telefono" class="form-input" type="tel"
-                                placeholder="Ej: 809-555-1234" required />
+                                placeholder="Ej: 809-555-1234" required oninput="this.value = this.value.replace(/[^0-9-() ]/g, '')" />
                             <span id="error-contacto-emergencia-telefono" class="field-error"></span>
                         </div>
                         <div class="form-field">
