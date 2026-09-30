@@ -118,6 +118,39 @@ def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str
 
 
 
+def _build_receipt_uploaded_email(nombre: str, frontend_url: str) -> str:
+    """Construye el HTML del correo de comprobante subido."""
+    return f"""
+<!DOCTYPE html>
+<html lang="es">
+<body style="margin:0;padding:0;background:#F9F4E0;font-family:Arial,sans-serif;color:#1a1a1a;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:40px;border-radius:16px;border:2px solid #FF0000;text-align:center;">
+    <h2 style="color:#FF0000;">¡Hola {nombre}, hemos recibido tu comprobante!</h2>
+    <p>Tu comprobante de pago está siendo revisado por nuestro equipo. Te notificaremos cuando el estado de tu pago se actualice a Verificado o Rechazado.</p>
+    <a href="{frontend_url}/verificar.html" style="display:inline-block;padding:12px 24px;background:#FEB004;color:#1a1a1a;font-weight:bold;text-decoration:none;border-radius:8px;">Ver Mi Portal</a>
+  </div>
+</body>
+</html>
+"""
+
+def _build_payment_status_email(nombre: str, status: str, frontend_url: str) -> str:
+    """Construye el HTML del correo de cambio de estado de pago."""
+    color = "#28a745" if status == "verificado" else "#dc3545"
+    mensaje = "¡Tu pago ha sido verificado exitosamente! Tu cupo en el Onda Fest 2026 está totalmente asegurado." if status == "verificado" else "Ha habido un problema con tu comprobante de pago y ha sido rechazado. Por favor, accede a tu portal para subir un comprobante válido."
+    return f"""
+<!DOCTYPE html>
+<html lang="es">
+<body style="margin:0;padding:0;background:#F9F4E0;font-family:Arial,sans-serif;color:#1a1a1a;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:40px;border-radius:16px;border:2px solid {color};text-align:center;">
+    <h2 style="color:{color};">Actualización de Pago: {status.upper()}</h2>
+    <p>Hola {nombre}, te informamos que el estado de tu pago ha cambiado.</p>
+    <p><strong>{mensaje}</strong></p>
+    <a href="{frontend_url}/verificar.html" style="display:inline-block;padding:12px 24px;background:#FEB004;color:#1a1a1a;font-weight:bold;text-decoration:none;border-radius:8px;">Ver Mi Portal</a>
+  </div>
+</body>
+</html>
+"""
+
 def _send_brevo_email(to_email: str, subject: str, html_content: str, nombre: str = "") -> bool:
     if not settings.BREVO_API_KEY:
         logger.warning(f"[EMAIL] Correo NO enviado a {to_email}: BREVO_API_KEY no configurada.")
