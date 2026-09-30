@@ -1935,6 +1935,14 @@
     </div><!-- end #admin-dashboard-content -->
 
     <script src="js/admin.js?v=3"></script>
+    <script>
+        if (window.location.hostname.includes('qa') || window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
+            const banner = document.createElement('div');
+            banner.innerHTML = 'Esto es un Entorno de Prueba, Los correos no salen';
+            banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:rgba(255,0,0,0.85);color:white;text-align:center;padding:8px;font-weight:bold;z-index:999999;font-size:14px;pointer-events:none;letter-spacing:1px;text-transform:uppercase;';
+            document.body.appendChild(banner);
+        }
+    </script>
 </body>
 
 </html>

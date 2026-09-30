@@ -269,6 +269,10 @@ def _build_payment_status_email(nombre: str, status: str, frontend_url: str) -> 
 """
 
 def _send_brevo_email(to_email: str, subject: str, html_content: str, nombre: str = "") -> bool:
+    if settings.ENVIRONMENT.lower() == "qa":
+        logger.info(f"[EMAIL MOCK QA] Simulando envío a {to_email}. Asunto: {subject}")
+        return True
+
     if not settings.BREVO_API_KEY:
         logger.warning(f"[EMAIL] Correo NO enviado a {to_email}: BREVO_API_KEY no configurada.")
         return False
