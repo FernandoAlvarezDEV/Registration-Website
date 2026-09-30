@@ -123,30 +123,133 @@ def _build_receipt_uploaded_email(nombre: str, frontend_url: str) -> str:
     return f"""
 <!DOCTYPE html>
 <html lang="es">
-<body style="margin:0;padding:0;background:#F9F4E0;font-family:Arial,sans-serif;color:#1a1a1a;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:40px;border-radius:16px;border:2px solid #FF0000;text-align:center;">
-    <h2 style="color:#FF0000;">¡Hola {nombre}, hemos recibido tu comprobante!</h2>
-    <p>Tu comprobante de pago está siendo revisado por nuestro equipo. Te notificaremos cuando el estado de tu pago se actualice a Verificado o Rechazado.</p>
-    <a href="{frontend_url}/verificar.html" style="display:inline-block;padding:12px 24px;background:#FEB004;color:#1a1a1a;font-weight:bold;text-decoration:none;border-radius:8px;">Ver Mi Portal</a>
-  </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprobante en Revisión — ENO 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#F9F4E0;font-family:'Plus Jakarta Sans',Arial,sans-serif;color:#1a1a1a;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F9F4E0;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.05);border:2px solid #FF0000;">
+          <!-- Header -->
+          <tr>
+            <td style="background:#FF0000;padding:40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:36px;font-family:'Syne',Arial,sans-serif;font-weight:800;letter-spacing:-1px;text-transform:uppercase;">Onda Fest</h1>
+              <p style="margin:8px 0 0;color:#F9F4E0;font-size:14px;letter-spacing:2px;text-transform:uppercase;font-weight:600;">Comprobante Recibido</p>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;text-align:center;">
+              <h2 style="margin:0 0 16px;color:#FF0000;font-size:24px;font-family:'Syne',Arial,sans-serif;font-weight:800;">¡Hola {nombre}!</h2>
+              <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#333333;">
+                Hemos recibido tu comprobante de pago exitosamente. Nuestro equipo lo está verificando en este momento.<br/><br/>
+                Recibirás otro correo muy pronto cuando el estado de tu pago se actualice a <strong>Verificado</strong> o si hay algún problema.
+              </p>
+              <!-- CTA Button -->
+              <table cellpadding="0" cellspacing="0" style="margin:0 auto 32px;">
+                <tr>
+                  <td style="background:#FEB004;border-radius:12px;border:2px solid #1a1a1a;box-shadow:4px 4px 0px #1a1a1a;">
+                    <a href="{frontend_url}/verificar.html"
+                       style="display:inline-block;padding:16px 40px;color:#1a1a1a;font-size:16px;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:1px;font-family:'Plus Jakarta Sans',Arial,sans-serif;">
+                      Ir a Mi Portal
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0;color:#666666;font-size:13px;">
+                Si tienes alguna pregunta, contacta a tu coordinador.
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background:#F9F4E0;border-top:2px solid #FF0000;padding:24px 40px;text-align:center;">
+              <p style="margin:0;color:#666666;font-size:12px;line-height:1.6;font-weight:600;">
+                ENO 2026 - Grupo Religioso Onda
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 """
 
 def _build_payment_status_email(nombre: str, status: str, frontend_url: str) -> str:
     """Construye el HTML del correo de cambio de estado de pago."""
-    color = "#28a745" if status == "verificado" else "#dc3545"
-    mensaje = "¡Tu pago ha sido verificado exitosamente! Tu cupo en el Onda Fest 2026 está totalmente asegurado." if status == "verificado" else "Ha habido un problema con tu comprobante de pago y ha sido rechazado. Por favor, accede a tu portal para subir un comprobante válido."
+    if status == "verificado":
+        color = "#16a34a" # green-600
+        titulo = "¡PAGO VERIFICADO!"
+        subtitulo = "Cupo Asegurado"
+        mensaje = f"Buenas noticias, <strong>{nombre}</strong>. Hemos verificado tu pago exitosamente. ¡Tu cupo en Onda Fest 2026 está totalmente asegurado!"
+    else:
+        color = "#dc2626" # red-600
+        titulo = "PROBLEMA CON TU PAGO"
+        subtitulo = "Acción Requerida"
+        mensaje = f"Hola <strong>{nombre}</strong>, hemos revisado tu comprobante pero ha sido <strong>RECHAZADO</strong>. Por favor, accede a tu portal para subir un comprobante válido o contacta a soporte para más detalles."
+
     return f"""
 <!DOCTYPE html>
 <html lang="es">
-<body style="margin:0;padding:0;background:#F9F4E0;font-family:Arial,sans-serif;color:#1a1a1a;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;padding:40px;border-radius:16px;border:2px solid {color};text-align:center;">
-    <h2 style="color:{color};">Actualización de Pago: {status.upper()}</h2>
-    <p>Hola {nombre}, te informamos que el estado de tu pago ha cambiado.</p>
-    <p><strong>{mensaje}</strong></p>
-    <a href="{frontend_url}/verificar.html" style="display:inline-block;padding:12px 24px;background:#FEB004;color:#1a1a1a;font-weight:bold;text-decoration:none;border-radius:8px;">Ver Mi Portal</a>
-  </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actualización de Pago — ENO 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#F9F4E0;font-family:'Plus Jakarta Sans',Arial,sans-serif;color:#1a1a1a;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F9F4E0;padding:40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.05);border:2px solid {color};">
+          <!-- Header -->
+          <tr>
+            <td style="background:{color};padding:40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:32px;font-family:'Syne',Arial,sans-serif;font-weight:800;letter-spacing:-1px;text-transform:uppercase;">{titulo}</h1>
+              <p style="margin:8px 0 0;color:#ffffff;opacity:0.9;font-size:14px;letter-spacing:2px;text-transform:uppercase;font-weight:600;">{subtitulo}</p>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;text-align:center;">
+              <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#333333;">
+                {mensaje}
+              </p>
+              <!-- CTA Button -->
+              <table cellpadding="0" cellspacing="0" style="margin:0 auto 32px;">
+                <tr>
+                  <td style="background:#FEB004;border-radius:12px;border:2px solid #1a1a1a;box-shadow:4px 4px 0px #1a1a1a;">
+                    <a href="{frontend_url}/verificar.html"
+                       style="display:inline-block;padding:16px 40px;color:#1a1a1a;font-size:16px;font-weight:800;text-decoration:none;text-transform:uppercase;letter-spacing:1px;font-family:'Plus Jakarta Sans',Arial,sans-serif;">
+                      Ir a Mi Portal
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background:#F9F4E0;border-top:2px solid {color};padding:24px 40px;text-align:center;">
+              <p style="margin:0;color:#666666;font-size:12px;line-height:1.6;font-weight:600;">
+                ENO 2026 - Grupo Religioso Onda
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 """
