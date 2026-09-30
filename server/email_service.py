@@ -313,4 +313,4 @@ def send_receipt_uploaded_email(to_email: str, nombre: str) -> bool:
 def send_payment_status_email(to_email: str, nombre: str, status: str) -> bool:
     subject = "¡Pago Verificado! - Onda Fest 2026" if status.lower() == "verificado" else "Problema con tu pago - Onda Fest 2026"
     html_body = _build_payment_status_email(nombre, status, settings.FRONTEND_URL)
-    return _send_brevo_email(to_email, subject, html_body, nombre)il(to_email, subject, html_body, nombre)
+    return _send_brevo_email(to_email, subject, html_body, nombre)
