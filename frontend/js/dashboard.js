@@ -185,29 +185,38 @@ function initDashboard() {
         return;
     }
 
-    // 2. Revisar si hay un magic link en la URL (?tel=...&email=...)
+    // 2. Revisar si hay un magic link en la URL (?i=...&t=...)
     const urlParams = new URLSearchParams(window.location.search);
-    const magicTel = urlParams.get('tel');
-    const magicEmail = urlParams.get('email');
-    if (magicTel && magicEmail) {
-        // Mostrar loader y auto-llenar
+    const magicI = urlParams.get('i');
+    const magicT = urlParams.get('t');
+    
+    if (magicI && magicT) {
         const loader = document.getElementById("loading-screen");
         const loginScreen = document.getElementById("user-login-screen");
         if (loader) loader.style.display = "flex";
         if (loginScreen) loginScreen.style.display = "none";
         
-        // Auto-llenar campos
-        const telEl = document.getElementById("login-telefono");
-        const emailEl = document.getElementById("login-email");
-        if (telEl) telEl.value = magicTel;
-        if (emailEl) emailEl.value = magicEmail;
-        
-        // Ejecutar login
-        setTimeout(() => {
-            loginUsuarioNormal().then(() => {
-                showToast("success", "Bienvenido de vuelta");
+        fetch(`${API_BASE}/api/registros/magic?i=${encodeURIComponent(magicI)}&t=${encodeURIComponent(magicT)}`)
+            .then(res => {
+                if(!res.ok) throw res;
+                return res.json();
+            })
+            .then(data => {
+                if(data.success) {
+                    populateUI(data.data);
+                    showToast("success", "Bienvenido de vuelta");
+                }
+            })
+            .catch(async (err) => {
+                let errorMsg = "Enlace inválido o expirado.";
+                try {
+                    const errorData = await err.json();
+                    errorMsg = errorData.detail || errorMsg;
+                } catch(e) {}
+                showToast("error", errorMsg);
+                if (loader) loader.style.display = "none";
+                if (loginScreen) loginScreen.style.display = "flex";
             });
-        }, 500);
         return;
     }
 

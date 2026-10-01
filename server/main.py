@@ -299,9 +299,9 @@ def crear_registro(
 
     # Enviar correo de confirmación en segundo plano
     if nuevo_registro.email:
-        # Aquí se usa un token simple, puedes implementar JWT después si lo deseas.
-        # Por ahora pasamos el id como token para que el enlace abra el login o dashboard directamente.
-        background_tasks.add_task(send_confirmation_email, nuevo_registro.email, nuevo_registro.nombre_completo, str(nuevo_registro.id))
+        # Enviar i=id y t=telefono para el magic login seguro
+        params = f"i={nuevo_registro.id}&t={nuevo_registro.telefono}"
+        background_tasks.add_task(send_confirmation_email, nuevo_registro.email, nuevo_registro.nombre_completo, params)
 
     return RegistroResponse(
         success=True,
@@ -531,7 +531,46 @@ def verificar_registro(
         },
     }
 
-
+@app.get("/api/registros/magic", tags=["Auth"])
+@limiter.limit("15/minute")
+def magic_login(
+    request: Request,
+    i: int = Query(...),
+    t: str = Query(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Magic login usando ID numérico y Teléfono.
+    """
+    registro = db.query(Registro).filter(Registro.id == i, Registro.telefono == t).first()
+    if not registro:
+        raise HTTPException(status_code=404, detail="Enlace inválido o expirado.")
+    
+    talla_val = registro.talla_camiseta.value if hasattr(registro.talla_camiseta, 'value') else str(registro.talla_camiseta or "")
+    codigo = generar_codigo_registro(registro.id)
+    return {
+        "success": True,
+        "message": f"Registro encontrado para {registro.nombre_completo}.",
+        "data": {
+            "id": registro.id,
+            "idLabel": codigo,
+            "codigoRegistro": codigo,
+            "nombreCompleto": registro.nombre_completo,
+            "edad": registro.edad,
+            "telefono": registro.telefono,
+            "email": registro.email,
+            "municipio": registro.municipio,
+            "tallaCamiseta": talla_val,
+            "noOnda": registro.no_onda,
+            "contactoEmergencia": registro.contacto_emergencia,
+            "contactoEmergenciaTelefono": registro.contacto_emergencia_telefono,
+            "parentesco": registro.parentesco,
+            "fechaRegistro": str(registro.fecha_registro) if registro.fecha_registro else None,
+            "comprobantePago": registro.comprobante_pago,
+            "estadoPago": registro.estado_pago,
+            "opcionComida": getattr(registro, "opcion_comida", "Comida 1") or "Comida 1",
+        }
+    }
 
 class AdminLoginRequest(BaseModel):
     username: str

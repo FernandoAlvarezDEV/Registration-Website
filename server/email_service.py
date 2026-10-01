@@ -8,9 +8,9 @@ import requests
 from config import settings
 
 logger = logging.getLogger(__name__)
-def _build_confirmation_email(nombre: str, token: str, frontend_url: str) -> str:
+def _build_confirmation_email(nombre: str, params: str, frontend_url: str) -> str:
     """Construye el HTML del correo de confirmación de registro."""
-    dashboard_url = f"{frontend_url}/dashboard.html?token={token}"
+    dashboard_url = f"{frontend_url}/dashboard.html?{params}"
     logo_url = f"{frontend_url}/img/LOGO%20VERSI%20HORIZONTAL%201.png"
     icon_url = f"{frontend_url}/img/iconos/ESTRELLA%20FUCSIA.png"
 
@@ -313,14 +313,14 @@ def _send_brevo_email(to_email: str, subject: str, html_content: str, nombre: st
         logger.error(f"[EMAIL] Excepción enviando correo a {to_email}: {e}")
         return False
 
-def send_confirmation_email(to_email: str, nombre: str, token: str) -> bool:
+def send_confirmation_email(to_email: str, nombre: str, params: str) -> bool:
     if not settings.BREVO_API_KEY:
-        dashboard_url = f"{settings.FRONTEND_URL}/dashboard.html?token={token}"
+        dashboard_url = f"{settings.FRONTEND_URL}/dashboard.html?{params}"
         logger.info(f"--- MAGIC LINK LOCAL ---")
         logger.info(f"🔗 Para probar haz clic aquí: {dashboard_url}")
         logger.info(f"------------------------")
         
-    html_body = _build_confirmation_email(nombre, token, settings.FRONTEND_URL)
+    html_body = _build_confirmation_email(nombre, params, settings.FRONTEND_URL)
     return _send_brevo_email(to_email, "Registro Exitoso - Onda Fest 2026", html_body, nombre)
 
 def send_receipt_uploaded_email(to_email: str, nombre: str) -> bool:
