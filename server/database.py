@@ -63,7 +63,7 @@ def init_db():
             conn.execute(text("ALTER TABLE registros DROP COLUMN IF EXISTS magic_token CASCADE;"))
             conn.execute(text("ALTER TABLE registros DROP COLUMN IF EXISTS token_expires CASCADE;"))
             conn.execute(text("ALTER TABLE registros ADD COLUMN IF NOT EXISTS email VARCHAR(255);"))
-            conn.execute(text("ALTER TABLE registros ADD COLUMN IF NOT EXISTS opcion_comida VARCHAR(100) DEFAULT 'Comida 1';"))
+            conn.execute(text("ALTER TABLE registros ADD COLUMN IF NOT EXISTS opcion_comida VARCHAR(100) DEFAULT 'Moro de habichuelas negras + pollo horneado + ensalada rusa';"))
             conn.execute(text("ALTER TABLE registros ADD COLUMN IF NOT EXISTS contacto_emergencia_telefono VARCHAR(20);"))
             conn.commit()
     except Exception as e:

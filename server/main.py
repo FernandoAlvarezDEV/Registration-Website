@@ -265,7 +265,7 @@ def crear_registro(
             detail="Ya existe una inscripción con este número de teléfono.",
         )
 
-    comida_elegida = (registro.opcionComida or "Comida 1").strip()
+    comida_elegida = (registro.opcionComida or "Moro de habichuelas negras + pollo horneado + ensalada rusa").strip()
 
     nuevo_registro = Registro(
         nombre_completo=registro.nombreCompleto,
@@ -527,7 +527,7 @@ def verificar_registro(
             "fechaRegistro": str(registro.fecha_registro) if registro.fecha_registro else None,
             "comprobantePago": registro.comprobante_pago,
             "estadoPago": registro.estado_pago,
-            "opcionComida": getattr(registro, "opcion_comida", "Comida 1") or "Comida 1",
+            "opcionComida": getattr(registro, "opcion_comida", "Moro de habichuelas negras + pollo horneado + ensalada rusa") or "Moro de habichuelas negras + pollo horneado + ensalada rusa",
         },
     }
 
@@ -568,7 +568,7 @@ def magic_login(
             "fechaRegistro": str(registro.fecha_registro) if registro.fecha_registro else None,
             "comprobantePago": registro.comprobante_pago,
             "estadoPago": registro.estado_pago,
-            "opcionComida": getattr(registro, "opcion_comida", "Comida 1") or "Comida 1",
+            "opcionComida": getattr(registro, "opcion_comida", "Moro de habichuelas negras + pollo horneado + ensalada rusa") or "Moro de habichuelas negras + pollo horneado + ensalada rusa",
         }
     }
 

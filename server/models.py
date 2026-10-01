@@ -41,7 +41,7 @@ class Registro(Base):
     contacto_emergencia = Column(String(255), nullable=False)
     contacto_emergencia_telefono = Column(String(20), nullable=True) # made True temporarily for old records
     parentesco = Column(String(100), nullable=False)
-    opcion_comida = Column(String(100), nullable=True, default="Comida 1")
+    opcion_comida = Column(String(100), nullable=True, default="Moro de habichuelas negras + pollo horneado + ensalada rusa")
     fecha_registro = Column(DateTime, default=datetime.utcnow)
     comprobante_pago = Column(String(512), nullable=True, default=None)
     estado_pago = Column(String(20), nullable=False, default="pendiente")
@@ -66,7 +66,7 @@ class RegistroCreate(BaseModel):
     contactoEmergencia: str = Field(..., min_length=1, max_length=255, description="Nombre del contacto de emergencia")
     contactoEmergenciaTelefono: str = Field(..., min_length=7, max_length=20, description="Teléfono del contacto de emergencia")
     parentesco: str = Field(..., min_length=1, max_length=100, description="Parentesco del contacto de emergencia")
-    opcionComida: str | None = Field(default="Comida 1", description="Opción de comida seleccionada (Comida 1, Comida 2, Comida 3)")
+    opcionComida: str | None = Field(default="Moro de habichuelas negras + pollo horneado + ensalada rusa", description="Opción de comida seleccionada")
 
     @field_validator("nombreCompleto")
     @classmethod
@@ -136,7 +136,7 @@ class RegistroOut(BaseModel):
     fecha_registro: datetime
     comprobante_pago: str | None = None
     estado_pago: str = "pendiente"
-    opcion_comida: str | None = "Comida 1"
+    opcion_comida: str | None = "Moro de habichuelas negras + pollo horneado + ensalada rusa"
 
     class Config:
         from_attributes = True
