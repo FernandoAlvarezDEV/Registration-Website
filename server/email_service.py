@@ -50,9 +50,20 @@ logger = logging.getLogger(__name__)
             <td style="padding:40px 30px;">
               <h2 style="margin:0 0 16px;color:#1A1A1A;font-size:24px;font-family:'Syne',Arial,sans-serif;font-weight:800;">¡Hola {nombre}!</h2>
               <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#333333;font-weight:500;">
-                Gracias por inscribirte al <strong>Evento Nacional Onda 2026</strong>. Tu lugar está reservado y estamos listos para vivir esta experiencia contigo.<br/><br/>
+                Gracias por inscribirte al <strong>Evento Nacional Onda 2026</strong>. Tu lugar está pre-reservado y estamos listos para vivir esta experiencia contigo.<br/><br/>
                 Para ver tu estado, subir tu comprobante de pago o acceder a tu código QR, haz clic en el botón a continuación.
               </p>
+
+              <!-- Importante Alert -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#F9F4E0;border-left:4px solid #ED008C;border-radius:0 8px 8px 0;">
+                <tr>
+                  <td style="padding:12px 16px;">
+                    <p style="margin:0;font-size:14px;color:#1A1A1A;font-weight:600;line-height:1.5;">
+                      <strong>💡 Nota Importante:</strong> Para completar oficialmente tu inscripción, asegurar tu cupo y garantizar tu T-Shirt, es necesario que realices el pago y subas tu comprobante en el portal.
+                    </p>
+                  </td>
+                </tr>
+              </table>
 
               <!-- CTA Button -->
               <table cellpadding="0" cellspacing="0" style="margin:0 auto 32px;">
