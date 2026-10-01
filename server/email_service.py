@@ -111,7 +111,7 @@ logger = logging.getLogger(__name__)
               <p style="margin:0;color:#666666;font-size:12px;line-height:1.5;font-weight:600;">
                 Este enlace es personal. No lo compartas con nadie.<br/>
                 Onda Fest 2026<br/>
-                Soporte: <strong>829-753-4583</strong>
+                Soporte: <strong>829-753-4583 / 849-249-7319 / 809-769-8350</strong>
               </p>
             </td>
           </tr>
@@ -184,7 +184,7 @@ def _build_receipt_uploaded_email(nombre: str, frontend_url: str) -> str:
             <td style="background:#F9F4E0;border-top:3px solid #1A1A1A;padding:24px;text-align:center;">
               <p style="margin:0;color:#666666;font-size:12px;line-height:1.5;font-weight:600;">
                 Onda Fest 2026<br/>
-                Soporte: <strong>829-753-4583</strong>
+                Soporte: <strong>829-753-4583 / 849-249-7319 / 809-769-8350</strong>
               </p>
             </td>
           </tr>
@@ -211,7 +211,7 @@ def _build_payment_status_email(nombre: str, status: str, frontend_url: str) -> 
         text_color = "#FFFFFF"
         titulo = "PROBLEMA CON PAGO"
         subtitulo = "Acción Requerida"
-        mensaje = f"Hola <strong>{nombre}</strong>, revisamos tu comprobante pero ha sido <strong>RECHAZADO</strong>. Por favor, entra a tu portal para subir uno válido o contacta a soporte al <strong>829-753-4583</strong>."
+        mensaje = f"Hola <strong>{nombre}</strong>, revisamos tu comprobante pero ha sido <strong>RECHAZADO</strong>. Por favor, entra a tu portal para subir uno válido o contacta a soporte al <strong>829-753-4583 / 849-249-7319 / 809-769-8350</strong>."
 
     return f"""
 <!DOCTYPE html>
@@ -267,7 +267,7 @@ def _build_payment_status_email(nombre: str, status: str, frontend_url: str) -> 
             <td style="background:#F9F4E0;border-top:3px solid #1A1A1A;padding:24px;text-align:center;">
               <p style="margin:0;color:#666666;font-size:12px;line-height:1.5;font-weight:600;">
                 Onda Fest 2026<br/>
-                Soporte: <strong>829-753-4583</strong>
+                Soporte: <strong>829-753-4583 / 849-249-7319 / 809-769-8350</strong>
               </p>
             </td>
           </tr>
