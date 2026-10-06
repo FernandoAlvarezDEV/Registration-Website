@@ -1832,6 +1832,10 @@
                             </div>
                         </div>
                         <div style="display:flex;gap:10px;">
+                            <button id="btn-toggle-columns" class="btn-refresh" onclick="toggleExtraColumns()" style="display:flex;align-items:center;gap:6px;background:var(--amarillo);color:var(--oscuro);font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
+                                <span class="material-symbols-outlined" style="font-size:0.9rem;" id="icon-toggle-columns">open_in_full</span>
+                                <span id="text-toggle-columns">Expandir</span>
+                            </button>
                             <button class="btn-refresh" onclick="exportToExcel()" style="display:flex;align-items:center;gap:6px;background:#059669;color:white;font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
                                 <span class="material-symbols-outlined" style="font-size:0.9rem;">download</span>
                                 Exportar Excel
@@ -1896,9 +1900,13 @@
                     </div>
                 </div>
 
+                <style>
+                    .extra-col { display: none; }
+                    .table-expanded .extra-col { display: table-cell; }
+                </style>
                 <!-- Table -->
                 <div class="table-wrap">
-                    <table class="sortable-table">
+                    <table class="sortable-table" id="registros-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -1909,6 +1917,10 @@
                                 <th>Municipio</th>
                                 <th>Talla</th>
                                 <th>Comida</th>
+                                <th class="extra-col">No. Onda</th>
+                                <th class="extra-col">Emergencia</th>
+                                <th class="extra-col">Tel. Emergencia</th>
+                                <th class="extra-col">Parentesco</th>
                                 <th>Estado Pago</th>
                                 <th>Comprobante</th>
                                 <th style="text-align:center;">Acciones</th>

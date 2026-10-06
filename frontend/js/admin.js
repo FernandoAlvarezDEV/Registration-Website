@@ -268,7 +268,7 @@ function renderTable() {
 
     if (filteredRegistros.length === 0) {
         if (pagInfo) pagInfo.textContent = "0-0 / 0";
-        tbody.innerHTML = `<tr><td colspan="11" class="px-6 py-12 text-center text-slate-400">
+        tbody.innerHTML = `<tr><td colspan="15" class="px-6 py-12 text-center text-slate-400">
                     <span class="material-symbols-outlined mb-2" style="font-size: 40px;">search_off</span>
                     <p>No se encontraron registros con estos filtros.</p>
                 </td></tr>`;
@@ -301,6 +301,10 @@ function renderTable() {
                         <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">${r.talla_camiseta.toUpperCase()}</span>
                     </td>
                     <td data-label="Comida" class="px-5 py-3.5 text-slate-600 text-xs">${r.opcion_comida || r.opcionComida || "—"}</td>
+                    <td data-label="No. Onda" class="extra-col px-5 py-3.5 text-slate-600 font-mono text-xs">${r.numero_onda || r.numeroOnda || "—"}</td>
+                    <td data-label="Emergencia" class="extra-col px-5 py-3.5 text-slate-600 text-xs">${r.contacto_emergencia || r.contactoEmergencia || "—"}</td>
+                    <td data-label="Tel. Emergencia" class="extra-col px-5 py-3.5 text-slate-600 font-mono text-xs">${r.contacto_emergencia_telefono || r.contactoEmergenciaTelefono || "—"}</td>
+                    <td data-label="Parentesco" class="extra-col px-5 py-3.5 text-slate-600 text-xs">${r.parentesco || "—"}</td>
                     <td data-label="Estado Pago" class="px-5 py-3.5">${estadoBadge(r.estado_pago)}</td>
                     <td data-label="Comprobante" class="px-5 py-3.5">
                         ${r.comprobante_pago
@@ -346,6 +350,17 @@ function nextPage() {
         currentPage++;
         renderTable();
     }
+}
+
+function toggleExtraColumns() {
+    const table = document.getElementById("registros-table");
+    if (!table) return;
+    
+    table.classList.toggle("table-expanded");
+    const isExpanded = table.classList.contains("table-expanded");
+    
+    document.getElementById("icon-toggle-columns").textContent = isExpanded ? "close_fullscreen" : "open_in_full";
+    document.getElementById("text-toggle-columns").textContent = isExpanded ? "Contraer" : "Expandir";
 }
 
 // Modal functions
