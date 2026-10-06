@@ -5,6 +5,11 @@ const API_BASE = isLocal
 let allRegistros = [];
 let currentModalId = null;
 
+// Variables de paginación
+let filteredRegistros = [];
+let currentPage = 1;
+const itemsPerPage = 20;
+
 // ── Formateador oficial de Código de Registro (ENO-A001 a ENO-Z100) ──
 function formatRegistroCode(id) {
     if (!id) return "ENO-A001";
@@ -252,9 +257,17 @@ function applyFilters() {
     // Default to id ascending
     filtered.sort((a, b) => a.id - b.id);
 
-    const tbody = document.getElementById("table-body");
+    filteredRegistros = filtered;
+    currentPage = 1;
+    renderTable();
+}
 
-    if (filtered.length === 0) {
+function renderTable() {
+    const tbody = document.getElementById("table-body");
+    const pagInfo = document.getElementById("pagination-info");
+
+    if (filteredRegistros.length === 0) {
+        if (pagInfo) pagInfo.textContent = "0-0 / 0";
         tbody.innerHTML = `<tr><td colspan="11" class="px-6 py-12 text-center text-slate-400">
                     <span class="material-symbols-outlined mb-2" style="font-size: 40px;">search_off</span>
                     <p>No se encontraron registros con estos filtros.</p>
@@ -262,7 +275,21 @@ function applyFilters() {
         return;
     }
 
-    tbody.innerHTML = filtered.map(r => `
+    const totalItems = filteredRegistros.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+    
+    if (pagInfo) {
+        pagInfo.textContent = `${startIndex + 1}-${endIndex} / ${totalItems}`;
+    }
+
+    const paginated = filteredRegistros.slice(startIndex, endIndex);
+
+    tbody.innerHTML = paginated.map(r => `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td data-label="ID" class="px-5 py-3.5 font-bold text-primary text-xs">${formatRegistroCode(r.id)}</td>
                     <td data-label="Nombre" class="px-5 py-3.5 font-semibold text-slate-800 max-w-[150px] truncate" title="${r.nombre_completo}">${r.nombre_completo}</td>
@@ -304,6 +331,21 @@ function applyFilters() {
                     </td>
                 </tr>
             `).join("");
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+}
+
+function nextPage() {
+    const totalPages = Math.ceil(filteredRegistros.length / itemsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+    }
 }
 
 // Modal functions

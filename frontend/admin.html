@@ -1822,15 +1822,25 @@
                         <span class="material-symbols-outlined" style="color:var(--fucsia);">group</span>
                         Registros
                     </h3>
-                    <div style="display:flex;gap:10px;">
-                        <button class="btn-refresh" onclick="exportToExcel()" style="display:flex;align-items:center;gap:6px;background:#059669;color:white;font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
-                            <span class="material-symbols-outlined" style="font-size:0.9rem;">download</span>
-                            Exportar Excel
-                        </button>
-                        <button class="btn-refresh" onclick="loadData()" style="display:flex;align-items:center;gap:6px;background:white;color:var(--oscuro);font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
-                            <span class="material-symbols-outlined" style="font-size:0.9rem;">refresh</span>
-                            Actualizar
-                        </button>
+                    <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+                        <!-- Odoo Pagination -->
+                        <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:#4B5563;">
+                            <span id="pagination-info" style="font-weight:500;">0-0 / 0</span>
+                            <div style="display:flex; gap:2px;">
+                                <button onclick="prevPage()" class="action-btn" style="background:#f1f5f9; color:#64748b; width:26px; height:26px;"><span class="material-symbols-outlined" style="font-size:18px;">chevron_left</span></button>
+                                <button onclick="nextPage()" class="action-btn" style="background:#f1f5f9; color:#64748b; width:26px; height:26px;"><span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span></button>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="btn-refresh" onclick="exportToExcel()" style="display:flex;align-items:center;gap:6px;background:#059669;color:white;font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
+                                <span class="material-symbols-outlined" style="font-size:0.9rem;">download</span>
+                                Exportar Excel
+                            </button>
+                            <button class="btn-refresh" onclick="loadData()" style="display:flex;align-items:center;gap:6px;background:white;color:var(--oscuro);font-weight:700;font-size:0.8rem;padding:6px 12px;border:2px solid var(--oscuro);border-radius:6px;box-shadow:2px 2px 0 var(--oscuro);cursor:pointer;">
+                                <span class="material-symbols-outlined" style="font-size:0.9rem;">refresh</span>
+                                Actualizar
+                            </button>
+                        </div>
                     </div>
                 </div>
 
