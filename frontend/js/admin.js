@@ -77,7 +77,7 @@ function estadoBadge(estado) {
 // Load registrations
 async function loadRegistrations() {
     try {
-        const res = await fetch(`${API_BASE}/api/registros?limit=200`, {
+        const res = await fetch(`${API_BASE}/api/registros?limit=1000`, {
             headers: getAdminHeaders(),
         });
         if (res.status === 401) {
