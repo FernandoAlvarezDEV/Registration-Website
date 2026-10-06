@@ -44,24 +44,8 @@ if (registrationData) {
         `).join("");
     }
 } else {
-    // Si no hay datos en sessionStorage, mostrar aviso amigable
-    const summaryCard = document.getElementById("summary-card");
-    if (summaryCard) {
-        summaryCard.innerHTML = `
-            <div class="card-header">
-                <span class="material-symbols-outlined" style="color:var(--fucsia);">info</span>
-                <h3>Información de Inscripción</h3>
-            </div>
-            <div class="card-body" style="text-align:center; padding:32px 20px;">
-                <span class="material-symbols-outlined" style="font-size:48px; color:var(--naranja); margin-bottom:12px; display:inline-block;">how_to_reg</span>
-                <p style="font-size:1.05rem; font-weight:700; color:var(--oscuro); margin-bottom:8px;">No se encontraron datos en esta sesión local</p>
-                <p style="font-size:0.9rem; color:#666; max-width:440px; margin:0 auto 20px;">
-                    Si ya te registraste, puedes revisar tu estado con tu número de teléfono y nombre en el portal.
-                </p>
-                <a href="dashboard.html" class="btn-register-nav" style="display:inline-block;">Ir a Revisar Mi Inscripción →</a>
-            </div>
-        `;
-    }
+    // Si no hay datos en sessionStorage, redirigir al inicio para evitar mostrar la plantilla vacía
+    window.location.replace("index.html");
 }
 
 // ── Confetti animado con paleta oficial Onda Fest ──
