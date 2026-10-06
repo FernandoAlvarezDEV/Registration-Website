@@ -301,7 +301,7 @@ function renderTable() {
                         <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">${r.talla_camiseta.toUpperCase()}</span>
                     </td>
                     <td data-label="Comida" class="px-5 py-3.5 text-slate-600 text-xs">${r.opcion_comida || r.opcionComida || "—"}</td>
-                    <td data-label="No. Onda" class="extra-col px-5 py-3.5 text-slate-600 font-mono text-xs">${r.numero_onda || r.numeroOnda || "—"}</td>
+                    <td data-label="No. Onda" class="extra-col px-5 py-3.5 text-slate-600 font-mono text-xs">${r.no_onda || r.noOnda || "—"}</td>
                     <td data-label="Emergencia" class="extra-col px-5 py-3.5 text-slate-600 text-xs">${r.contacto_emergencia || r.contactoEmergencia || "—"}</td>
                     <td data-label="Tel. Emergencia" class="extra-col px-5 py-3.5 text-slate-600 font-mono text-xs">${r.contacto_emergencia_telefono || r.contactoEmergenciaTelefono || "—"}</td>
                     <td data-label="Parentesco" class="extra-col px-5 py-3.5 text-slate-600 text-xs">${r.parentesco || "—"}</td>
@@ -671,7 +671,12 @@ document.addEventListener('click', function (e) {
         5: 'municipio',
         6: 'talla_camiseta',
         7: 'opcion_comida',
-        8: 'estado_pago'
+        8: 'no_onda',
+        9: 'contacto_emergencia',
+        10: 'contacto_emergencia_telefono',
+        11: 'parentesco',
+        12: 'estado_pago',
+        13: 'comprobante_pago'
     };
 
     const key = columnMap[thIndex];
