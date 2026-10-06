@@ -646,35 +646,41 @@ document.addEventListener('click', function (e) {
     const direction = isAscending ? -1 : 1;
     th.classList.add(isAscending ? 'sort-desc' : 'sort-asc');
 
-    // Sort rows
-    const rowsArray = Array.from(tbody.querySelectorAll('tr'));
-    
-    rowsArray.sort((rowA, rowB) => {
-        const cellA = rowA.children[thIndex].textContent.trim();
-        const cellB = rowB.children[thIndex].textContent.trim();
-        
-        const parseValue = (val) => {
-            // Remove currency symbols, commas, spaces for numeric check
-            const clean = val.replace(/[$,\s]/g, "");
-            if (/^-?\d+(\.\d+)?$/.test(clean)) {
-                return parseFloat(clean);
+    // Mapeo de índice de columna a campo del objeto
+    const columnMap = {
+        0: 'id',
+        1: 'nombre_completo',
+        2: 'edad',
+        3: 'telefono',
+        4: 'email',
+        5: 'municipio',
+        6: 'talla_camiseta',
+        7: 'opcion_comida',
+        8: 'estado_pago'
+    };
+
+    const key = columnMap[thIndex];
+    if (key) {
+        filteredRegistros.sort((rowA, rowB) => {
+            let valA = rowA[key] || "";
+            let valB = rowB[key] || "";
+            
+            if (key === 'id' || key === 'edad') {
+                const numA = parseInt(valA) || 0;
+                const numB = parseInt(valB) || 0;
+                return (numA - numB) * direction;
             }
-            return val;
-        };
 
-        const valA = parseValue(cellA);
-        const valB = parseValue(cellB);
-        
-        if (typeof valA === 'number' && typeof valB === 'number') {
-            return (valA - valB) * direction;
-        }
-        
-        // Fallback to text compare
-        return cellA.localeCompare(cellB, 'es', { numeric: true, sensitivity: 'base' }) * direction;
-    });
+            if (typeof valA !== 'string') valA = String(valA);
+            if (typeof valB !== 'string') valB = String(valB);
 
-    // Re-append sorted rows
-    rowsArray.forEach(row => tbody.appendChild(row));
+            return valA.localeCompare(valB, 'es', { numeric: true, sensitivity: 'base' }) * direction;
+        });
+
+        // Reset page to 1 after sorting globally
+        currentPage = 1;
+        renderTable();
+    }
 });
 
 // ── Exportar a Excel (CSV) ──
