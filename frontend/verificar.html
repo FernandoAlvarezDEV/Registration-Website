@@ -794,6 +794,39 @@
             font-family: 'Syne', sans-serif;
         }
 
+        .bank-field-val-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .bank-field-val-wrap p {
+            word-break: break-word;
+        }
+
+        .btn-copy-chip {
+            background: #E8F9E5;
+            border: 1.5px solid var(--oscuro);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--oscuro);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .btn-copy-chip:hover {
+            background: var(--amarillo);
+            transform: translate(1px, 1px);
+        }
+
         /* Warning box */
         .warning-box {
             background: #FFFBEB;
@@ -1355,26 +1388,59 @@
                 </div>
                 <div class="detail-card-body" style="padding:20px 24px;">
                     <div class="bank-card" style="margin-bottom:0;">
-                        <div class="bank-card-header">
-                            <span class="material-symbols-outlined" style="color:#2d8c00;">assured_workload</span>
-                            <strong>Banco Popular Dominicano</strong>
+                        <div class="bank-card-header" style="justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="material-symbols-outlined" style="color:#2d8c00;">assured_workload</span>
+                                <strong>Banco Popular Dominicano</strong>
+                            </div>
+                            <span
+                                style="font-size:0.75rem; background:white; border:1px solid #c9ecc5; padding:3px 8px; border-radius:6px; font-weight:700; color:#1a5200;">Cuenta
+                                de Ahorro</span>
                         </div>
                         <div class="bank-grid">
                             <div class="bank-field">
-                                <label>Titular</label>
-                                <p>Hamlet</p>
+                                <label>Titular de la Cuenta</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-holder">Hamlet Rodriguez</p>
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('Hamlet Rodriguez', 'Titular copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
                             </div>
                             <div class="bank-field">
-                                <label>No. de Cuenta</label>
-                                <p>123-456789-0</p>
+                                <label>Número de Cuenta</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-account">798870242</p>
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('798870242', 'No. de cuenta copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
                             </div>
                             <div class="bank-field">
-                                <label>Cédula</label>
-                                <p>001-1234567-8</p>
+                                <label>Cédula / Identificación</label>
+                                <div class="bank-field-val-wrap">
+                                    <p id="bank-id">001-0646602-2</p>
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('00106466022', 'Cédula copiada')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
                             </div>
-                            <div class="bank-field">
-                                <label>Monto</label>
-                                <p style="color:var(--verde);">RD$600.00</p>
+                            <div class="bank-field" style="background:#EBFEEB; border-color:var(--verde);">
+                                <label style="color:#1a5200;">Monto Exacto</label>
+                                <div class="bank-field-val-wrap">
+                                    <p style="color:var(--verde); font-size:1.15rem;">RD$600.00</p>
+                                    <button type="button" class="btn-copy-chip"
+                                        onclick="copyToClipboard('600', 'Monto copiado')">
+                                        <span class="material-symbols-outlined"
+                                            style="font-size:14px;">content_copy</span> Copiar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1382,7 +1448,13 @@
                     <!-- Concepto de transferencia con Número de Registro -->
                     <div style="background:var(--amarillo); border:2px solid var(--oscuro); border-radius:10px; padding:14px 16px; margin-top:16px;">
                         <p style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--oscuro); margin-bottom:4px;">⚠️ Concepto de Transferencia Obligatorio:</p>
-                        <p id="dashboard-transfer-memo" style="font-family:'Syne',monospace; font-weight:800; font-size:1rem; color:var(--oscuro);">ENO-A001 - Tu Nombre - Tu Distrito</p>
+                        <div class="bank-field-val-wrap" style="justify-content: space-between; gap: 8px;">
+                            <p id="dashboard-transfer-memo" style="font-family:'Syne',monospace; font-weight:800; font-size:1rem; color:var(--oscuro); margin:0;">ENO-A001 - Tu Nombre - Tu Distrito</p>
+                            <button type="button" class="btn-copy-chip" onclick="copyTransferMemo()">
+                                <span class="material-symbols-outlined" style="font-size:14px;">content_copy</span>
+                                Copiar Concepto
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Soporte WhatsApp 829-753-4583 -->
@@ -1474,6 +1546,30 @@
 
     <script src="js/dashboard.js"></script>
     <script>
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (typeof showToast === 'function') {
+                    showToast('success', message || "¡Copiado con éxito!");
+                }
+            }).catch(() => {
+                const temp = document.createElement("input");
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand("copy");
+                document.body.removeChild(temp);
+                if (typeof showToast === 'function') {
+                    showToast('success', message || "¡Copiado con éxito!");
+                }
+            });
+        }
+
+        function copyTransferMemo() {
+            const memoEl = document.getElementById("dashboard-transfer-memo");
+            const memo = memoEl ? memoEl.innerText.trim() : "";
+            if (memo) copyToClipboard(memo, "Concepto copiado");
+        }
+
         if (window.location.hostname.includes('qa') || window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
             const banner = document.createElement('div');
             banner.innerHTML = 'Esto es un Entorno de Prueba, Los correos no salen';
