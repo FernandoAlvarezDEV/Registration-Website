@@ -92,7 +92,7 @@ logger = logging.getLogger(__name__)
                 <tr>
                   <td style="padding:16px 20px;border-bottom:2px solid #1A1A1A;">
                     <span style="color:#1A1A1A;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Lugar</span><br/>
-                    <span style="font-size:16px;font-weight:700;">Próximamente</span>
+                    <a href="https://maps.app.goo.gl/uLX8URkdQAU2bRo28" target="_blank" style="font-size:16px;font-weight:700;color:#1A1A1A;text-decoration:underline;">Polideportivo Tony Barreiro (UASD, Santo Domingo)</a>
                   </td>
                 </tr>
                 <tr>
