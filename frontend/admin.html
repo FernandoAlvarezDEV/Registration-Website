@@ -1643,7 +1643,7 @@
             <a href="inscripcion.html" class="btn-register-nav">Inscríbete →</a>
             <div id="admin-header-badge" class="admin-badge" style="display:none;">
                 <span class="material-symbols-outlined" style="font-size:0.9rem;">shield</span>
-                <span>Admin</span>
+                <span id="admin-badge-text">Admin</span>
             </div>
             <button id="admin-header-logout" class="btn-logout" onclick="logout()" style="display:none;">
                 <span class="material-symbols-outlined" style="font-size:0.9rem;">logout</span>
@@ -1670,7 +1670,7 @@
 
                 <div class="login-field">
                     <label class="login-label" for="admin-username">Usuario</label>
-                    <input id="admin-username" class="login-input" type="text" placeholder="Ej: admin_nagua" />
+                    <input id="admin-username" class="login-input" type="text" placeholder="Ej: admin_all o admin_sfmC33" />
                 </div>
                 <div class="login-field">
                     <label class="login-label" for="admin-password">Contraseña</label>
@@ -1775,7 +1775,7 @@
                             style="font-size:1.5rem; vertical-align:middle;">admin_panel_settings</span>
                         Panel de <span>Administración</span>
                     </h1>
-                    <p class="page-sub">Gestiona los registros y pagos del evento Onda Fest 2026</p>
+                    <p class="page-sub" id="admin-page-sub">Gestiona los registros y pagos del evento Onda Fest 2026</p>
                 </div>
             </div>
 

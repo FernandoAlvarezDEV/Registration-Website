@@ -33,6 +33,44 @@ function getAdminHeaders(extra = {}) {
     };
 }
 
+// 🔒 Helper: verificar permisos de eliminación (únicamente admin_all)
+function canAdminDelete() {
+    const s = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
+    return Boolean(
+        s.canDelete === true ||
+        s.data?.canDelete === true ||
+        s.adminRole === "superadmin" ||
+        s.data?.adminRole === "superadmin" ||
+        s.username === "admin_all" ||
+        s.data?.username === "admin_all"
+    );
+}
+
+// Actualizar nombre y municipio en la cabecera del panel
+function updateAdminHeaderInfo() {
+    const s = JSON.parse(sessionStorage.getItem("eno_session") || "null");
+    if (!s) return;
+    
+    const adminBadgeText = document.getElementById("admin-badge-text");
+    const nombre = s.data?.nombreCompleto || s.nombreCompleto || "Admin";
+    if (adminBadgeText) {
+        adminBadgeText.textContent = nombre;
+    }
+    
+    const subTitle = document.getElementById("admin-page-sub");
+    if (subTitle) {
+        const adminRole = s.adminRole || s.data?.adminRole;
+        const municipio = s.municipio || s.data?.municipio;
+        if (adminRole === "superadmin") {
+            subTitle.innerHTML = `Administrador General — <span class="text-emerald-600 font-semibold">Acceso total (ver todos y eliminar)</span>`;
+        } else if (adminRole === "finanzas") {
+            subTitle.innerHTML = `Administración de Finanzas — <span class="text-blue-600 font-semibold">Consolidado general (todos los municipios, solo lectura)</span>`;
+        } else if (municipio && municipio !== "ALL") {
+            subTitle.innerHTML = `Administrador Local — <strong style="color:var(--fucsia);">${municipio}</strong> (solo registros de su municipio)`;
+        }
+    }
+}
+
 // Check admin session — si no hay sesión admin, mostrar formulario de login
 const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
 const adminBadge = document.getElementById("admin-header-badge");
@@ -49,6 +87,7 @@ if (!session || session.role !== "admin") {
     document.getElementById("admin-dashboard-content").classList.remove("hidden");
     if (adminBadge) adminBadge.style.display = "inline-flex";
     if (adminLogout) adminLogout.style.display = "inline-flex";
+    updateAdminHeaderInfo();
     loadData();
 }
 
@@ -327,10 +366,15 @@ function renderTable() {
                                     <span class="material-symbols-outlined text-sm">cancel</span>
                                 </button>
                             ` : ''}
+                            ${canAdminDelete() ? `
                             <button onclick="promptDeleteRegistro(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Eliminar registro"
                                 class="text-slate-400 hover:bg-red-50 hover:text-red-500 p-1.5 rounded-lg transition-colors">
                                 <span class="material-symbols-outlined text-sm">delete</span>
                             </button>
+                            ` : ''}
+                            ${!canAdminDelete() && !r.comprobante_pago ? `
+                                <span class="text-slate-300 text-xs">—</span>
+                            ` : ''}
                         </div>
                     </td>
                 </tr>
@@ -547,16 +591,21 @@ async function deleteRegistro(id) {
 }
 
 async function executeDeleteRegistro(id, code) {
+    if (!canAdminDelete()) {
+        showToast("error", "Acceso denegado: Solo el Administrador General puede eliminar registros.");
+        return;
+    }
     try {
         const res = await fetch(`${API_BASE}/api/registros/${id}`, {
             method: "DELETE",
             headers: getAdminHeaders(),
         });
+        const data = await res.json().catch(() => ({}));
         if (res.ok) {
-            showToast("success", `Registro ${code} eliminado.`);
+            showToast("success", data.message || `Registro ${code} eliminado.`);
             loadData();
         } else {
-            showToast("error", "Error al eliminar el registro.");
+            showToast("error", data.detail || "Error al eliminar el registro.");
         }
     } catch (e) {
         showToast("error", "Error de conexión.");
@@ -612,7 +661,11 @@ async function adminLogin() {
             role: "admin",
             token: data.token,
             data: data.data,
-            municipio: data.data.municipio // Guarda el municipio del admin
+            municipio: data.data.municipio, // Guarda el municipio del admin
+            adminRole: data.data.adminRole,
+            canDelete: data.data.canDelete,
+            nombreCompleto: data.data.nombreCompleto,
+            username: data.data.username
         }));
 
         // Mostrar dashboard, ocultar login
@@ -620,6 +673,7 @@ async function adminLogin() {
         document.getElementById("admin-dashboard-content").classList.remove("hidden");
         if (adminBadge) adminBadge.style.display = "inline-flex";
         if (adminLogout) adminLogout.style.display = "inline-flex";
+        updateAdminHeaderInfo();
         loadData();
     } catch (err) {
         if (err.name === "TypeError" || (err.message && err.message.toLowerCase().includes("failed to fetch"))) {

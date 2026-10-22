@@ -331,8 +331,8 @@ def listar_registros(
     """Lista todos los registros (paginado). Filtra por municipio según el Admin."""
     query = db.query(Registro)
     
-    # Aplicar filtro por municipio si no es admin_all
-    admin_data = ADMIN_USERS.get(admin_username)
+    # Aplicar filtro por municipio si no es ALL (admin_all y admin_FinanzasA13 ven todos)
+    admin_data = ADMIN_USERS.get(admin_username.lower())
     if admin_data and admin_data["municipio"] != "ALL":
         query = query.filter(Registro.municipio == admin_data["municipio"])
         
@@ -368,7 +368,7 @@ def estadisticas(
     """Estadísticas generales (para Admin dashboard). Solo Admin autenticado."""
     from sqlalchemy import func
 
-    admin_data = ADMIN_USERS.get(admin_username)
+    admin_data = ADMIN_USERS.get(admin_username.lower())
     municipio_filter = admin_data["municipio"] if admin_data and admin_data["municipio"] != "ALL" else None
 
     # Helper function to apply filter
@@ -406,15 +406,18 @@ def eliminar_registro(
     db: Session = Depends(get_db),
     admin_username: str = Depends(require_admin),
 ):
-    """Elimina un registro por ID. Solo Admin autenticado y autorizado para ese municipio."""
+    """Elimina un registro por ID. Solo admin_all (superadmin) puede eliminar."""
+    # 🔒 Solo el superadmin (admin_all) puede eliminar registros
+    admin_data = ADMIN_USERS.get(admin_username.lower())
+    if not admin_data or admin_data.get("role") != "superadmin":
+        raise HTTPException(
+            status_code=403, 
+            detail="Acceso denegado: Únicamente el Administrador General (admin_all) tiene permisos para eliminar registros."
+        )
+
     registro = db.query(Registro).filter(Registro.id == registro_id).first()
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
-        
-    admin_data = ADMIN_USERS.get(admin_username)
-    if admin_data and admin_data["municipio"] != "ALL":
-        if registro.municipio != admin_data["municipio"]:
-            raise HTTPException(status_code=403, detail="No tienes permisos para eliminar este registro.")
             
     db.delete(registro)
     db.commit()
@@ -577,21 +580,25 @@ class AdminLoginRequest(BaseModel):
     password: str
 
 # ── Mapa de administradores por municipio ──
-# admin_all ve todos los registros
+# Roles:
+#   superadmin  → ve todos los registros y puede eliminar (ÚNICO que puede eliminar)
+#   finanzas    → ve todos los registros pero NO puede eliminar
+#   municipio   → solo ve los registros de su municipio y NO puede eliminar
 ADMIN_USERS = {
-    "admin_all": {"password": "OndaFest2026!", "municipio": "ALL"},
-    "admin_guaranas": {"password": "OndaFest2026!", "municipio": "Las Guáranas"},
-    "admin_sfm": {"password": "OndaFest2026!", "municipio": "San Francisco"},
-    "admin_cotui": {"password": "OndaFest2026!", "municipio": "Cotuí"},
-    "admin_nagua": {"password": "OndaFest2026!", "municipio": "Nagua"},
-    "admin_lavega": {"password": "OndaFest2026!", "municipio": "La Vega"},
-    "admin_bonao": {"password": "OndaFest2026!", "municipio": "Bonao"},
-    "admin_maimon": {"password": "OndaFest2026!", "municipio": "Maimón"},
-    "admin_fantino": {"password": "OndaFest2026!", "municipio": "Fantino"},
-    "admin_villatapia": {"password": "OndaFest2026!", "municipio": "Villa Tapia"},
-    "admin_salcedo": {"password": "OndaFest2026!", "municipio": "Salcedo"},
-    "admin_sde": {"password": "OndaFest2026!", "municipio": "Santo Domingo Este"},
-    "admin_dn": {"password": "OndaFest2026!", "municipio": "Distrito Nacional"},
+    "admin_all":            {"password": "OndaFest2026!", "municipio": "ALL",                  "role": "superadmin"},
+    "admin_finanzasa13":    {"password": "OndaFest2026!", "municipio": "ALL",                  "role": "finanzas"},
+    "admin_guaranasb23":    {"password": "OndaFest2026!", "municipio": "Las Guáranas",         "role": "municipio"},
+    "admin_sfmc33":         {"password": "OndaFest2026!", "municipio": "San Francisco",        "role": "municipio"},
+    "admin_cotuid43":       {"password": "OndaFest2026!", "municipio": "Cotuí",                "role": "municipio"},
+    "admin_naguae53":       {"password": "OndaFest2026!", "municipio": "Nagua",                "role": "municipio"},
+    "admin_lavegaf63":      {"password": "OndaFest2026!", "municipio": "La Vega",              "role": "municipio"},
+    "admin_bonaog73":       {"password": "OndaFest2026!", "municipio": "Bonao",                "role": "municipio"},
+    "admin_maimonh83":      {"password": "OndaFest2026!", "municipio": "Maimón",               "role": "municipio"},
+    "admin_fantinoi93":     {"password": "OndaFest2026!", "municipio": "Fantino",              "role": "municipio"},
+    "admin_villatapiaj103": {"password": "OndaFest2026!", "municipio": "Villa Tapia",          "role": "municipio"},
+    "admin_salcedok113":    {"password": "OndaFest2026!", "municipio": "Salcedo",              "role": "municipio"},
+    "admin_sdel123":        {"password": "OndaFest2026!", "municipio": "Santo Domingo Este",   "role": "municipio"},
+    "admin_dnm133":         {"password": "OndaFest2026!", "municipio": "Distrito Nacional",    "role": "municipio"},
 }
 
 
@@ -611,13 +618,28 @@ def admin_login(
     if username in ADMIN_USERS and credentials.password == ADMIN_USERS[username]["password"]:
         admin_token = _generate_admin_token(username)
         municipio = ADMIN_USERS[username]["municipio"]
-        logger.info(f"[AUTH] Inicio de sesión de administrador exitoso: {username} ({municipio}).")
+        admin_role = ADMIN_USERS[username]["role"]
+        can_delete = (admin_role == "superadmin")
+        
+        display_name = (
+            "Super Administrador" if admin_role == "superadmin"
+            else ("Admin Finanzas" if admin_role == "finanzas"
+            else f"Admin {municipio}")
+        )
+        logger.info(f"[AUTH] Inicio de sesión exitoso: {username} ({municipio}, rol: {admin_role}).")
         return {
             "success": True,
             "role": "admin",
-            "message": f"Bienvenido, Administrador de {municipio}.",
+            "message": f"Bienvenido, {display_name}.",
             "token": admin_token,  # Token para usar en endpoints protegidos
-            "data": {"nombreCompleto": f"Admin {municipio}", "isAdmin": True, "municipio": municipio},
+            "data": {
+                "nombreCompleto": display_name,
+                "isAdmin": True,
+                "municipio": municipio,
+                "adminRole": admin_role,
+                "canDelete": can_delete,
+                "username": username,
+            },
         }
     # 🔒 SECURITY: Loguear intentos fallidos sin exponer credenciales
     logger.warning(f"[AUTH] Intento de login admin fallido ({username}) desde IP: {request.client.host}")
@@ -709,7 +731,7 @@ def actualizar_estado_pago(
     if not registro:
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
 
-    admin_data = ADMIN_USERS.get(admin_username)
+    admin_data = ADMIN_USERS.get(admin_username.lower())
     if admin_data and admin_data["municipio"] != "ALL":
         if registro.municipio != admin_data["municipio"]:
             raise HTTPException(status_code=403, detail="No tienes permisos para editar este registro.")
