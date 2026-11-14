@@ -51,7 +51,7 @@ logger = logging.getLogger(__name__)
               <h2 style="margin:0 0 16px;color:#1A1A1A;font-size:24px;font-family:'Syne',Arial,sans-serif;font-weight:800;">¡Hola {nombre}!</h2>
               <p style="margin:0 0 24px;font-size:16px;line-height:1.6;color:#333333;font-weight:500;">
                 Gracias por inscribirte al <strong>Evento Nacional Onda 2026</strong>. Tu lugar está pre-reservado y estamos listos para vivir esta experiencia contigo.<br/><br/>
-                Para ver tu estado, subir tu comprobante de pago o acceder a tu código QR, haz clic en el botón a continuación.
+                Para ver tu estado, subir tu comprobante de pago o acceder a tu código QR, haz clic en el botón a continuación. Este enlace es permanente y quedará guardado en tu navegador.
               </p>
 
               <!-- Importante Alert -->
@@ -109,7 +109,7 @@ logger = logging.getLogger(__name__)
           <tr>
             <td style="background:#F9F4E0;border-top:3px solid #1A1A1A;padding:24px;text-align:center;">
               <p style="margin:0;color:#666666;font-size:12px;line-height:1.5;font-weight:600;">
-                Este enlace es personal. No lo compartas con nadie.<br/>
+                Este enlace es personal y permanente. No lo compartas con nadie.<br/>
                 Onda Fest 2026<br/>
                 Soporte: <strong>829-753-4583 / 849-249-7319 / 809-769-8350</strong>
               </p>

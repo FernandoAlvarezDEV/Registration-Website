@@ -44,12 +44,14 @@ function populateUI(d) {
     const registroId = d.id ? parseInt(d.id.toString().replace(/\D/g, ""), 10) : d.id;
     const codigoOficial = d.codigoRegistro || d.idLabel || formatRegistroCode(registroId);
 
-    // Guardar en sessionStorage para uso posterior (subir comprobante, etc.)
-    sessionStorage.setItem("eno_session", JSON.stringify({
+    // El acceso mediante enlace de correo es permanente y debe sobrevivir
+    // al cierre del navegador. Se conserva en localStorage para que el
+    // participante no tenga que volver a iniciar sesión.
+    localStorage.setItem("eno_session", JSON.stringify({
         role: "user",
         data: { ...d, idLabel: codigoOficial, codigoRegistro: codigoOficial }
     }));
-    sessionStorage.setItem("eno_registro_id", registroId);
+    localStorage.setItem("eno_registro_id", registroId);
 
     // Rellenar campos HTML
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -179,13 +181,18 @@ async function loginUsuarioNormal() {
 // ── Lógica principal de carga ─────────────────────────────────────
 function initDashboard() {
     // 1. Revisar si ya hay una sesión activa de participante
-    const session = JSON.parse(sessionStorage.getItem("eno_session") || "null");
+    // Migrar una sesión anterior de esta pestaña al almacenamiento permanente.
+    const legacySession = sessionStorage.getItem("eno_session");
+    if (!localStorage.getItem("eno_session") && legacySession) {
+        localStorage.setItem("eno_session", legacySession);
+    }
+    const session = JSON.parse(localStorage.getItem("eno_session") || "null");
     if (session && session.data && session.role === "user") {
         populateUI(session.data);
         return;
     }
 
-    // 2. Revisar si hay un magic link en la URL (?i=...&t=...)
+    // 2. Revisar si hay un enlace permanente enviado por correo (?i=...&t=...)
     const urlParams = new URLSearchParams(window.location.search);
     const magicI = urlParams.get('i');
     const magicT = urlParams.get('t');
@@ -208,7 +215,7 @@ function initDashboard() {
                 }
             })
             .catch(async (err) => {
-                let errorMsg = "Enlace inválido o expirado.";
+                let errorMsg = "Enlace inválido.";
                 try {
                     const errorData = await err.json();
                     errorMsg = errorData.detail || errorMsg;
@@ -298,7 +305,7 @@ function clearFile() {
 
 async function uploadComprobante() {
     if (!selectedFile) return;
-    const registroId = sessionStorage.getItem("eno_registro_id");
+    const registroId = localStorage.getItem("eno_registro_id");
     if (!registroId) { showToast("error", "No se pudo identificar tu registro."); return; }
 
     const btn = document.getElementById("btn-upload");
@@ -321,11 +328,11 @@ async function uploadComprobante() {
         showToast("success", data.message || "¡Comprobante subido con éxito!");
 
         // Actualizar sesión guardada
-        const s = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
+        const s = JSON.parse(localStorage.getItem("eno_session") || "{}");
         if (s.data) {
             s.data.comprobantePago = data.data.comprobantePago;
             s.data.estadoPago = data.data.estadoPago;
-            sessionStorage.setItem("eno_session", JSON.stringify(s));
+            localStorage.setItem("eno_session", JSON.stringify(s));
         }
 
         setTimeout(() => location.reload(), 1500);
@@ -337,6 +344,8 @@ async function uploadComprobante() {
 }
 
 function logout() {
+    localStorage.removeItem("eno_session");
+    localStorage.removeItem("eno_registro_id");
     sessionStorage.removeItem("eno_session");
     sessionStorage.removeItem("eno_registro_id");
     window.location.reload();

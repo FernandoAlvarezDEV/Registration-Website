@@ -33,13 +33,15 @@ function getAdminHeaders(extra = {}) {
     };
 }
 
-// 🔒 Helper: verificar permisos de eliminación (únicamente admin_all)
+// 🔒 Helper: verificar permisos de eliminación (Admin y superadmin)
 function canAdminDelete() {
     const s = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
     return Boolean(
         s.canDelete === true ||
         s.data?.canDelete === true ||
+        s.adminRole === "admin" ||
         s.adminRole === "superadmin" ||
+        s.data?.adminRole === "admin" ||
         s.data?.adminRole === "superadmin" ||
         s.username === "admin_all" ||
         s.data?.username === "admin_all"
@@ -63,8 +65,8 @@ function updateAdminHeaderInfo() {
         const municipio = s.municipio || s.data?.municipio;
         if (adminRole === "superadmin") {
             subTitle.innerHTML = `Administrador General — <span class="text-emerald-600 font-semibold">Acceso total (ver todos y eliminar)</span>`;
-        } else if (adminRole === "finanzas") {
-            subTitle.innerHTML = `Administración de Finanzas — <span class="text-blue-600 font-semibold">Consolidado general (todos los municipios, solo lectura)</span>`;
+        } else if (adminRole === "admin") {
+            subTitle.innerHTML = `Administrador — <span class="text-blue-600 font-semibold">Consolidado general (todos los municipios, gestión de pagos y registros)</span>`;
         } else if (municipio && municipio !== "ALL") {
             subTitle.innerHTML = `Administrador Local — <strong style="color:var(--fucsia);">${municipio}</strong> (solo registros de su municipio)`;
         }
@@ -88,6 +90,7 @@ if (!session || session.role !== "admin") {
     if (adminBadge) adminBadge.style.display = "inline-flex";
     if (adminLogout) adminLogout.style.display = "inline-flex";
     updateAdminHeaderInfo();
+    updatePaymentControls();
     loadData();
 }
 
@@ -356,7 +359,7 @@ function renderTable() {
                     </td>
                     <td data-label="Acciones" class="px-5 py-3.5 text-center">
                         <div class="flex items-center justify-center gap-1">
-                            ${r.comprobante_pago ? `
+                            ${r.comprobante_pago && canManagePayments() ? `
                                 <button onclick="promptQuickSetEstado(${r.id}, 'verificado', '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Aprobar pago"
                                     class="text-emerald-500 hover:bg-emerald-50 p-1.5 rounded-lg transition-colors">
                                     <span class="material-symbols-outlined text-sm">check_circle</span>
@@ -526,6 +529,10 @@ document.addEventListener("keydown", (e) => {
 
 // Prompts para acciones rápidas desde la tabla
 function promptQuickSetEstado(id, estado, nombre) {
+    if (!canManagePayments()) {
+        showToast("error", "Acceso denegado: solo el Admin o superadmin puede modificar comprobantes.");
+        return;
+    }
     const code = formatRegistroCode(id);
     const isApprove = estado === "verificado";
     requestConfirmAction({
@@ -562,6 +569,10 @@ function promptDeleteRegistro(id, nombre) {
 
 // Set payment status (desde modal de imagen)
 async function setEstado(estado) {
+    if (!canManagePayments()) {
+        showToast("error", "Acceso denegado: solo el Admin o superadmin puede modificar comprobantes.");
+        return;
+    }
     if (!currentModalId) return;
     await quickSetEstado(currentModalId, estado);
     closeModal();
@@ -674,6 +685,7 @@ async function adminLogin() {
         if (adminBadge) adminBadge.style.display = "inline-flex";
         if (adminLogout) adminLogout.style.display = "inline-flex";
         updateAdminHeaderInfo();
+        updatePaymentControls();
         loadData();
     } catch (err) {
         if (err.name === "TypeError" || (err.message && err.message.toLowerCase().includes("failed to fetch"))) {
@@ -817,4 +829,23 @@ function exportToExcel() {
     document.body.removeChild(link);
     
     showToast("success", "Exportación a Excel completada.");
+}
+
+// Solo Admin y superadmin pueden aprobar o rechazar comprobantes.
+function canManagePayments() {
+    const s = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
+    const role = s.adminRole || s.data?.adminRole;
+    return Boolean(
+        s.canManagePayments === true ||
+        s.data?.canManagePayments === true ||
+        role === "admin" ||
+        role === "superadmin"
+    );
+}
+
+function updatePaymentControls() {
+    const visible = canManagePayments();
+    document.querySelectorAll("[data-payment-action]").forEach((button) => {
+        button.style.display = visible ? "" : "none";
+    });
 }

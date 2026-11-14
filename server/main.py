@@ -406,13 +406,13 @@ def eliminar_registro(
     db: Session = Depends(get_db),
     admin_username: str = Depends(require_admin),
 ):
-    """Elimina un registro por ID. Solo admin_all (superadmin) puede eliminar."""
-    # 🔒 Solo el superadmin (admin_all) puede eliminar registros
+    """Elimina un registro por ID. Solo Admin o superadmin pueden eliminar."""
+    # 🔒 Los administradores municipales no pueden eliminar registros
     admin_data = ADMIN_USERS.get(admin_username.lower())
-    if not admin_data or admin_data.get("role") != "superadmin":
+    if not admin_data or admin_data.get("role") not in ("admin", "superadmin"):
         raise HTTPException(
             status_code=403, 
-            detail="Acceso denegado: Únicamente el Administrador General (admin_all) tiene permisos para eliminar registros."
+            detail="Acceso denegado: únicamente el Admin o superadmin puede eliminar registros."
         )
 
     registro = db.query(Registro).filter(Registro.id == registro_id).first()
@@ -543,11 +543,14 @@ def magic_login(
     db: Session = Depends(get_db)
 ):
     """
-    Magic login usando ID numérico y Teléfono.
+    Magic login permanente usando ID numérico y Teléfono.
+
+    El enlace enviado por correo no tiene fecha de expiración. Solo deja de
+    funcionar si cambia el ID o el teléfono asociado al registro.
     """
     registro = db.query(Registro).filter(Registro.id == i, Registro.telefono == t).first()
     if not registro:
-        raise HTTPException(status_code=404, detail="Enlace inválido o expirado.")
+        raise HTTPException(status_code=404, detail="Enlace inválido.")
     
     talla_val = registro.talla_camiseta.value if hasattr(registro.talla_camiseta, 'value') else str(registro.talla_camiseta or "")
     codigo = generar_codigo_registro(registro.id)
@@ -582,11 +585,11 @@ class AdminLoginRequest(BaseModel):
 # ── Mapa de administradores por municipio ──
 # Roles:
 #   superadmin  → ve todos los registros y puede eliminar (ÚNICO que puede eliminar)
-#   finanzas    → ve todos los registros pero NO puede eliminar
+#   admin       → ve todos los registros y puede modificar pagos y registros
 #   municipio   → solo ve los registros de su municipio y NO puede eliminar
 ADMIN_USERS = {
     "admin_all":            {"password": "OndaFest2026!", "municipio": "ALL",                  "role": "superadmin"},
-    "admin_finanzasa13":    {"password": "OndaFest2026!", "municipio": "ALL",                  "role": "finanzas"},
+    "admin_finanzasa13":    {"password": "OndaFest2026!", "municipio": "ALL",                  "role": "admin"},
     "admin_guaranasb23":    {"password": "OndaFest2026!", "municipio": "Las Guáranas",         "role": "municipio"},
     "admin_sfmc33":         {"password": "OndaFest2026!", "municipio": "San Francisco",        "role": "municipio"},
     "admin_cotuid43":       {"password": "OndaFest2026!", "municipio": "Cotuí",                "role": "municipio"},
@@ -619,11 +622,11 @@ def admin_login(
         admin_token = _generate_admin_token(username)
         municipio = ADMIN_USERS[username]["municipio"]
         admin_role = ADMIN_USERS[username]["role"]
-        can_delete = (admin_role == "superadmin")
+        can_delete = admin_role in ("admin", "superadmin")
         
         display_name = (
             "Super Administrador" if admin_role == "superadmin"
-            else ("Admin Finanzas" if admin_role == "finanzas"
+            else ("Administrador" if admin_role == "admin"
             else f"Admin {municipio}")
         )
         logger.info(f"[AUTH] Inicio de sesión exitoso: {username} ({municipio}, rol: {admin_role}).")
@@ -638,6 +641,7 @@ def admin_login(
                 "municipio": municipio,
                 "adminRole": admin_role,
                 "canDelete": can_delete,
+                "canManagePayments": admin_role in ("admin", "superadmin"),
                 "username": username,
             },
         }
@@ -722,7 +726,7 @@ def actualizar_estado_pago(
     db: Session = Depends(get_db),
     admin_username: str = Depends(require_admin),
 ):
-    """Actualiza el estado de pago de un registro. Solo Admin autenticado y autorizado."""
+    """Actualiza el estado de pago. Solo Admin o superadmin pueden aprobar/rechazar."""
     estados_validos = ["pendiente", "en revisión", "verificado", "rechazado"]
     if body.estado_pago not in estados_validos:
         raise HTTPException(status_code=400, detail=f"Estado no válido. Opciones: {', '.join(estados_validos)}")
@@ -732,7 +736,13 @@ def actualizar_estado_pago(
         raise HTTPException(status_code=404, detail="Registro no encontrado.")
 
     admin_data = ADMIN_USERS.get(admin_username.lower())
-    if admin_data and admin_data["municipio"] != "ALL":
+    if not admin_data or admin_data.get("role") not in ("admin", "superadmin"):
+        raise HTTPException(
+            status_code=403,
+            detail="Acceso denegado: solo el Admin o superadmin puede aprobar o rechazar comprobantes."
+        )
+
+    if admin_data["municipio"] != "ALL":
         if registro.municipio != admin_data["municipio"]:
             raise HTTPException(status_code=403, detail="No tienes permisos para editar este registro.")
 
