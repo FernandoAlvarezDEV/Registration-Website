@@ -770,9 +770,14 @@ document.addEventListener('click', function (e) {
 });
 
 // ── Exportar a Excel (CSV) ──
-function exportToExcel() {
+function exportToCsvLegacy() {
     if (!allRegistros || allRegistros.length === 0) {
         showToast("error", "No hay datos para exportar.");
+        return;
+    }
+
+    if (typeof XLSX === "undefined") {
+        showToast("error", "No se pudo cargar el exportador de Excel. Recarga la página e inténtalo de nuevo.");
         return;
     }
 
@@ -829,6 +834,45 @@ function exportToExcel() {
     document.body.removeChild(link);
     
     showToast("success", "Exportación a Excel completada.");
+}
+
+// Exportación real de Excel: esta definición reemplaza el exportador CSV legado.
+function exportToExcel() {
+    if (!allRegistros || allRegistros.length === 0) {
+        showToast("error", "No hay datos para exportar.");
+        return;
+    }
+
+    if (typeof XLSX === "undefined") {
+        showToast("error", "No se pudo cargar el exportador de Excel. Recarga la página e inténtalo de nuevo.");
+        return;
+    }
+
+    const headers = [
+        "Código Registro", "Nombre", "Edad", "Teléfono", "Email", "Municipio",
+        "Talla", "Comida", "Estado Pago", "Contacto Emergencia",
+        "Teléfono Emergencia", "Parentesco", "Es de Onda?", "Fecha Registro"
+    ];
+    const rows = allRegistros.map(r => [
+        formatRegistroCode(r.id), r.nombre_completo, r.edad, r.telefono, r.email,
+        r.municipio, r.talla_camiseta, r.opcion_comida, r.estado_pago,
+        r.contacto_emergencia, r.contacto_emergencia_telefono, r.parentesco,
+        r.no_onda, new Date(r.fecha_registro).toLocaleString("es-DO")
+    ]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    worksheet["!autofilter"] = { ref: worksheet["!ref"] };
+    worksheet["!cols"] = [
+        { wch: 16 }, { wch: 28 }, { wch: 8 }, { wch: 16 },
+        { wch: 32 }, { wch: 24 }, { wch: 10 }, { wch: 42 },
+        { wch: 18 }, { wch: 28 }, { wch: 20 }, { wch: 16 },
+        { wch: 12 }, { wch: 22 }
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Registros");
+    XLSX.writeFile(workbook, `OndaFest_Registros_${new Date().toISOString().split("T")[0]}.xlsx`);
+    showToast("success", "Archivo Excel descargado correctamente.");
 }
 
 // Solo Admin y superadmin pueden aprobar o rechazar comprobantes.
