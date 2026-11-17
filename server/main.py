@@ -34,7 +34,7 @@ from slowapi.errors import RateLimitExceeded
 
 from config import settings
 from database import get_db, init_db
-from models import Registro, RegistroCreate, RegistroResponse, RegistroOut
+from models import Registro, RegistroCreate, RegistroResponse, RegistroOut, TallaCamiseta
 from storage_service import upload_comprobante
 from email_service import send_confirmation_email, send_receipt_uploaded_email, send_payment_status_email
 
@@ -182,6 +182,22 @@ class VerificarRegistroRequest(BaseModel):
 
 class UpdateEstadoPago(BaseModel):
     estado_pago: str
+
+
+class RegistroUpdate(BaseModel):
+    """Campos editables manualmente por el superadmin (todos opcionales)."""
+    nombre_completo: str | None = None
+    edad: int | None = None
+    telefono: str | None = None
+    email: str | None = None
+    municipio: str | None = None
+    talla_camiseta: str | None = None
+    no_onda: str | None = None
+    contacto_emergencia: str | None = None
+    contacto_emergencia_telefono: str | None = None
+    parentesco: str | None = None
+    opcion_comida: str | None = None
+    estado_pago: str | None = None
 
 
 # ─────────────────────────────────────────────────────────────────
@@ -425,6 +441,92 @@ def eliminar_registro(
     return {"success": True, "message": f"Registro ENO-{registro_id} eliminado."}
 
 
+@app.patch("/api/registros/{registro_id}", response_model=RegistroOut, tags=["Registros"])
+def editar_registro(
+    request: Request,
+    registro_id: int,
+    body: RegistroUpdate,
+    db: Session = Depends(get_db),
+    admin_username: str = Depends(require_admin),
+):
+    """Edita manualmente un registro. ÚNICAMENTE el superadmin puede hacerlo."""
+    admin_data = ADMIN_USERS.get(admin_username.lower())
+    if not admin_data or admin_data.get("role") != "superadmin":
+        raise HTTPException(
+            status_code=403,
+            detail="Acceso denegado: únicamente el superadmin puede modificar registros.",
+        )
+
+    registro = db.query(Registro).filter(Registro.id == registro_id).first()
+    if not registro:
+        raise HTTPException(status_code=404, detail="Registro no encontrado.")
+
+    cambios = body.model_dump(exclude_unset=True)
+
+    def texto(campo: str, min_len: int = 1, max_len: int = 255, requerido: bool = True):
+        valor = (cambios[campo] or "").strip()
+        if requerido and len(valor) < min_len:
+            raise HTTPException(status_code=400, detail=f"El campo '{campo}' es obligatorio.")
+        if len(valor) > max_len:
+            raise HTTPException(status_code=400, detail=f"El campo '{campo}' es demasiado largo.")
+        return valor or None
+
+    def telefono(campo: str):
+        valor = clean_phone(cambios[campo] or "")
+        if not valor.isdigit() or not (7 <= len(valor) <= 15):
+            raise HTTPException(status_code=400, detail=f"El campo '{campo}' debe tener entre 7 y 15 dígitos.")
+        return valor
+
+    if "nombre_completo" in cambios:
+        registro.nombre_completo = texto("nombre_completo", min_len=3)
+    if "edad" in cambios:
+        if cambios["edad"] is None or not (5 <= cambios["edad"] <= 120):
+            raise HTTPException(status_code=400, detail="La edad debe estar entre 5 y 120.")
+        registro.edad = cambios["edad"]
+    if "telefono" in cambios:
+        nuevo_tel = telefono("telefono")
+        duplicado = db.query(Registro).filter(Registro.telefono == nuevo_tel, Registro.id != registro_id).first()
+        if duplicado:
+            raise HTTPException(status_code=409, detail="Ya existe otro registro con ese número de teléfono.")
+        registro.telefono = nuevo_tel
+    if "email" in cambios:
+        email = (cambios["email"] or "").strip().lower()
+        if email and not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+            raise HTTPException(status_code=400, detail="Correo electrónico no válido.")
+        registro.email = email or None
+    if "municipio" in cambios:
+        registro.municipio = texto("municipio", min_len=2)
+    if "talla_camiseta" in cambios:
+        try:
+            registro.talla_camiseta = TallaCamiseta((cambios["talla_camiseta"] or "").strip().lower())
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Talla no válida (xs, s, m, l, xl, xxl).")
+    if "no_onda" in cambios:
+        registro.no_onda = texto("no_onda", max_len=100)
+    if "contacto_emergencia" in cambios:
+        registro.contacto_emergencia = texto("contacto_emergencia")
+    if "contacto_emergencia_telefono" in cambios:
+        registro.contacto_emergencia_telefono = telefono("contacto_emergencia_telefono")
+    if "parentesco" in cambios:
+        registro.parentesco = texto("parentesco", max_len=100)
+    if "opcion_comida" in cambios:
+        registro.opcion_comida = texto("opcion_comida", max_len=100)
+    if "estado_pago" in cambios:
+        if cambios["estado_pago"] not in ["pendiente", "en revisión", "verificado", "rechazado"]:
+            raise HTTPException(status_code=400, detail="Estado de pago no válido.")
+        registro.estado_pago = cambios["estado_pago"]
+
+    try:
+        db.commit()
+        db.refresh(registro)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Conflicto: los datos chocan con otro registro.")
+
+    logger.info(f"[ADMIN] Registro ENO-{registro_id} editado por {admin_username}. Campos: {', '.join(cambios.keys())}")
+    return registro
+
+
 # ─────────────────────────────────────────────────────────────────
 # 🔐 AUTENTICACIÓN Y VERIFICACIÓN DE ASISTENTES
 # ─────────────────────────────────────────────────────────────────
@@ -641,6 +743,7 @@ def admin_login(
                 "municipio": municipio,
                 "adminRole": admin_role,
                 "canDelete": can_delete,
+                "canEdit": admin_role == "superadmin",
                 "canManagePayments": admin_role in ("admin", "superadmin"),
                 "username": username,
             },

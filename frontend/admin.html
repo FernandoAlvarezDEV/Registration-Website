@@ -265,6 +265,21 @@
             /* manejado por la clase .hidden */
         }
 
+        /* Modal editar registro */
+        .edit-modal-box { max-width: 620px; }
+        .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .edit-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .edit-field-full { grid-column: 1 / -1; }
+        .edit-field span { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.03em; }
+        .edit-field input, .edit-field select {
+            width: 100%; box-sizing: border-box; border: 2px solid #e2e8f0; border-radius: 8px;
+            padding: 8px 10px; font-size: 0.85rem; color: var(--oscuro); background: #fff;
+        }
+        .edit-field input:focus, .edit-field select:focus { outline: none; border-color: var(--fucsia); }
+        .edit-error { display: none; font-size: 0.8rem; font-weight: 600; color: #b91c1c; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; padding: 8px 10px; }
+        #edit-save-btn:disabled { opacity: 0.6; cursor: wait; }
+        @media (max-width: 520px) { .edit-grid { grid-template-columns: 1fr; } }
+
         /* Modal overlay */
         .modal-overlay {
             position: fixed;
@@ -1727,6 +1742,50 @@
                     </button>
                     <button class="modal-btn-reject" data-payment-action onclick="setEstado('rechazado')">
                         <span class="material-symbols-outlined" style="font-size:1.05rem;">cancel</span> Rechazar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal editar registro (solo superadmin) -->
+        <div id="modal-edit" class="modal-overlay" onclick="if(event.target===this)closeEditModal()">
+            <div class="modal-content edit-modal-box">
+                <div class="modal-header">
+                    <h3>
+                        <span class="material-symbols-outlined" style="color:var(--fucsia);">edit</span>
+                        Modificar Registro
+                    </h3>
+                    <button class="modal-close-btn" onclick="closeEditModal()" title="Cerrar modal">
+                        <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-user-info">
+                        <div class="modal-user-details">
+                            <p id="edit-user-name" class="modal-user-name"></p>
+                            <p id="edit-user-code" class="modal-user-meta"></p>
+                        </div>
+                    </div>
+                    <form id="edit-form" class="edit-grid" onsubmit="event.preventDefault();saveEditRegistro();">
+                        <label class="edit-field edit-field-full"><span>Nombre completo</span><input id="edit-nombre_completo" type="text" /></label>
+                        <label class="edit-field"><span>Edad</span><input id="edit-edad" type="number" /></label>
+                        <label class="edit-field"><span>Teléfono</span><input id="edit-telefono" type="tel" /></label>
+                        <label class="edit-field edit-field-full"><span>Email</span><input id="edit-email" type="email" /></label>
+                        <label class="edit-field"><span>Municipio</span><select id="edit-municipio"><option value="Las Guáranas">Las Guáranas</option><option value="San Francisco">San Francisco</option><option value="Cotuí">Cotuí</option><option value="Nagua">Nagua</option><option value="La Vega">La Vega</option><option value="Bonao">Bonao</option><option value="Maimón">Maimón</option><option value="Fantino">Fantino</option><option value="Villa Tapia">Villa Tapia</option><option value="Salcedo">Salcedo</option><option value="Santo Domingo Este">Santo Domingo Este</option><option value="Distrito Nacional">Distrito Nacional</option></select></label>
+                        <label class="edit-field"><span>Talla</span><select id="edit-talla_camiseta"><option value="xs">XS</option><option value="s">S</option><option value="m">M</option><option value="l">L</option><option value="xl">XL</option><option value="xxl">XXL</option></select></label>
+                        <label class="edit-field edit-field-full"><span>Comida</span><select id="edit-opcion_comida"><option value="Moro de habichuelas negras + pollo horneado + ensalada rusa">Moro de habichuelas negras + pollo horneado + ensalada rusa</option><option value="Arroz con maíz + pollo horneado + ensalada rusa">Arroz con maíz + pollo horneado + ensalada rusa</option><option value="Hamburguesa con papas">Hamburguesa con papas</option><option value="2 piezas de pollo frito con tostones">2 piezas de pollo frito con tostones</option></select></label>
+                        <label class="edit-field"><span>No. Onda</span><input id="edit-no_onda" type="text" /></label>
+                        <label class="edit-field"><span>Estado de pago</span><select id="edit-estado_pago"><option value="pendiente">Pendiente</option><option value="en revisión">En revisión</option><option value="verificado">Verificado</option><option value="rechazado">Rechazado</option></select></label>
+                        <label class="edit-field edit-field-full"><span>Contacto de emergencia</span><input id="edit-contacto_emergencia" type="text" /></label>
+                        <label class="edit-field"><span>Tel. emergencia</span><input id="edit-contacto_emergencia_telefono" type="tel" /></label>
+                        <label class="edit-field"><span>Parentesco</span><input id="edit-parentesco" type="text" /></label>
+                    </form>
+                    <div id="edit-error" class="edit-error"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-confirm-cancel" style="flex:1;" onclick="closeEditModal()">Cancelar</button>
+                    <button type="submit" form="edit-form" id="edit-save-btn" class="modal-btn-approve">
+                        <span class="material-symbols-outlined" style="font-size:1.05rem;">save</span> Guardar cambios
                     </button>
                 </div>
             </div>

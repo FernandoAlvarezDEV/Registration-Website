@@ -369,6 +369,12 @@ function renderTable() {
                                     <span class="material-symbols-outlined text-sm">cancel</span>
                                 </button>
                             ` : ''}
+                            ${canAdminEdit() ? `
+                            <button onclick="openEditModal(${r.id})" title="Modificar registro"
+                                class="text-slate-400 hover:bg-amber-50 hover:text-amber-600 p-1.5 rounded-lg transition-colors">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                            </button>
+                            ` : ''}
                             ${canAdminDelete() ? `
                             <button onclick="promptDeleteRegistro(${r.id}, '${r.nombre_completo.replace(/'/g, "\\'")}')" title="Eliminar registro"
                                 class="text-slate-400 hover:bg-red-50 hover:text-red-500 p-1.5 rounded-lg transition-colors">
@@ -516,6 +522,11 @@ function closeConfirmModal() {
 // Cerrar modales con tecla Escape
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
+        const editModal = document.getElementById("modal-edit");
+        if (editModal && editModal.classList.contains("active")) {
+            closeEditModal();
+            return;
+        }
         const confirmModal = document.getElementById("modal-confirm");
         if (confirmModal && confirmModal.classList.contains("active")) {
             closeConfirmModal();
@@ -892,4 +903,115 @@ function updatePaymentControls() {
     document.querySelectorAll("[data-payment-action]").forEach((button) => {
         button.style.display = visible ? "" : "none";
     });
+}
+
+
+// ─────────────────────────────────────────────────────────────────
+// ✏️ Edición manual de registros (ÚNICAMENTE superadmin)
+// ─────────────────────────────────────────────────────────────────
+function canAdminEdit() {
+    const s = JSON.parse(sessionStorage.getItem("eno_session") || "{}");
+    const role = s.adminRole || s.data?.adminRole;
+    return role === "superadmin";
+}
+
+const EDIT_FIELDS = [
+    "nombre_completo", "edad", "telefono", "email", "municipio", "talla_camiseta",
+    "opcion_comida", "no_onda", "contacto_emergencia", "contacto_emergencia_telefono",
+    "parentesco", "estado_pago",
+];
+let currentEditId = null;
+
+function setSelectValue(select, value) {
+    const v = value ?? "";
+    if (v && ![...select.options].some(o => o.value === v)) {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+    }
+    select.value = v;
+}
+
+function openEditModal(id) {
+    if (!canAdminEdit()) {
+        showToast("error", "Acceso denegado: solo el superadmin puede modificar registros.");
+        return;
+    }
+    const r = allRegistros.find(x => x.id === id);
+    if (!r) return;
+    currentEditId = id;
+    document.getElementById("edit-user-name").textContent = r.nombre_completo;
+    document.getElementById("edit-user-code").textContent = `${r.telefono} · ${formatRegistroCode(r.id)}`;
+    EDIT_FIELDS.forEach(f => {
+        const el = document.getElementById(`edit-${f}`);
+        if (!el) return;
+        let val = r[f] ?? "";
+        if (f === "talla_camiseta") val = String(val).toLowerCase();
+        if (el.tagName === "SELECT") setSelectValue(el, String(val));
+        else el.value = val;
+    });
+    const err = document.getElementById("edit-error");
+    err.textContent = "";
+    err.style.display = "none";
+    document.getElementById("modal-edit").classList.add("active");
+}
+
+function closeEditModal() {
+    document.getElementById("modal-edit").classList.remove("active");
+    currentEditId = null;
+}
+
+async function saveEditRegistro() {
+    if (!currentEditId || !canAdminEdit()) return;
+    const original = allRegistros.find(x => x.id === currentEditId) || {};
+    const payload = {};
+    EDIT_FIELDS.forEach(f => {
+        const el = document.getElementById(`edit-${f}`);
+        if (!el) return;
+        let val = el.value.trim();
+        let orig = original[f] ?? "";
+        if (f === "talla_camiseta") orig = String(orig).toLowerCase();
+        if (f === "edad") {
+            if (String(orig) !== val) payload[f] = val === "" ? null : parseInt(val, 10);
+            return;
+        }
+        if (String(orig) !== val) payload[f] = val;
+    });
+
+    const err = document.getElementById("edit-error");
+    if (Object.keys(payload).length === 0) {
+        showToast("success", "No hay cambios que guardar.");
+        closeEditModal();
+        return;
+    }
+
+    const btn = document.getElementById("edit-save-btn");
+    btn.disabled = true;
+    try {
+        const res = await fetch(`${API_BASE}/api/registros/${currentEditId}`, {
+            method: "PATCH",
+            headers: getAdminHeaders(),
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) {
+            const idx = allRegistros.findIndex(x => x.id === currentEditId);
+            if (idx >= 0) allRegistros[idx] = { ...allRegistros[idx], ...data };
+            showToast("success", `Registro ${formatRegistroCode(currentEditId)} actualizado.`);
+            closeEditModal();
+            loadData();
+        } else {
+            const msg = Array.isArray(data.detail)
+                ? data.detail.map(d => d.msg).join(" · ")
+                : (data.detail || "Error al guardar los cambios.");
+            err.textContent = msg;
+            err.style.display = "block";
+        }
+    } catch (e) {
+        err.textContent = "Error de conexión.";
+        err.style.display = "block";
+    } finally {
+        btn.disabled = false;
+    }
 }
